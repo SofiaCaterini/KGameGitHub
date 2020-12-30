@@ -12,11 +12,9 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_layout)
         setSupportActionBar(findViewById(R.id.toolbar))
-
         val drawerToggle = ActionBarDrawerToggle(this, drawer, R.string.open, R.string.close)
         drawer.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     }

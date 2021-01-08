@@ -11,6 +11,10 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_layout)
+        //Wifi
+
+
+
 
         setSupportActionBar(findViewById(R.id.toolbar))
         val drawerToggle = ActionBarDrawerToggle(this, drawer, R.string.open, R.string.close)

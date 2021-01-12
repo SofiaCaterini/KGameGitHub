@@ -129,6 +129,8 @@
             android:id="@+id/provawifi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#F6F1F1"
+            android:textColor="#070707"
             app:layout_constraintBottom_toBottomOf="@+id/floatingActionButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

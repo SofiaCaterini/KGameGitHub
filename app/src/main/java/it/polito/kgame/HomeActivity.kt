@@ -50,7 +50,7 @@ class HomeActivity : AppCompatActivity() {
                         val str= URL("http://192.168.4.1/").readText(Charset.forName("UTF-8"))
                         withContext(Dispatchers.Main) {
                             //qui mi faccio mostrare il peso in una textView
-                            provawifi.text = str;
+                            provawifi.text = str
                         }
                     }
 

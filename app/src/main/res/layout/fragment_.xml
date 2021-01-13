@@ -14,7 +14,7 @@
         <androidx.drawerlayout.widget.DrawerLayout
             android:id="@+id/drawer"
             android:layout_width="match_parent"
-            android:layout_height="1128dp"
+            android:layout_height="1341dp"
             tools:context=".HomeActivity">
 
             <ScrollView

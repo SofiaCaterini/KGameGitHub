@@ -8,25 +8,26 @@ import android.net.NetworkRequest
 import android.net.wifi.WifiNetworkSpecifier
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import kotlinx.android.synthetic.main.fragment_.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.URL
 import java.nio.charset.Charset
 
+class FragmentHome : Fragment() {
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
 
-class Fragment : Fragment(R.layout.fragment_) {
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-
+    ): View? {
         //Wifi
         val manager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
@@ -59,10 +60,6 @@ class Fragment : Fragment(R.layout.fragment_) {
         } catch (e: SecurityException) {
             Log.e("Ciao", e.message!!)
         }
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_, container, false)
-
+        return inflater.inflate(R.layout.fragment_home, container, false)
     }
-
-
 }

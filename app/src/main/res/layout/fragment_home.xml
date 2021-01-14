@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    tools:context=".FragmentHome">
+    tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -94,7 +94,7 @@
             android:id="@+id/textView5"
             android:layout_width="187dp"
             android:layout_height="540dp"
-            android:text="TextView"
+            android:text="Qui va recyclerview con lista"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.527"

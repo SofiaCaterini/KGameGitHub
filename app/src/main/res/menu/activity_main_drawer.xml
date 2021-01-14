@@ -13,8 +13,12 @@
             android:icon="@drawable/user"
             android:title="@string/menu_account" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
+            android:id="@+id/nav_calendar"
+            android:icon="@drawable/calendar"
+            android:title="@string/menu_calendar" />
+        <item
+            android:id="@+id/nav_grow"
+            android:icon="@drawable/open_folder"
+            android:title="@string/menu_grow" />
     </group>
 </menu>

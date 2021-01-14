@@ -18,8 +18,13 @@
         tools:layout="@layout/fragment_account" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="it.polito.kgame.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_calendar"
+        android:name="it.polito.kgame.ui.calendar.CalendarFragment"
+        android:label="@string/menu_calendar"
+        tools:layout="@layout/fragment_calendar" />
+    <fragment
+        android:id="@+id/nav_grow"
+        android:name="it.polito.kgame.ui.grow.GrowFragment"
+        android:label="@string/menu_grow"
+        tools:layout="@layout/fragment_grow" />
 </navigation>

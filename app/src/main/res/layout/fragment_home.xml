@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,7 +15,7 @@
         tools:context=".HomeActivity">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/gameBoard"
             android:layout_width="423dp"
             android:layout_height="442dp"
             android:layout_marginTop="8dp"
@@ -26,7 +27,7 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton"
+            android:id="@+id/homeAddWeight"
             android:layout_width="wrap_content"
             android:layout_height="70dp"
             android:clickable="true"
@@ -38,7 +39,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:layout_constraintTop_toBottomOf="@+id/gameBoard"
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
@@ -65,7 +66,7 @@
             app:layout_constraintGuide_begin="116dp" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/refresh"
             android:layout_width="28dp"
             android:layout_height="29dp"
             android:background="#00FF0000"
@@ -92,7 +93,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/floatingActionButton"
+            app:layout_constraintTop_toBottomOf="@+id/homeAddWeight"
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
@@ -137,10 +138,18 @@
             android:layout_height="wrap_content"
             android:background="#F6F1F1"
             android:textColor="#070707"
-            app:layout_constraintBottom_toBottomOf="@+id/floatingActionButton"
+            app:layout_constraintBottom_toBottomOf="@+id/homeAddWeight"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView" />
+            app:layout_constraintTop_toTopOf="@+id/gameBoard" />
+
+        <ImageView
+            android:id="@+id/player1"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            app:srcCompat="@drawable/dog"
+            tools:layout_editor_absoluteX="282dp"
+            tools:layout_editor_absoluteY="45dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

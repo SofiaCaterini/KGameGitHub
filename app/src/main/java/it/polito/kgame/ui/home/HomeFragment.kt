@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import it.polito.kgame.R
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import kotlinx.android.synthetic.main.nav_header_main.textView
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +26,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.URL
 import java.nio.charset.Charset
+import kotlin.math.floor
+import kotlin.math.roundToInt
 
 class HomeFragment : Fragment() {
 
@@ -74,6 +77,25 @@ class HomeFragment : Fragment() {
         homeViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
+
+        //Inizio parte di movimento
+        //set position 0
+        println("left= " + root.gameBoard.left)
+        println("right= " + root.gameBoard.width)
+
+        //root.player1.translationX = root.gameBoard.maxWidth.toFloat()
+        //root.player1.translationX = ((root.gameBoard.left + root.gameBoard.maxWidth) * 4/5).toFloat()
+        root.player1.translationY = 50F
+
+        //refresh position
+        var position = 0
+        root.homeAddWeight.setOnClickListener {
+            position++
+            println("right2= " + root.gameBoard.width)
+            root.player1.translationX = root.gameBoard.left + (root.gameBoard.width.toFloat() - root.player1.width.toFloat()) * 31/40
+            root.player1.translationY = (root.gameBoard.width.toFloat() - root.player1.width.toFloat()) * 3/20
+        }
+
         return root
     }
 }

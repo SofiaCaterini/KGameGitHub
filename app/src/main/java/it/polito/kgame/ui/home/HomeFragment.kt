@@ -79,26 +79,50 @@ class HomeFragment : Fragment() {
         })
 
         //Inizio parte di movimento
-        //set position 0
-        println("left= " + root.gameBoard.left)
-        println("right= " + root.gameBoard.width)
-
-        //root.player1.translationX = root.gameBoard.maxWidth.toFloat()
-        //root.player1.translationX = ((root.gameBoard.left + root.gameBoard.maxWidth) * 4/5).toFloat()
-        root.player1.translationY = 50F
-
-        //refresh position
         var position = 0
+        var playersNum = 2
         root.homeAddWeight.setOnClickListener {
+            //refresh position
             position++
+            //move player
             println("right2= " + root.gameBoard.width)
-            root.player1.translationX = root.gameBoard.left + (root.gameBoard.width.toFloat() ) * getXYmodsFromPosition(position).first - root.player1.width.toFloat()/2
-            root.player1.translationY = root.gameBoard.top + (root.gameBoard.height.toFloat() ) * getXYmodsFromPosition(position).second - root.player1.height.toFloat()/2
-        }
+            when (playersNum) {
+                1 -> {
+                    root.player1.translationX =
+                        root.gameBoard.left + (root.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                            position
+                        ).first - root.player1.width.toFloat() / 2
+                    root.player1.translationY =
+                        root.gameBoard.top + (root.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                            position
+                        ).second - root.player1.height.toFloat() / 2
+                }
+                2 -> {
+                    root.player1.translationX =
+                        root.gameBoard.left + (root.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                            position
+                        ).first - root.player1.width.toFloat()*3/4
+                    root.player1.translationY =
+                        root.gameBoard.top + (root.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                            position
+                        ).second - root.player1.height.toFloat()*3/4
 
+                    root.player2.translationX =
+                        root.gameBoard.left + (root.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                            position
+                        ).first - root.player2.width.toFloat()/4
+                    root.player2.translationY =
+                        root.gameBoard.top + (root.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                            position
+                        ).second - root.player2.height.toFloat()/4
+
+                }
+            }
+        }
         return root
     }
 
+    //Prende in input il numero della casella e ritorna i moltiplicatori x ed y relativi a quella casella
     fun getXYmodsFromPosition (position: Int): Pair<Float, Float> {
         var(x, y) = Pair(1F, 1F)
         when (position) {
@@ -110,17 +134,17 @@ class HomeFragment : Fragment() {
             2 -> {
                 println("position == 2")
                 x = 62/100F
-                y = 6/100F
+                y = 5/100F
             }
             3 -> {
                 println("position == 3")
-                x = 53/100F
-                y = 6/100F
+                x = 51/100F
+                y = 5/100F
             }
             4 -> {
                 println("position == 4")
                 x = 41/100F
-                y = 6/100F
+                y = 5/100F
             }
             5 -> {
                 println("position == 5")
@@ -129,13 +153,13 @@ class HomeFragment : Fragment() {
             }
             6 -> {
                 println("position == 6")
-                x = 23/100F
-                y = 10/100F
+                x = 22/100F
+                y = 11/100F
             }
             7 -> {
                 println("position == 7")
-                x = 23/100F
-                y = 18/100F
+                x = 22/100F
+                y = 17/100F
             }
             8 -> {
                 println("position == 8")
@@ -144,18 +168,18 @@ class HomeFragment : Fragment() {
             }
             9 -> {
                 println("position == 9")
-                x = 35/100F
+                x = 36/100F
                 y = 22/100F
             }
             10 -> {
                 println("position == 10")
-                x = 45/100F
+                x = 46/100F
                 y = 20/100F
             }
             11 -> {
-                println("position == 1")
-                x = 55/100F
-                y = 20/100F
+                println("position == 11")
+                x = 56/100F
+                y = 21/100F
             }
             12 -> {
                 println("position == 12")
@@ -169,7 +193,7 @@ class HomeFragment : Fragment() {
             }
             14 -> {
                 println("position == 14")
-                x = 78/100F
+                x = 79/100F
                 y = 35/100F
             }
             15 -> {
@@ -179,12 +203,12 @@ class HomeFragment : Fragment() {
             }
             16 -> {
                 println("position == 16")
-                x = 60/100F
+                x = 59/100F
                 y = 40/100F
             }
             17 -> {
                 println("position == 17")
-                x = 50/100F
+                x = 49/100F
                 y = 40/100F
             }
             18 -> {
@@ -194,23 +218,23 @@ class HomeFragment : Fragment() {
             }
             19 -> {
                 println("position == 19")
-                x = 30/100F
+                x = 29/100F
                 y = 38/100F
             }
             20 -> {
                 println("position == 20")
-                x = 22/100F
-                y = 43/100F
+                x = 23/100F
+                y = 44/100F
             }
             21 -> {
                 println("position == 21")
-                x = 21/100F
-                y = 51/100F
+                x = 22/100F
+                y = 52/100F
             }
             22 -> {
                 println("position == 22")
-                x = 25/100F
-                y = 58/100F
+                x = 26/100F
+                y = 59/100F
             }
             23 -> {
                 println("position == 23")
@@ -219,23 +243,23 @@ class HomeFragment : Fragment() {
             }
             24 -> {
                 println("position == 24")
-                x = 43/100F
+                x = 44/100F
                 y = 63/100F
             }
             25 -> {
                 println("position == 25")
-                x = 52/100F
+                x = 54/100F
                 y = 63/100F
             }
             26 -> {
                 println("position == 26")
-                x = 61/100F
-                y = 63/100F
+                x = 64/100F
+                y = 64/100F
             }
             27 -> {
                 println("position == 27")
-                x = 71/100F
-                y = 67/100F
+                x = 72/100F
+                y = 68/100F
             }
             28 -> {
                 println("position == 28")
@@ -249,17 +273,17 @@ class HomeFragment : Fragment() {
             }
             30 -> {
                 println("position == 30")
-                x = 77/100F
-                y = 92/100F
+                x = 78/100F
+                y = 93/100F
             }
             31 -> {
                 println("position == 31")
-                x = 66/100F
+                x = 68/100F
                 y = 95/100F
             }
             32 -> {
                 println("position == 32")
-                x = 57/100F
+                x = 56/100F
                 y = 95/100F
             }
             33 -> {
@@ -268,13 +292,13 @@ class HomeFragment : Fragment() {
                 y = 95/100F
             }
             34 -> {
-                println("position == 31")
+                println("position == 34")
                 x = 35/100F
                 y = 95/100F
             }
             35 -> {
                 println("position == 35")
-                x = 22/100F
+                x = 24/100F
                 y = 95/100F
             }
 

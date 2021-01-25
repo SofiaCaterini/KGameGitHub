@@ -151,6 +151,14 @@
             tools:layout_editor_absoluteX="282dp"
             tools:layout_editor_absoluteY="45dp" />
 
+        <ImageView
+            android:id="@+id/player2"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            app:srcCompat="@drawable/lion"
+            tools:layout_editor_absoluteX="334dp"
+            tools:layout_editor_absoluteY="53dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.core.widget.NestedScrollView>

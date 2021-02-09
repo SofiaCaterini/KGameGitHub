@@ -17,12 +17,15 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Impostazioni</string>
-    <string name="ob_settings">Imposta obiettivo</string>
-    <string name="clock_settings">Imposta sveglia giornaliera</string>
+    <string name="ob_settings">IMPOSTA OBIETTIVO</string>
+    <string name="clock_settings">IMPOSTA SVEGLIA GIORNALIERA</string>
     <string name="weight_settings">Ultima pesata:</string>
     <string name="menu_home">Home</string>
     <string name="menu_account">Profilo</string>
     <string name="menu_calendar">Calendario</string>
     <string name="menu_grow">La tua crescita</string>
+    <string name="evento">PROPONI NUOVO EVENTO</string>
+    <string name="impegno">AGGIUNGI UN TUO IMPEGNO</string>
+    <string name="sincronizza">SINCRONIZZA CON GOOGLE</string>
     <string name="ricorda">Ricorda: è meglio pesarsi sempre allo stesso orario, preferibilmente al mattino o prima dei pasti!</string>
 </resources>

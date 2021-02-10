@@ -2,6 +2,7 @@ package it.polito.kgame.ui.grow
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.app.PendingIntent.getActivity
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
@@ -21,16 +22,17 @@ import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import it.polito.kgame.AlarmReceiver
+import it.polito.kgame.MyAlarmManager
 import it.polito.kgame.R
 import kotlinx.android.synthetic.main.fragment_grow.*
 import kotlinx.android.synthetic.main.fragment_grow.view.*
+import java.security.AccessController.getContext
+import java.sql.Types.NULL
 
 
 class GrowFragment : Fragment() {
 
     private lateinit var growViewModel: GrowViewModel
-
-
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -58,13 +60,15 @@ class GrowFragment : Fragment() {
             val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
                 cal.set(Calendar.HOUR_OF_DAY, hour)
                 cal.set(Calendar.MINUTE, minute)
+
                 var orarioscelto : String = SimpleDateFormat("HH:mm").format(cal.time)
                 var messaggiosalvato : String = getString(R.string.question_message)
-                var message : String = "$messaggiosalvato $orarioscelto ?"
+                var message : String = "$messaggiosalvato $orarioscelto?"
+
                 AlertDialog.Builder(root.context)
                         .setTitle(R.string.question_title)
                         .setMessage(message)
-                        .setPositiveButton(R.string.yes) { _, _ -> yesClicked(root.context) }
+                        .setPositiveButton(R.string.yes) { _, _ -> yesClicked(requireActivity().applicationContext, cal) }
                         .setNegativeButton(R.string.no) { _, _ -> noClicked() }
                         .show()
             }
@@ -76,13 +80,15 @@ class GrowFragment : Fragment() {
     }
 
     }
-    fun yesClicked(context: Context){
+    fun yesClicked(context: Context, calendar: Calendar){
     //Intent
         /*val intent = Intent(AlarmClock.ACTION_SET_ALARM)
         intent.putExtra(AlarmClock.EXTRA_MESSAGE,"Pesati!")
         intent.putExtra(AlarmClock.EXTRA_HOUR, 19)
         intent.putExtra(AlarmClock.EXTRA_MINUTES, 19)
-        startActivity(intent)*/
+        startActivity(context, intent)*/
+        /*
+        //prova 2
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
         intent.putExtra(AlarmClock.EXTRA_MESSAGE,"Pesati!")
@@ -90,8 +96,11 @@ class GrowFragment : Fragment() {
         intent.putExtra(AlarmClock.EXTRA_MINUTES, 19)
         val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
         val interval = (60 * 1000).toLong()
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent)
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent)*/
 
+        //prova 3
+
+        MyAlarmManager.setAlarm(context, calendar.timeInMillis, "Test Message!")
     }
     fun noClicked(){
     //Do nothing

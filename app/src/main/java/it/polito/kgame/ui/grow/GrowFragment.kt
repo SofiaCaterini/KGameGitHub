@@ -1,20 +1,26 @@
 package it.polito.kgame.ui.grow
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.app.TimePickerDialog
+import android.content.Context
+import android.content.Intent
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.os.Bundle
+import android.provider.AlarmClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.isVisible
+import androidx.core.content.ContextCompat.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
+import it.polito.kgame.AlarmReceiver
 import it.polito.kgame.R
 import kotlinx.android.synthetic.main.fragment_grow.*
 import kotlinx.android.synthetic.main.fragment_grow.view.*
@@ -25,12 +31,13 @@ class GrowFragment : Fragment() {
     private lateinit var growViewModel: GrowViewModel
 
 
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
-        
+
         growViewModel =
                 ViewModelProvider(this).get(GrowViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_grow, container, false)
@@ -42,9 +49,11 @@ class GrowFragment : Fragment() {
         val series = LineGraphSeries(arrayOf(DataPoint(0.toDouble(), 1.toDouble()), DataPoint(1.toDouble(), 5.toDouble()), DataPoint(2.toDouble(), 3.toDouble())));
         series.color = R.color.black
         graph.addSeries(series)
-        //Sveglia
 
+
+        //Sveglia
         root.sveglia.setOnClickListener {
+
             val cal = Calendar.getInstance()
             val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
                 cal.set(Calendar.HOUR_OF_DAY, hour)
@@ -55,7 +64,7 @@ class GrowFragment : Fragment() {
                 AlertDialog.Builder(root.context)
                         .setTitle(R.string.question_title)
                         .setMessage(message)
-                        .setPositiveButton(R.string.yes) { _, _ -> yesClicked() }
+                        .setPositiveButton(R.string.yes) { _, _ -> yesClicked(root.context) }
                         .setNegativeButton(R.string.no) { _, _ -> noClicked() }
                         .show()
             }
@@ -63,13 +72,27 @@ class GrowFragment : Fragment() {
         }
 
 
-
         return root
     }
+
     }
-    fun yesClicked(){
+    fun yesClicked(context: Context){
+    //Intent
+        /*val intent = Intent(AlarmClock.ACTION_SET_ALARM)
+        intent.putExtra(AlarmClock.EXTRA_MESSAGE,"Pesati!")
+        intent.putExtra(AlarmClock.EXTRA_HOUR, 19)
+        intent.putExtra(AlarmClock.EXTRA_MINUTES, 19)
+        startActivity(intent)*/
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, AlarmReceiver::class.java)
+        intent.putExtra(AlarmClock.EXTRA_MESSAGE,"Pesati!")
+        intent.putExtra(AlarmClock.EXTRA_HOUR, 19)
+        intent.putExtra(AlarmClock.EXTRA_MINUTES, 19)
+        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
+        val interval = (60 * 1000).toLong()
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent)
 
     }
     fun noClicked(){
-
+    //Do nothing
     }

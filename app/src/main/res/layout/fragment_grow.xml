@@ -17,7 +17,7 @@
         android:textColor="#151414"
         android:textSize="26sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/Obiettivo"
+        app:layout_constraintBottom_toTopOf="@+id/obiettivo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.18"
         app:layout_constraintStart_toStartOf="parent"
@@ -112,7 +112,7 @@
         android:textColor="#020202"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/Obiettivo"
+        app:layout_constraintBottom_toTopOf="@+id/obiettivo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/materialTextView"
         app:layout_constraintTop_toBottomOf="@+id/refreshgrow1">
@@ -120,7 +120,7 @@
     </com.google.android.material.textview.MaterialTextView>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/Obiettivo"
+        android:id="@+id/obiettivo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/asap"
@@ -166,18 +166,5 @@
         app:layout_constraintVertical_bias="0.96">
 
     </com.google.android.material.button.MaterialButton>
-
-    <include
-        android:id="@+id/alarm"
-        layout="@layout/alarm_clock"
-        android:layout_width="235dp"
-        android:layout_height="101dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.85"
-        tools:visibility="invisible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -32,5 +32,10 @@
     <string name="cambia_nickname">Cambia nickname:</string>
     <string name="famiglie">Le tue famiglie:</string>
     <string name="famiglia">AGGIUNGI FAMIGLIA</string>
+    <string name="question_title">Imposta sveglia</string>
+    <string name="question_message">Sei sicuro di voler impostare la sveglia alle </string>
+    <string name="yes">Sì</string>
+    <string name="no">No</string>
+
     <string name="ricorda">Ricorda: è meglio pesarsi sempre allo stesso orario, preferibilmente al mattino o prima dei pasti!</string>
 </resources>

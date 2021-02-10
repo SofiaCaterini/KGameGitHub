@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">KGame</string>
     <string name="family_name">Famiglia Rossi</string>
-    <string name="username">Rossella73</string>
+    <string name="nickname">Rossella73</string>
     <string name="leaderboard">Classifica</string>
     <string name="open">open</string>
     <string name="close">close</string>
@@ -29,6 +29,8 @@
     <string name="sincronizza">SINCRONIZZA CON GOOGLE</string>
     <string name="cambia">CAMBIA FOTO PROFILO</string>
     <string name="cambia_pedina">Cambia pedina:</string>
+    <string name="cambia_nickname">Cambia nickname:</string>
+    <string name="famiglie">Le tue famiglie:</string>
     <string name="famiglia">AGGIUNGI FAMIGLIA</string>
     <string name="ricorda">Ricorda: è meglio pesarsi sempre allo stesso orario, preferibilmente al mattino o prima dei pasti!</string>
 </resources>

@@ -17,8 +17,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import it.polito.kgame.ItemAdapterUsers
 import it.polito.kgame.R
+import it.polito.kgame.ui.account.ItemAdapterFamily
 import it.polito.kgame.ui.grow.GrowViewModel
+import kotlinx.android.synthetic.main.fragment_account.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.nav_header_main.*
@@ -33,9 +37,14 @@ import kotlin.math.roundToInt
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
-
+    val adapter = ItemAdapterUsers()
     val homeViewModel by activityViewModels<HomeViewModel>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        homeViewModel.data.observe(viewLifecycleOwner, Observer { data-> adapter.setData(data) })
+        rvhome.layoutManager= LinearLayoutManager(requireContext())
+        rvhome.adapter = adapter
+
         //Wifi
         val manager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 

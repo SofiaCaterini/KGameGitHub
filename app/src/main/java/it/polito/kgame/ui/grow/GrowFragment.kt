@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.jjoe64.graphview.GraphView
@@ -24,37 +25,28 @@ import com.jjoe64.graphview.series.LineGraphSeries
 import it.polito.kgame.AlarmReceiver
 import it.polito.kgame.MyAlarmManager
 import it.polito.kgame.R
+import it.polito.kgame.ui.account.AccountViewModel
 import kotlinx.android.synthetic.main.fragment_grow.*
 import kotlinx.android.synthetic.main.fragment_grow.view.*
 import java.security.AccessController.getContext
-import java.sql.Types.NULL
 
 
-class GrowFragment : Fragment() {
 
-    private lateinit var growViewModel: GrowViewModel
+class GrowFragment : Fragment(R.layout.fragment_grow) {
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
+    val growViewModel by activityViewModels<GrowViewModel>()
 
-        growViewModel =
-                ViewModelProvider(this).get(GrowViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_grow, container, false)
-        growViewModel.text.observe(viewLifecycleOwner, Observer {
-        })
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         //Graph
-        val graph = root.findViewById(R.id.graph) as GraphView
+        var graph : GraphView = view.findViewById(R.id.graph) as GraphView
         val series = LineGraphSeries(arrayOf(DataPoint(0.toDouble(), 1.toDouble()), DataPoint(1.toDouble(), 5.toDouble()), DataPoint(2.toDouble(), 3.toDouble())));
         series.color = R.color.black
         graph.addSeries(series)
 
 
         //Sveglia
-        root.sveglia.setOnClickListener {
+        sveglia.setOnClickListener {
 
             val cal = Calendar.getInstance()
             val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
@@ -64,21 +56,21 @@ class GrowFragment : Fragment() {
                 var orarioscelto : String = SimpleDateFormat("HH:mm").format(cal.time)
                 var messaggiosalvato : String = getString(R.string.question_message)
                 var message : String = "$messaggiosalvato $orarioscelto?"
-
-                AlertDialog.Builder(root.context)
-                        .setTitle(R.string.question_title)
-                        .setMessage(message)
-                        .setPositiveButton(R.string.yes) { _, _ -> yesClicked(requireActivity().applicationContext, cal) }
-                        .setNegativeButton(R.string.no) { _, _ -> noClicked() }
-                        .show()
+                alert(requireContext(),message,cal)
             }
-            TimePickerDialog(root.context, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
+            TimePickerDialog(context, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
         }
 
-
-        return root
     }
 
+    }
+    fun alert(context: Context, message:String,calendar: Calendar){
+        AlertDialog.Builder(context)
+                .setTitle(R.string.question_title)
+                .setMessage(message)
+                .setPositiveButton(R.string.yes) { _, _ -> yesClicked(context, calendar) }
+                .setNegativeButton(R.string.no) { _, _ -> noClicked() }
+                .show()
     }
     fun yesClicked(context: Context, calendar: Calendar){
     //Intent

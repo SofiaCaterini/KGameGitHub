@@ -1,24 +1,22 @@
 package it.polito.kgame.ui.grow
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.app.TimePickerDialog
-import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.provider.AlarmClock
 import android.view.View
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import it.polito.kgame.alarm.MyAlarmManager
 import it.polito.kgame.R
-import it.polito.kgame.alarm.AlarmReceiver
+import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_grow.*
 
 
@@ -27,6 +25,8 @@ class GrowFragment : Fragment(R.layout.fragment_grow) {
     val growViewModel by activityViewModels<GrowViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        //Toolbar
+        requireActivity().toolbar.setBackgroundResource(R.color.toolbar_grow)
 
         //Graph
         var graph : GraphView = view.findViewById(R.id.graph) as GraphView
@@ -46,41 +46,30 @@ class GrowFragment : Fragment(R.layout.fragment_grow) {
                 var orarioscelto : String = SimpleDateFormat("HH:mm").format(cal.time)
                 var messaggiosalvato : String = getString(R.string.question_message)
                 var message : String = "$messaggiosalvato $orarioscelto?"
-                alert(requireContext(),message,cal)
+
+                AlertDialog.Builder(requireContext())
+                        .setTitle(R.string.question_title)
+                        .setMessage(message)
+                        .setPositiveButton(R.string.yes) { _, _ ->
+                            val intent = Intent(AlarmClock.ACTION_SET_ALARM)
+                            intent.putExtra(AlarmClock.EXTRA_MESSAGE, "Pesati!")
+                            intent.putExtra(AlarmClock.EXTRA_HOUR, cal.get(Calendar.HOUR_OF_DAY))
+                            intent.putExtra(AlarmClock.EXTRA_MINUTES, cal.get(Calendar.MINUTE))
+                            requireActivity().startActivity(intent)
+
+                        }
+                        .setNegativeButton(R.string.no) { _, _ -> noClicked() }
+                        .show()
             }
             TimePickerDialog(context, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
+
         }
 
     }
 
     }
-    fun alert(context: Context, message:String,calendar: Calendar){
-        AlertDialog.Builder(context)
-                .setTitle(R.string.question_title)
-                .setMessage(message)
-                .setPositiveButton(R.string.yes) { _, _ -> yesClicked(context, calendar) }
-                .setNegativeButton(R.string.no) { _, _ -> noClicked() }
-                .show()
-    }
-    fun yesClicked(context: Context, calendar: Calendar){
-    //Intent
-        /*val intent = Intent(AlarmClock.ACTION_SET_ALARM)
-        intent.putExtra(AlarmClock.EXTRA_MESSAGE,"Pesati!")
-        intent.putExtra(AlarmClock.EXTRA_HOUR, 19)
-        intent.putExtra(AlarmClock.EXTRA_MINUTES, 19)
-        startActivity(context, intent)*/
 
-        //prova 2
-        /*val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(context, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
-        val interval = (60 * 1000).toLong()
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent)*/
 
-        //prova 3
-
-        MyAlarmManager.setAlarm(context.applicationContext, calendar.timeInMillis, "Test Message!")
-    }
     fun noClicked(){
     //Do nothing
     }

@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import it.polito.kgame.R
+import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +28,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     val adapter = ItemAdapterUsers()
     val homeViewModel by activityViewModels<HomeViewModel>()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        //Toolbar
+        requireActivity().toolbar.setBackgroundResource(R.color.toolbar_home)
 
         homeViewModel.data.observe(viewLifecycleOwner, Observer { data-> adapter.setData(data) })
         rvhome.layoutManager= LinearLayoutManager(requireContext())

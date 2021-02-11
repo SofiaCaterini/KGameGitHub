@@ -2,11 +2,13 @@ package it.polito.kgame.ui.grow
 
 import android.app.TimePickerDialog
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.provider.AlarmClock
 import android.view.View
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -14,6 +16,7 @@ import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import it.polito.kgame.R
+import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_grow.*
 
 
@@ -22,6 +25,8 @@ class GrowFragment : Fragment(R.layout.fragment_grow) {
     val growViewModel by activityViewModels<GrowViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        //Toolbar
+        requireActivity().toolbar.setBackgroundResource(R.color.toolbar_grow)
 
         //Graph
         var graph : GraphView = view.findViewById(R.id.graph) as GraphView
@@ -47,7 +52,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow) {
                         .setMessage(message)
                         .setPositiveButton(R.string.yes) { _, _ ->
                             val intent = Intent(AlarmClock.ACTION_SET_ALARM)
-                            intent.putExtra(AlarmClock.EXTRA_MESSAGE,"Pesati!")
+                            intent.putExtra(AlarmClock.EXTRA_MESSAGE, "Pesati!")
                             intent.putExtra(AlarmClock.EXTRA_HOUR, cal.get(Calendar.HOUR_OF_DAY))
                             intent.putExtra(AlarmClock.EXTRA_MINUTES, cal.get(Calendar.MINUTE))
                             requireActivity().startActivity(intent)

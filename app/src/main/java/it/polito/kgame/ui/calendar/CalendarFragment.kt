@@ -6,26 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import it.polito.kgame.R
+import it.polito.kgame.ui.home.HomeViewModel
 
-class CalendarFragment : Fragment() {
+class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
-    private lateinit var calendarViewModel: CalendarViewModel
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
-        calendarViewModel =
-                ViewModelProvider(this).get(CalendarViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_calendar, container, false)
+    val calendarViewModel by activityViewModels<HomeViewModel>()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        calendarViewModel.text.observe(viewLifecycleOwner, Observer {
-            
-        })
-        return root
+
+
     }
 }

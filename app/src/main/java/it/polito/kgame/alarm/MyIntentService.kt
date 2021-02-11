@@ -1,4 +1,4 @@
-package it.polito.kgame
+package it.polito.kgame.alarm
 
 import android.app.IntentService
 import android.content.Intent

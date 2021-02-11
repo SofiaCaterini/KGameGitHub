@@ -8,32 +8,20 @@ import android.net.NetworkRequest
 import android.net.wifi.WifiNetworkSpecifier
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import it.polito.kgame.ItemAdapterUsers
 import it.polito.kgame.R
-import it.polito.kgame.ui.account.ItemAdapterFamily
-import it.polito.kgame.ui.grow.GrowViewModel
-import kotlinx.android.synthetic.main.fragment_account.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.android.synthetic.main.nav_header_main.*
-import kotlinx.android.synthetic.main.nav_header_main.textView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.URL
 import java.nio.charset.Charset
-import kotlin.math.floor
-import kotlin.math.roundToInt
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 

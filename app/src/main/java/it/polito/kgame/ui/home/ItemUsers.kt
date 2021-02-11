@@ -1,4 +1,4 @@
-package it.polito.kgame
+package it.polito.kgame.ui.home
 
 import android.graphics.drawable.Drawable
 import android.widget.ImageView

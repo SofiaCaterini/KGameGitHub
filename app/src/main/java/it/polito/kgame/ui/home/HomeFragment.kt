@@ -13,10 +13,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import it.polito.kgame.ItemAdapterUsers
 import it.polito.kgame.R
+import it.polito.kgame.ui.account.ItemAdapterFamily
+import it.polito.kgame.ui.grow.GrowViewModel
+import kotlinx.android.synthetic.main.fragment_account.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.nav_header_main.*
@@ -29,15 +35,16 @@ import java.nio.charset.Charset
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(R.layout.fragment_home) {
 
-    private lateinit var homeViewModel: HomeViewModel
+    val adapter = ItemAdapterUsers()
+    val homeViewModel by activityViewModels<HomeViewModel>()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
+        homeViewModel.data.observe(viewLifecycleOwner, Observer { data-> adapter.setData(data) })
+        rvhome.layoutManager= LinearLayoutManager(requireContext())
+        rvhome.adapter = adapter
+
         //Wifi
         val manager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
@@ -70,56 +77,50 @@ class HomeFragment : Fragment() {
         } catch (e: SecurityException) {
             Log.e("Ciao", e.message!!)
         }
-        homeViewModel =
-                ViewModelProvider(this).get(HomeViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
 
-        homeViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
 
         //Inizio parte di movimento
         var position = 0
         var playersNum = 2
-        root.homeAddWeight.setOnClickListener {
+        homeAddWeight.setOnClickListener {
             //refresh position
             position++
             //move player
-            println("right2= " + root.gameBoard.width)
+            println("right2= " + view.gameBoard.width)
             when (playersNum) {
                 1 -> {
-                    root.player1.translationX =
-                        root.gameBoard.left + (root.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                    player1.translationX =
+                        view.gameBoard.left + (view.gameBoard.width.toFloat()) * getXYmodsFromPosition(
                             position
-                        ).first - root.player1.width.toFloat() / 2
-                    root.player1.translationY =
-                        root.gameBoard.top + (root.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                        ).first - player1.width.toFloat() / 2
+                    player1.translationY =
+                        view.gameBoard.top + (view.gameBoard.height.toFloat()) * getXYmodsFromPosition(
                             position
-                        ).second - root.player1.height.toFloat() / 2
+                        ).second - player1.height.toFloat() / 2
                 }
                 2 -> {
-                    root.player1.translationX =
-                        root.gameBoard.left + (root.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                    player1.translationX =
+                        view.gameBoard.left + (view.gameBoard.width.toFloat()) * getXYmodsFromPosition(
                             position
-                        ).first - root.player1.width.toFloat()*3/4
-                    root.player1.translationY =
-                        root.gameBoard.top + (root.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                        ).first - player1.width.toFloat()*3/4
+                    player1.translationY =
+                        view.gameBoard.top + (view.gameBoard.height.toFloat()) * getXYmodsFromPosition(
                             position
-                        ).second - root.player1.height.toFloat()*3/4
+                        ).second - player1.height.toFloat()*3/4
 
-                    root.player2.translationX =
-                        root.gameBoard.left + (root.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                    player2.translationX =
+                        view.gameBoard.left + (view.gameBoard.width.toFloat()) * getXYmodsFromPosition(
                             position
-                        ).first - root.player2.width.toFloat()/4
-                    root.player2.translationY =
-                        root.gameBoard.top + (root.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                        ).first - player2.width.toFloat()/4
+                    player2.translationY =
+                        view.gameBoard.top + (view.gameBoard.height.toFloat()) * getXYmodsFromPosition(
                             position
-                        ).second - root.player2.height.toFloat()/4
+                        ).second - player2.height.toFloat()/4
 
                 }
             }
         }
-        return root
+
     }
 
     //Prende in input il numero della casella e ritorna i moltiplicatori x ed y relativi a quella casella

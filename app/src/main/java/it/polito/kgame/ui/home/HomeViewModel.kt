@@ -3,9 +3,7 @@ package it.polito.kgame.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import it.polito.kgame.ItemUsers
 import it.polito.kgame.R
-import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeViewModel : ViewModel() {
         private val _items= mutableListOf(

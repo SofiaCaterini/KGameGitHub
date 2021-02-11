@@ -2,7 +2,6 @@ package it.polito.kgame.ui.grow
 
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.app.PendingIntent.getActivity
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
@@ -10,26 +9,17 @@ import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.provider.AlarmClock
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import it.polito.kgame.AlarmReceiver
-import it.polito.kgame.MyAlarmManager
+import it.polito.kgame.alarm.MyAlarmManager
 import it.polito.kgame.R
-import it.polito.kgame.ui.account.AccountViewModel
+import it.polito.kgame.alarm.AlarmReceiver
 import kotlinx.android.synthetic.main.fragment_grow.*
-import kotlinx.android.synthetic.main.fragment_grow.view.*
-import java.security.AccessController.getContext
-
 
 
 class GrowFragment : Fragment(R.layout.fragment_grow) {
@@ -79,20 +69,17 @@ class GrowFragment : Fragment(R.layout.fragment_grow) {
         intent.putExtra(AlarmClock.EXTRA_HOUR, 19)
         intent.putExtra(AlarmClock.EXTRA_MINUTES, 19)
         startActivity(context, intent)*/
-        /*
+
         //prova 2
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        /*val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
-        intent.putExtra(AlarmClock.EXTRA_MESSAGE,"Pesati!")
-        intent.putExtra(AlarmClock.EXTRA_HOUR, 19)
-        intent.putExtra(AlarmClock.EXTRA_MINUTES, 19)
         val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
         val interval = (60 * 1000).toLong()
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent)*/
 
         //prova 3
 
-        MyAlarmManager.setAlarm(context, calendar.timeInMillis, "Test Message!")
+        MyAlarmManager.setAlarm(context.applicationContext, calendar.timeInMillis, "Test Message!")
     }
     fun noClicked(){
     //Do nothing

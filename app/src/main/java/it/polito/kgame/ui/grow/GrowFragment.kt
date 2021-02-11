@@ -22,8 +22,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow) {
     val growViewModel by activityViewModels<GrowViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        var yes: Boolean
-        yes = false
+
         //Graph
         var graph : GraphView = view.findViewById(R.id.graph) as GraphView
         val series = LineGraphSeries(arrayOf(DataPoint(0.toDouble(), 1.toDouble()), DataPoint(1.toDouble(), 5.toDouble()), DataPoint(2.toDouble(), 3.toDouble())));

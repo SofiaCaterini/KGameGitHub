@@ -9,6 +9,22 @@
     android:background="@drawable/sfondo_orange_profilo"
     tools:context=".ui.account.AccountFragment">
 
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView3"
+        android:layout_width="376dp"
+        android:layout_height="153dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/famiglie"
+        app:layout_constraintVertical_bias="0.100000024">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </androidx.core.widget.NestedScrollView>
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/cambianickname"
         android:layout_width="301dp"
@@ -21,12 +37,12 @@
         android:textStyle="bold"
         app:backgroundTint="#00FFFFFF"
         app:cornerRadius="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/cambia2"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.345"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
-        app:layout_constraintVertical_bias="0.01999998">
+        app:layout_constraintTop_toBottomOf="@+id/dx"
+        app:layout_constraintVertical_bias="0.050000012">
 
     </com.google.android.material.textview.MaterialTextView>
 
@@ -39,7 +55,7 @@
         android:text="@string/nickname"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/cambia2"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,12 +76,12 @@
         android:textStyle="bold"
         app:backgroundTint="#00FFFFFF"
         app:cornerRadius="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/cambia2"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.35"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_nickname"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="0.06999999">
 
     </com.google.android.material.textview.MaterialTextView>
 
@@ -81,11 +97,11 @@
         android:textStyle="bold"
         app:backgroundTint="#00FFFFFF"
         app:cornerRadius="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/cambia2"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.33"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cambia"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
         app:layout_constraintVertical_bias="0.01999998">
 
     </com.google.android.material.textview.MaterialTextView>
@@ -126,10 +142,38 @@
 
     </com.google.android.material.button.MaterialButton>
 
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imageView"
+        android:layout_width="113dp"
+        android:layout_height="133dp"
+        android:layout_marginTop="8dp"
+        android:adjustViewBounds="false"
+        android:background="#FAF8F8"
+        android:src="@drawable/user"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cambia"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.029999971" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="77dp"
+        android:layout_height="60dp"
+        android:layout_margin="15dp"
+        android:src="@drawable/lion"
+        app:layout_constraintBottom_toBottomOf="@+id/dx"
+        app:layout_constraintEnd_toStartOf="@+id/dx"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/sx"
+        app:layout_constraintTop_toTopOf="@+id/dx" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/cambia2"
         android:layout_width="317dp"
         android:layout_height="89dp"
+        android:layout_marginBottom="8dp"
         android:fontFamily="@font/asap"
         android:padding="20dp"
         android:text="@string/famiglia"
@@ -146,61 +190,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintTop_toBottomOf="@+id/nestedScrollView3">
 
     </com.google.android.material.button.MaterialButton>
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageView"
-        android:layout_width="113dp"
-        android:layout_height="133dp"
-        android:adjustViewBounds="false"
-        android:background="#FAF8F8"
-        android:src="@drawable/user"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/cambia"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.01999998" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="93dp"
-        android:layout_height="83dp"
-        android:layout_margin="15dp"
-        android:src="@drawable/lion"
-        app:layout_constraintBottom_toBottomOf="@+id/dx"
-        app:layout_constraintEnd_toStartOf="@+id/dx"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/sx"
-        app:layout_constraintTop_toTopOf="@+id/dx" />
 
     <ImageView
         android:id="@+id/dx"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/right_arrow"
-        app:layout_constraintBottom_toTopOf="@+id/cambia2"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
         app:layout_constraintTop_toBottomOf="@+id/cambiapedina"
-        app:layout_constraintVertical_bias="0.04000002" />
-
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/cambia2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/famiglie">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </androidx.core.widget.NestedScrollView>
+        app:layout_constraintVertical_bias="0.01999998" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

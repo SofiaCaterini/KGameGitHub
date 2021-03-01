@@ -1,12 +1,10 @@
 package it.polito.kgame
 
 import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -18,7 +16,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_account.*
-import kotlinx.android.synthetic.main.fragment_account.view.*
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -43,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
+    //Chiude la tastiera che rimane aperta dalla pagina del profilo
     fun hideKeyboard(pView: View?, pActivity: Activity) {
         var pView: View? = pView
 

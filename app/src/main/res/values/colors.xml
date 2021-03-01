@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="toolbar_home">#FFC73B</color>
-    <color name="toolbar_grow">#E8ABF3</color>
+    <color name="toolbar_grow">#BE1DCA</color>
     <color name="toolbar_calendar">#FA584C</color>
     <color name="toolbar_account">#FF9800</color>
 </resources>

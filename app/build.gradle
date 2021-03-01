@@ -17,6 +17,17 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    //Signing configurations for build variants "release"
+    signingConfigs {
+        release {
+            storeFile file("C:/Users/work/Documents/GitHub/KGameGitHub")
+            storePassword "kgameapp"
+            keyAlias "kgame"
+            keyPassword "kgameapp"
+        }
+    }
+
+
 
     buildTypes {
         release {

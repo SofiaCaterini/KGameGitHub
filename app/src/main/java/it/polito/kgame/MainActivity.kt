@@ -1,24 +1,25 @@
 package it.polito.kgame
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.navigation.NavigationView
+import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_account.*
+import kotlinx.android.synthetic.main.fragment_account.view.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,6 +43,22 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+    fun hideKeyboard(pView: View?, pActivity: Activity) {
+        var pView: View? = pView
+
+        if (pView == null) {
+            pView = pActivity.window.currentFocus
+        }
+        if (pView != null) {
+            val imm = pActivity
+                    .getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm?.hideSoftInputFromWindow(pView.getWindowToken(), 0)
+
+
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main_activity, menu)
@@ -49,9 +66,9 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
-
     override fun onSupportNavigateUp(): Boolean {
+        hideKeyboard(nav_view, this)
+        edit_nickname?.isCursorVisible = false
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }

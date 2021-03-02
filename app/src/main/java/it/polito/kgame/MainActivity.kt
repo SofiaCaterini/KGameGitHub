@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         hideKeyboard(nav_view, this)
-        edit_nickname?.isCursorVisible = false
+
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }

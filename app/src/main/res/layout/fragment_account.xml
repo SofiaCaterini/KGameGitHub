@@ -120,7 +120,7 @@
         app:layout_constraintTop_toTopOf="@+id/imageView2" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/cambiaFoto"
+        android:id="@+id/but_cambiaFoto"
         android:layout_width="184dp"
         android:layout_height="112dp"
         android:fontFamily="@font/asap"
@@ -153,7 +153,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/cambiaFoto"
+        app:layout_constraintStart_toEndOf="@+id/but_cambiaFoto"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.029999971" />
 

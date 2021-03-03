@@ -1,24 +1,24 @@
 package it.polito.kgame.ui.account
 
-<<<<<<< Updated upstream
-=======
+
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
->>>>>>> Stashed changes
+
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import it.polito.kgame.R
-<<<<<<< Updated upstream
-=======
+
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_account.*
@@ -28,28 +28,10 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
->>>>>>> Stashed changes
 
-class AccountFragment : Fragment() {
 
-<<<<<<< Updated upstream
-    private lateinit var accountViewModel: AccountViewModel
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
-        accountViewModel =
-                ViewModelProvider(this).get(AccountViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_account, container, false)
-        val textView: TextView = root.findViewById(R.id.text_account)
-        accountViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-        return root
-    }
-=======
+
 class AccountFragment : Fragment(R.layout.fragment_account) {
     val adapter = ItemAdapterFamily()
     val viewModel by activityViewModels<AccountViewModel>()
@@ -145,5 +127,4 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                 .show()
     }
 
->>>>>>> Stashed changes
 }

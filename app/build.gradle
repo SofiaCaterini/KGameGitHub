@@ -17,6 +17,17 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    //Signing configurations for build variants "release"
+    signingConfigs {
+        release {
+            storeFile file("C:/Users/work/Documents/GitHub/KGameGitHub")
+            storePassword "kgameapp"
+            keyAlias "kgame"
+            keyPassword "kgameapp"
+        }
+    }
+
+
 
     buildTypes {
         release {
@@ -62,4 +73,6 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    //Graph
+    implementation 'com.jjoe64:graphview:4.2.2'
 }

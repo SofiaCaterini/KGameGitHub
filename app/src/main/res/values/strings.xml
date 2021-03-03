@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">KGame</string>
     <string name="family_name">Famiglia Rossi</string>
-    <string name="username">Rossella73</string>
+    <string name="nickname">Rossella73</string>
     <string name="leaderboard">Classifica</string>
     <string name="open">open</string>
     <string name="close">close</string>
@@ -17,13 +17,14 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Impostazioni</string>
-
+    <string name="ob_settings">IMPOSTA OBIETTIVO</string>
+    <string name="clock_settings">IMPOSTA SVEGLIA GIORNALIERA</string>
+    <string name="weight_settings">Ultima pesata:</string>
     <string name="menu_home">Home</string>
     <string name="menu_account">Profilo</string>
     <string name="menu_calendar">Calendario</string>
     <string name="menu_grow">La tua crescita</string>
-<<<<<<< Updated upstream
-=======
+
     <string name="evento">PROPONI NUOVO EVENTO</string>
     <string name="impegno">AGGIUNGI UN TUO IMPEGNO</string>
     <string name="sincronizza">SINCRONIZZA CON GOOGLE</string>
@@ -36,13 +37,12 @@
     <string name="question_message">Sei sicuro di voler impostare la sveglia alle </string>
     <string name="yes">Sì</string>
     <string name="no">No</string>
+
     <string name="permesso_negato">Permesso negato</string>
     <string name="impostazioni_app">Il permesso per accedere alla Galleria è negato. Per favore consenti il permesso dalle Impostazioni dell\'App.</string>
     <string name="butt_imp_app">Impostazioni dell\'App</string>
     <string name="annulla">Annulla</string>
 
 
-
->>>>>>> Stashed changes
-
+    <string name="ricorda">Ricorda: è meglio pesarsi sempre allo stesso orario, preferibilmente al mattino o prima dei pasti!</string>
 </resources>

@@ -3,9 +3,12 @@
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#111112</color>
     <color name="purple_700">#090909</color>
-    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_200">#DB73ED</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="toolbar">#FFC73B</color>
+    <color name="toolbar_home">#FFC73B</color>
+    <color name="toolbar_grow">#BE1DCA</color>
+    <color name="toolbar_calendar">#FA584C</color>
+    <color name="toolbar_account">#FF9800</color>
 </resources>

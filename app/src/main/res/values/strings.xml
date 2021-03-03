@@ -24,6 +24,7 @@
     <string name="menu_account">Profilo</string>
     <string name="menu_calendar">Calendario</string>
     <string name="menu_grow">La tua crescita</string>
+
     <string name="evento">PROPONI NUOVO EVENTO</string>
     <string name="impegno">AGGIUNGI UN TUO IMPEGNO</string>
     <string name="sincronizza">SINCRONIZZA CON GOOGLE</string>
@@ -36,6 +37,12 @@
     <string name="question_message">Sei sicuro di voler impostare la sveglia alle </string>
     <string name="yes">Sì</string>
     <string name="no">No</string>
+
+    <string name="permesso_negato">Permesso negato</string>
+    <string name="impostazioni_app">Il permesso per accedere alla Galleria è negato. Per favore consenti il permesso dalle Impostazioni dell\'App.</string>
+    <string name="butt_imp_app">Impostazioni dell\'App</string>
+    <string name="annulla">Annulla</string>
+
 
     <string name="ricorda">Ricorda: è meglio pesarsi sempre allo stesso orario, preferibilmente al mattino o prima dei pasti!</string>
 </resources>

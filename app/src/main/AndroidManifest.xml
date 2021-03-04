@@ -17,9 +17,16 @@
         android:roundIcon="@drawable/logo_stilizzato"
         android:supportsRtl="true"
         android:theme="@style/Theme.KGame">
+        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".LogInActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-        <activity android:name=".MainActivity"
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
             android:theme="@style/Theme.KGame.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

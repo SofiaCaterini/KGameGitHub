@@ -5,9 +5,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class AccountViewModel : ViewModel() {
+    private val _items= mutableListOf(
+            ItemFamily( "Rossi"),
+            ItemFamily( "Bianchi"),
+            ItemFamily( "Caterini")
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is gallery Fragment"
+    )
+    //chi conosce il viewmodel può vedere i dati
+    private val _data: MutableLiveData<List<ItemFamily>> = MutableLiveData<List<ItemFamily>>().also {
+        it.value = _items
     }
-    val text: LiveData<String> = _text
+
+    val data: LiveData<List<ItemFamily>> = _data
+
+    fun addItem(nome: String){
+        val item = ItemFamily(nome)
+        _items.add(item)
+        _data.value= _items
+    }
 }

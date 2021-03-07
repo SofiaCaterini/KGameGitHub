@@ -30,7 +30,9 @@
         android:layout_height="56dp"
         android:backgroundTint="#EFE9E9"
         app:icon="@drawable/trash"
-        app:iconSize="50dp"
+
+        app:iconSize="40dp"
+
         app:iconTint="#171616"
         app:layout_constraintBottom_toBottomOf="@+id/nickname2"
         app:layout_constraintEnd_toEndOf="parent"

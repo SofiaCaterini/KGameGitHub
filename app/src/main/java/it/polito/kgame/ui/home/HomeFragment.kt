@@ -59,9 +59,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     .setTitle(R.string.question_title_weight)
                     .setMessage(message)
                     .setPositiveButton(R.string.yes) { _, _ ->
-
                         //Wifi
                         val manager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
                         val builder = NetworkRequest.Builder()
                         builder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                         builder.removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
@@ -82,26 +82,32 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                         val str= URL("http://192.168.4.1/").readText(Charset.forName("UTF-8"))
                                         withContext(Dispatchers.Main) {
                                             //qui mi faccio mostrare il peso in una textView
-                                            provawifi.text = str
+
                                             var messaggiosalvato2 : String = getString(R.string.question_message_weight_ok)
                                             var kg : String = getString(R.string.kg)
                                             var peso : String = str
                                             var message2 : String = "$messaggiosalvato2 $peso $kg"
+
                                             AlertDialog.Builder(requireContext())
                                                     .setTitle(R.string.question_title_weight_ok)
                                                     .setMessage(message2)
                                                     .setPositiveButton(R.string.ok) { _, _ ->
+
                                                     }
+                                                    .show()
+
+
+
                                         }
                                     }
+
 
                                 }
                             })
                         } catch (e: SecurityException) {
                             Log.e("Ciao", e.message!!)
+
                         }
-
-
 
 
 

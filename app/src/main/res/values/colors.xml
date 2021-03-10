@@ -12,4 +12,5 @@
     <color name="toolbar_calendar">#FA584C</color>
     <color name="dark_red">#910000</color>
     <color name="toolbar_account">#FF9800</color>
+    <color name="blue">#0000FF</color>
 </resources>

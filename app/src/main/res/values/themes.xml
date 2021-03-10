@@ -19,7 +19,12 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="calendar_theme" >
+        <item name="colorSecondary">@color/dark_red</item>
+    </style>
+
     <style name="Theme.KGame.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.KGame.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

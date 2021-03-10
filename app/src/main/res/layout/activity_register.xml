@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterActivity"
-    android:background="@drawable/sfondo_LogIn_reg"
-    >
+    android:background="@drawable/sfondo_login_reg"
+    tools:context=".RegisterActivity">
 
     <TextView
         android:id="@+id/textView11"

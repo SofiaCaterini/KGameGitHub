@@ -34,10 +34,17 @@
     <string name="famiglie">Le tue famiglie:</string>
     <string name="famiglia">AGGIUNGI FAMIGLIA</string>
     <string name="question_title">Imposta sveglia</string>
+    <string name="question_title_weight">Aggiungi peso</string>
+    <string name="question_title_weight_ok">Peso aggiunto correttamente</string>
     <string name="question_message">Sei sicuro di voler impostare la sveglia alle </string>
+    <string name="question_message_weight">Sei salito sopra la bilancia e vuoi aggiungere il tuo peso? </string>
+    <string name="question_message_weight_ok">Obiettivo aggiunto correttamente</string>
+    <string name="question_title_obj_ok">Hai aggiunto il tuo nuovo peso di </string>
+    <string name="question_message_obj">Hai aggiunto il tuo nuovo obiettivo di peso di </string>
+    <string name="kg">kg.</string>
     <string name="yes">Sì</string>
     <string name="no">No</string>
-
+    <string name="ok">OK</string>
     <string name="permesso_negato">Permesso negato</string>
     <string name="impostazioni_app">Il permesso per accedere alla Galleria è negato. Per favore consenti il permesso dalle Impostazioni dell\'App.</string>
     <string name="butt_imp_app">Impostazioni dell\'App</string>

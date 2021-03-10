@@ -1,20 +1,27 @@
 package it.polito.kgame.ui.home
 
 import android.content.Context
+import android.content.Intent
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.net.wifi.WifiNetworkSpecifier
 import android.os.Bundle
+import android.provider.AlarmClock
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import it.polito.kgame.R
+import it.polito.kgame.ui.grow.noClicked
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
@@ -37,44 +44,80 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         rvhome.layoutManager= LinearLayoutManager(requireContext())
         rvhome.adapter = adapter
 
-        //Wifi
-        val manager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        val builder = NetworkRequest.Builder()
-        builder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-        builder.removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-        builder.setNetworkSpecifier(
-            WifiNetworkSpecifier.Builder().apply {
-                //Qui inserite il nome del vostro WIFI e la password
-                setSsid("KGame")
-                setWpa2Passphrase("123123123")
-            }.build()
-        )
-        Log.d("esp", "Builder built")
-        try {
-            manager.requestNetwork(builder.build(), object : ConnectivityManager.NetworkCallback() {
-                override fun onAvailable(network: Network) {
-                    manager.bindProcessToNetwork(network)
-                    Log.d("esp","network connected")
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        val str= URL("http://192.168.4.1/").readText(Charset.forName("UTF-8"))
-                        withContext(Dispatchers.Main) {
-                            //qui mi faccio mostrare il peso in una textView
-                            provawifi.text = str;
-                        }
-                    }
-
-                }
-            })
-        } catch (e: SecurityException) {
-            Log.e("Ciao", e.message!!)
-        }
 
 
         //Inizio parte di movimento
         var position = 0
         var playersNum = 2
+
         homeAddWeight.setOnClickListener {
+
+            var messaggiosalvato : String = getString(R.string.question_message_weight)
+            var message : String = "$messaggiosalvato"
+
+            MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.question_title_weight)
+                    .setMessage(message)
+                    .setPositiveButton(R.string.yes) { _, _ ->
+                        //Wifi
+                        val manager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+                        val builder = NetworkRequest.Builder()
+                        builder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                        builder.removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                        builder.setNetworkSpecifier(
+                                WifiNetworkSpecifier.Builder().apply {
+                                    //Qui inserite il nome del vostro WIFI e la password
+                                    setSsid("KGame")
+                                    setWpa2Passphrase("123123123")
+                                }.build()
+                        )
+                        Log.d("esp", "Builder built")
+                        try {
+                            manager.requestNetwork(builder.build(), object : ConnectivityManager.NetworkCallback() {
+                                override fun onAvailable(network: Network) {
+                                    manager.bindProcessToNetwork(network)
+                                    Log.d("esp","network connected")
+                                    lifecycleScope.launch(Dispatchers.IO) {
+                                        val str= URL("http://192.168.4.1/").readText(Charset.forName("UTF-8"))
+                                        withContext(Dispatchers.Main) {
+                                            //qui mi faccio mostrare il peso in una textView
+
+                                            var messaggiosalvato2 : String = getString(R.string.question_message_weight_ok)
+                                            var kg : String = getString(R.string.kg)
+                                            var peso : String = str
+                                            var message2 : String = "$messaggiosalvato2 $peso $kg"
+
+                                            MaterialAlertDialogBuilder(requireContext())
+                                                    .setTitle(R.string.question_title_weight_ok)
+                                                    .setMessage(message2)
+                                                    .setPositiveButton(R.string.ok) { _, _ ->
+
+                                                    }
+                                                    .show()
+
+
+
+                                        }
+                                    }
+
+
+                                }
+                            })
+                        } catch (e: SecurityException) {
+                            Log.e("Ciao", e.message!!)
+
+                        }
+
+
+
+
+                    }
+                    .setNegativeButton(R.string.no) { _, _ -> noClicked() }
+                    .show()
+        }
+        /*homeAddWeight.setOnClickListener {
             //refresh position
             position++
             //move player
@@ -111,7 +154,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                 }
             }
-        }
+        }*/
 
     }
 

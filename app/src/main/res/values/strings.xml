@@ -7,16 +7,15 @@
     <string name="close">close</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="large_text">
-
+    <string name="large_text">     //cosa è? perchè è vuoto?
     </string>
     <string name="title_activity_main2">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Impostazioni</string>
+    <string name="nav_header_title">Android Studio</string>                     //se qualcuno sistemasse ste robe sarebbe carino
+    <string name="nav_header_subtitle">android.studio@android.com</string>      //ordinando tipo in: messaggi base (come possono essere: ok, si, no...)
+    <string name="nav_header_desc">Navigation header</string>                   //che vanno bene per tutte le schermate; e per schermate tipo:
+    <string name="action_settings">Impostazioni</string>                        //string di grow, string di account, string di calendar...
     <string name="ob_settings">IMPOSTA OBIETTIVO</string>
     <string name="clock_settings">IMPOSTA SVEGLIA GIORNALIERA</string>
     <string name="weight_settings">Ultima pesata:</string>
@@ -37,12 +36,30 @@
     <string name="question_message">Sei sicuro di voler impostare la sveglia alle </string>
     <string name="yes">Sì</string>
     <string name="no">No</string>
-
+    <string name="annulla">Annulla</string>
+    <string name="ok">OK</string>
     <string name="permesso_negato">Permesso negato</string>
     <string name="impostazioni_app">Il permesso per accedere alla Galleria è negato. Per favore consenti il permesso dalle Impostazioni dell\'App.</string>
     <string name="butt_imp_app">Impostazioni dell\'App</string>
-    <string name="annulla">Annulla</string>
-
-
     <string name="ricorda">Ricorda: è meglio pesarsi sempre allo stesso orario, preferibilmente al mattino o prima dei pasti!</string>
+    //growFrag - obiettivo
+    <string name="question_title_obj_ok">Conferma aggiunta obiettivo</string>
+    <string name="question_message_obj">Vuoi davvero impostare il tuo nuovo obiettivo di peso su </string>
+    <string name="kg">kg?</string>
+
+    //months of year
+    <string name="gen"> GEN</string>
+    <string name="feb"> FEB</string>
+    <string name="mar"> MAR</string>
+    <string name="apr"> APR</string>
+    <string name="mag"> MAG</string>
+    <string name="giu"> GIU</string>
+    <string name="lug"> LUG</string>
+    <string name="ago"> AGO</string>
+    <string name="set"> SET</string>
+    <string name="ott"> OTT</string>
+    <string name="nov"> NOV</string>
+    <string name="dic"> DIC</string>
+
+
 </resources>

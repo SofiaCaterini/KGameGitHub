@@ -19,6 +19,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import it.polito.kgame.R
 import it.polito.kgame.ui.grow.noClicked
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -55,7 +56,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             var messaggiosalvato : String = getString(R.string.question_message_weight)
             var message : String = "$messaggiosalvato"
 
-            AlertDialog.Builder(requireContext())
+            MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.question_title_weight)
                     .setMessage(message)
                     .setPositiveButton(R.string.yes) { _, _ ->
@@ -88,7 +89,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                             var peso : String = str
                                             var message2 : String = "$messaggiosalvato2 $peso $kg"
 
-                                            AlertDialog.Builder(requireContext())
+                                            MaterialAlertDialogBuilder(requireContext())
                                                     .setTitle(R.string.question_title_weight_ok)
                                                     .setMessage(message2)
                                                     .setPositiveButton(R.string.ok) { _, _ ->

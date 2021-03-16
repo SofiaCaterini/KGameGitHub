@@ -20,6 +20,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.kgame.R
 import it.polito.kgame.ui.grow.noClicked
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -36,6 +37,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     val adapter = ItemAdapterUsers()
     val homeViewModel by activityViewModels<HomeViewModel>()
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //Toolbar
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_home)
@@ -44,12 +46,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         rvhome.layoutManager= LinearLayoutManager(requireContext())
         rvhome.adapter = adapter
 
-
-
-
-        //Inizio parte di movimento
-        var position = 0
-        var playersNum = 2
+        val db = homeViewModel.db
 
         homeAddWeight.setOnClickListener {
 
@@ -89,11 +86,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                             var peso : String = str
                                             var message2 : String = "$messaggiosalvato2 $peso $kg"
 
+                                            val nomeProva : String = "Giorgio"
+                                            var data : MutableMap<String,String> = mutableMapOf()
+                                            data.put(nomeProva,peso)
+
+
                                             MaterialAlertDialogBuilder(requireContext())
                                                     .setTitle(R.string.question_title_weight_ok)
                                                     .setMessage(message2)
                                                     .setPositiveButton(R.string.ok) { _, _ ->
-
+                                                        db.collection("Pesate")
+                                                            .document("provaPesata")
+                                                            .set(data)
                                                     }
                                                     .show()
 
@@ -117,7 +121,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     .setNegativeButton(R.string.no) { _, _ -> noClicked() }
                     .show()
         }
-        /*homeAddWeight.setOnClickListener {
+
+
+
+
+        //Inizio parte di movimento
+        /*
+        var position = 0
+        var playersNum = 2
+        homeAddWeight.setOnClickListener {
             //refresh position
             position++
             //move player

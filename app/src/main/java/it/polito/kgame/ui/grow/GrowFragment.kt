@@ -61,7 +61,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
                     val day = c.get(Calendar.DAY_OF_MONTH).toDouble()
                     val month = monthNumToLetter(c.get(Calendar.MONTH))
 
-                    super.formatLabel(day, isValueX) + month ?: throw IllegalArgumentException("0-11 range expected")
+                    super.formatLabel(day, isValueX) + month
                 } else {
                     super.formatLabel(value, isValueX) + "kg"
                 }
@@ -207,7 +207,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
         //Sveglia
         sveglia.setOnClickListener {
 
-            val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
+            val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
                 cal.set(Calendar.HOUR_OF_DAY, hour)
                 cal.set(Calendar.MINUTE, minute)
 

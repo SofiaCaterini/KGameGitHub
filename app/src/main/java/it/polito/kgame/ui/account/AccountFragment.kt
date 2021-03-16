@@ -155,7 +155,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                 .setTitle(R.string.permesso_negato)
                 .setMessage(R.string.impostazioni_app)
                 .setPositiveButton(R.string.butt_imp_app,
-                        DialogInterface.OnClickListener { dialogInterface, i ->
+                        DialogInterface.OnClickListener { dialogInterface, _ ->
                             // send to app settings if permission is denied permanently
                             val intent = Intent()
                             intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS

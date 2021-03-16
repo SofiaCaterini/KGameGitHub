@@ -21,7 +21,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.18"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialTextView2">
+        app:layout_constraintTop_toBottomOf="@+id/last_x_days">
 
     </com.google.android.material.textview.MaterialTextView>
 
@@ -42,18 +42,32 @@
         app:layout_constraintVertical_bias="0.52" />
 
     <ImageView
-        android:id="@+id/refreshgrow1"
+        android:id="@+id/right_arrow"
         android:layout_width="28dp"
         android:layout_height="29dp"
         android:background="#00FF0000"
-        android:foreground="@drawable/exchange"
+        android:foreground="@drawable/right_arrow"
         android:foregroundTint="#000000"
         android:foregroundTintMode="src_in"
-        android:src="@drawable/exchange"
         app:layout_constraintBottom_toTopOf="@+id/materialTextView4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
-        app:layout_constraintStart_toEndOf="@+id/materialTextView2"
+        app:layout_constraintHorizontal_bias="0.65"
+        app:layout_constraintStart_toEndOf="@+id/numberPicker"
+        app:layout_constraintTop_toBottomOf="@+id/graph" />
+
+    <ImageView
+        android:id="@+id/left_arrow"
+        android:layout_width="28dp"
+        android:layout_height="29dp"
+        android:background="#00FF0000"
+        android:foreground="@drawable/right_arrow"
+        android:foregroundTint="#000000"
+        android:foregroundTintMode="src_in"
+        android:rotation="180"
+        app:layout_constraintBottom_toTopOf="@+id/materialTextView4"
+        app:layout_constraintEnd_toStartOf="@+id/numberPicker"
+        app:layout_constraintHorizontal_bias="0.35"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graph" />
 
     <TextView
@@ -86,7 +100,7 @@
         app:layout_constraintVertical_bias="0.18" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/materialTextView2"
+        android:id="@+id/last_x_days"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/asap"
@@ -96,7 +110,6 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/materialTextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.18"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graph"
         app:layout_constraintVertical_bias="0.22000003">
@@ -115,7 +128,7 @@
         app:layout_constraintBottom_toTopOf="@+id/obiettivo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/materialTextView"
-        app:layout_constraintTop_toBottomOf="@+id/refreshgrow1">
+        app:layout_constraintTop_toBottomOf="@+id/right_arrow">
 
     </com.google.android.material.textview.MaterialTextView>
 
@@ -167,5 +180,52 @@
         app:layout_constraintVertical_bias="0.96">
 
     </com.google.android.material.button.MaterialButton>
+
+    <ImageView
+        android:id="@+id/numPick_bg"
+        android:layout_width="302dp"
+        android:layout_height="259dp"
+        android:layout_marginBottom="-32dp"
+        android:src="@color/teal_200"
+        app:layout_constraintBottom_toBottomOf="@+id/cancel"
+        app:layout_constraintEnd_toEndOf="@+id/ok"
+        app:layout_constraintStart_toStartOf="@+id/cancel"
+        app:layout_constraintTop_toTopOf="@+id/numberPicker" />
+
+    <NumberPicker
+        android:id="@+id/numberPicker"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ok"
+        app:layout_constraintBottom_toBottomOf="@+id/cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cancel"
+        app:layout_constraintTop_toTopOf="@+id/cancel" />
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="47dp"
+        android:text="@string/annulla"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ok"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/numberPicker"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

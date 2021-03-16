@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1077244810126",
+    "project_id": "kgame-9904b",
+    "storage_bucket": "kgame-9904b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1077244810126:android:522ff0504cb5b9851ecadf",
+        "android_client_info": {
+          "package_name": "it.polito.kgame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1077244810126-p858kudb93npciegql7e1pnesnicetqb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDT0FUIrdkru3eiOsRWpGtrvtdEka855UA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1077244810126-p858kudb93npciegql7e1pnesnicetqb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

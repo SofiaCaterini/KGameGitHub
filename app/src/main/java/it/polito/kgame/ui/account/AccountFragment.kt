@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
@@ -44,7 +45,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
     val REQUEST_CODE = 100
     private var mImageUri: Uri? = null
     private var mStorageRef: StorageReference? = null
-    private var mDatabaseRef: DatabaseReference? = null
+    private var mDatabaseRef: FirebaseFirestore? = null
     private var mUploadTask: StorageTask<*>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,45 +59,8 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         val nView: View = requireActivity().nav_view
 
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads")
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads")
+        mDatabaseRef = FirebaseFirestore.getInstance()
 
-        /////////////////////////////////////////////////////////////////////
-        val np: NumberPicker = view.findViewById(R.id.numberPicker)
-        np.isVisible = false
-        ok.isVisible = false
-
-        val kgValues = arrayOfNulls<String>(200)
-
-        for (i in 0..199) {
-            kgValues[i] = i.toString() + " Kg"
-        }
-        np.minValue = 0
-        np.maxValue = 199
-        np.value = 50 //mettere obiettivo precedente
-        np.displayedValues = kgValues
-
-        dx.setOnClickListener {
-            np.isVisible = true
-            ok.isVisible = true
-            ok.setOnClickListener {
-                np.isVisible = false
-                ok.isVisible = false
-                var messag : String = getString(R.string.question_message_obj)
-                var kg : String = getString(R.string.kg)
-                var peso : String = np.value.toString()
-                var message2 : String = "$messag $peso $kg"
-
-                MaterialAlertDialogBuilder(requireContext())
-                        .setTitle(R.string.question_title_obj_ok)
-                        .setMessage(message2)
-                        .setPositiveButton(R.string.ok) { _, _ ->
-
-                        }
-                        .show()
-            }
-        }
-
-        ////////////////////////////////////////////////////////////////////////////
 
         fun View.hideKeyboard(){
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -218,13 +182,31 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
             mUploadTask = fileReference.putFile(mImageUri!!)
                 .addOnSuccessListener { taskSnapshot ->
                     Toast.makeText(requireContext(), "Upload successful", Toast.LENGTH_LONG).show()
-                    var FileName :String = "ImmagineProfilo"
+                    /*var FileName :String = "ImmagineProfilo"
                     val upload = Upload(
                         FileName,
                         taskSnapshot.storage.downloadUrl.toString()
-                    )
-                    val uploadId = mDatabaseRef!!.push().key
-                    mDatabaseRef!!.child(uploadId!!).setValue(upload)
+                    )*/
+                    var data : MutableMap<String,String> = mutableMapOf()
+                    val img : String = "IMGPROFILO"
+                    fileReference.downloadUrl.addOnCompleteListener () { taskSnapshot ->
+                        var url = taskSnapshot.result
+                        println ("url =" + url.toString())
+                        data.put(img, url.toString())
+                        mDatabaseRef?.collection("Accounts")
+                                ?.document("pippo@sowlo.it")
+                                ?.update(data as Map<String, Any>)
+                                ?.addOnSuccessListener {
+                                    Toast.makeText(
+                                            requireContext(),
+                                            R.string.ok,
+                                            Toast.LENGTH_SHORT
+                                    )
+                                }
+
+                    }
+
+
                 }
                 .addOnFailureListener { e ->
                     Toast.makeText(

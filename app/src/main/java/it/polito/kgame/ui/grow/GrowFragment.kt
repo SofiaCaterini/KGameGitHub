@@ -51,11 +51,11 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
 
         var graph : GraphView = view.findViewById(R.id.graph) as GraphView
 
-        graph.gridLabelRenderer.numHorizontalLabels = 3
+        graph.gridLabelRenderer.numHorizontalLabels = 5
+        graph.gridLabelRenderer.setHumanRounding(false,true)
         graph.gridLabelRenderer.labelFormatter = object : DefaultLabelFormatter() {
             override fun formatLabel(value: Double, isValueX: Boolean): String {
                 return if (isValueX) {
-                    // show normal x values
                     val c : Calendar = Calendar.getInstance()
                     c.setTimeInMillis(value.toLong())
                     val day = c.get(Calendar.DAY_OF_MONTH).toDouble()
@@ -63,8 +63,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
 
                     super.formatLabel(day, isValueX) + month ?: throw IllegalArgumentException("0-11 range expected")
                 } else {
-                    // show normale y values
-                    super.formatLabel(value, isValueX)
+                    super.formatLabel(value, isValueX) + "kg"
                 }
             }
         }

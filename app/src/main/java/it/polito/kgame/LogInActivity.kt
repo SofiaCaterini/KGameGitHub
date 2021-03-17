@@ -1,6 +1,5 @@
 package it.polito.kgame
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -17,7 +16,6 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 
 
 class LogInActivity : AppCompatActivity() {
-    @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)

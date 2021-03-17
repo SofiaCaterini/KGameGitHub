@@ -5,8 +5,6 @@
     <string name="leaderboard">Classifica</string>
     <string name="open">open</string>
     <string name="close">close</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="large_text">     //cosa è? perchè è vuoto?
     </string>
     <string name="title_activity_main2">MainActivity</string>
@@ -37,8 +35,9 @@
     <string name="question_title_weight_ok">Peso aggiunto correttamente</string>
     <string name="question_message">Sei sicuro di voler impostare la sveglia alle </string>
     <string name="question_message_weight">Sei salito sopra la bilancia e vuoi aggiungere il tuo peso? </string>
-    <string name="question_message_weight_ok">Obiettivo aggiunto correttamente</string>                           //DA CORREGGERE FORSE?? (Obiettivo??)
- 
+    <string name="question_message_weight_ok">Obiettivo aggiunto correttamente</string>
+    <string name="question_message_obj_ok">Hai aggiunto correttamente il peso di</string>
+
 
     <string name="yes">Sì</string>
     <string name="no">No</string>
@@ -54,7 +53,8 @@
     //growFrag - obiettivo
     <string name="question_title_obj_ok">Conferma aggiunta obiettivo</string>
     <string name="question_message_obj">Vuoi davvero impostare il tuo nuovo obiettivo di peso su </string>
-    <string name="kg">kg?</string>
+    <string name="kgq">kg?</string>
+    <string name="kg">kg.</string>
 
     //months of year
     <string name="gen"> GEN</string>

@@ -4,17 +4,19 @@ package it.polito.kgame.ui.account
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.ContentResolver
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.provider.Settings
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.webkit.MimeTypeMap
 import android.widget.NumberPicker
-import android.widget.NumberPicker.OnValueChangeListener
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -24,7 +26,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.StorageTask
 import it.polito.kgame.R
+import it.polito.kgame.Upload
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_account.*
@@ -34,6 +42,10 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
     val adapter = ItemAdapterFamily()
     val viewModel by activityViewModels<AccountViewModel>()
     val REQUEST_CODE = 100
+    private var mImageUri: Uri? = null
+    private var mStorageRef: StorageReference? = null
+    private var mDatabaseRef: DatabaseReference? = null
+    private var mUploadTask: StorageTask<*>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //Toolbar
@@ -44,6 +56,9 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         rv.adapter = adapter
         val tView: View = requireActivity().toolbar
         val nView: View = requireActivity().nav_view
+
+        mStorageRef = FirebaseStorage.getInstance().getReference("uploads")
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads")
 
         /////////////////////////////////////////////////////////////////////
         val np: NumberPicker = view.findViewById(R.id.numberPicker)
@@ -98,8 +113,8 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
             }
         }
 
-    }
 
+    }
 
 
     // access to gallery
@@ -113,30 +128,47 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE){
             imageView.setImageURI(data?.data) // handle chosen image
+            mImageUri = data?.data
+            uploadFile()
         }
+
     }
 
     //permission
 
     fun isPermissionsAllowed(): Boolean {
-        return if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        return if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED) {
             false
         } else true
     }
 
     fun askForPermissions(): Boolean {
         if (!isPermissionsAllowed()) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity() as Activity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    requireActivity() as Activity,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )) {
                 showPermissionDeniedDialog()
             } else {
-                ActivityCompat.requestPermissions(requireActivity() as Activity, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_CODE)
+                ActivityCompat.requestPermissions(
+                    requireActivity() as Activity,
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    REQUEST_CODE
+                )
             }
             return false
         }
         return true
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
             REQUEST_CODE -> {
                 if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -155,16 +187,57 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                 .setTitle(R.string.permesso_negato)
                 .setMessage(R.string.impostazioni_app)
                 .setPositiveButton(R.string.butt_imp_app,
-                        DialogInterface.OnClickListener { dialogInterface, i ->
-                            // send to app settings if permission is denied permanently
-                            val intent = Intent()
-                            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                            val uri = Uri.fromParts("package", requireActivity().getPackageName(), null)
-                            intent.data = uri
-                            startActivity(intent)
-                        })
+                    DialogInterface.OnClickListener { dialogInterface, i ->
+                        // send to app settings if permission is denied permanently
+                        val intent = Intent()
+                        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                        val uri = Uri.fromParts(
+                            "package",
+                            requireActivity().getPackageName(),
+                            null
+                        )
+                        intent.data = uri
+                        startActivity(intent)
+                    })
                 .setNegativeButton(R.string.annulla, null)
                 .show()
+    }
+
+    private fun getFileExtension(uri: Uri): String? {
+        val cR: ContentResolver = requireContext().contentResolver
+        val mime = MimeTypeMap.getSingleton()
+        return mime.getExtensionFromMimeType(cR.getType(uri))
+    }
+
+    private fun uploadFile() {
+        if (mImageUri != null) {
+            val fileReference = mStorageRef!!.child(
+                System.currentTimeMillis()
+                    .toString() + "." + getFileExtension(mImageUri!!)
+            )
+            mUploadTask = fileReference.putFile(mImageUri!!)
+                .addOnSuccessListener { taskSnapshot ->
+                    Toast.makeText(requireContext(), "Upload successful", Toast.LENGTH_LONG).show()
+                    var FileName :String = "ImmagineProfilo"
+                    val upload = Upload(
+                        FileName,
+                        taskSnapshot.storage.downloadUrl.toString()
+                    )
+                    val uploadId = mDatabaseRef!!.push().key
+                    mDatabaseRef!!.child(uploadId!!).setValue(upload)
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(
+                        context,
+                        e.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+        } else {
+            print("errore")
+            Toast.makeText(context, "No file selected", Toast.LENGTH_SHORT).show()
+        }
     }
 
 }

@@ -82,9 +82,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                     lifecycleScope.launch(Dispatchers.IO) {
                                         val str= URL("http://192.168.4.1/").readText(Charset.forName("UTF-8"))
                                         withContext(Dispatchers.Main) {
-                                            //qui mi faccio mostrare il peso in una textView
 
-                                            var messaggiosalvato2 : String = getString(R.string.question_message_weight_ok)
+
+                                            var messaggiosalvato2 : String = getString(R.string.question_message_obj_ok)
                                             var kg : String = getString(R.string.kg)
                                             var peso : String = str
                                             var message2 : String = "$messaggiosalvato2 $peso $kg"

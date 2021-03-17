@@ -181,7 +181,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
                 numPick_bg.isVisible = false
 
                 var messag : String = getString(R.string.question_message_obj)
-                var kg : String = getString(R.string.kg)
+                var kg : String = getString(R.string.kgq)
                 var peso : String = np.value.toString()
                 var message2 : String = "$messag $peso $kg"
 

@@ -1,23 +1,32 @@
 package it.polito.kgame
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import com.google.firebase.auth.AuthResult
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_log_in.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.android.synthetic.main.app_bar_main.*
+
 
 class LogInActivity : AppCompatActivity() {
+    @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
 
+        val view: View = findViewById(R.id.sfondologin)
+        view.setOnClickListener { hideKeyboard(this@LogInActivity) }
+
         tv_register.setOnClickListener{
-            startActivity(Intent(this@LogInActivity,RegisterActivity::class.java))
+            startActivity(Intent(this@LogInActivity, RegisterActivity::class.java))
         }
 
         btn_login.setOnClickListener {
@@ -55,8 +64,10 @@ class LogInActivity : AppCompatActivity() {
                                         Intent(this@LogInActivity, MainActivity::class.java)
                                     intent.flags =
                                         Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                    intent.putExtra("user_id",
-                                    FirebaseAuth.getInstance().currentUser!!.uid)
+                                    intent.putExtra(
+                                        "user_id",
+                                        FirebaseAuth.getInstance().currentUser!!.uid
+                                    )
                                     intent.putExtra("email_id", email)
                                     startActivity(intent)
                                     finish()
@@ -71,4 +82,15 @@ class LogInActivity : AppCompatActivity() {
                 }
             }
 
-        }}}
+        }
+
+    }
+
+
+    fun hideKeyboard(context: Activity) {
+        val inputMethodManager =
+            context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(context.currentFocus!!.windowToken, 0)
+    }
+
+}

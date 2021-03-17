@@ -46,7 +46,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         rvhome.layoutManager= LinearLayoutManager(requireContext())
         rvhome.adapter = adapter
 
-        val db = homeViewModel.db
 
         homeAddWeight.setOnClickListener {
 
@@ -86,18 +85,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                             var peso : String = str
                                             var message2 : String = "$messaggiosalvato2 $peso $kg"
 
-                                            val nomeProva : String = "Giorgio"
-                                            var data : MutableMap<String,String> = mutableMapOf()
-                                            data.put(nomeProva,peso)
-
 
                                             MaterialAlertDialogBuilder(requireContext())
                                                     .setTitle(R.string.question_title_weight_ok)
                                                     .setMessage(message2)
                                                     .setPositiveButton(R.string.ok) { _, _ ->
-                                                        db.collection("Pesate")
-                                                            .document("provaPesata")
-                                                            .set(data)
+
                                                     }
                                                     .show()
 

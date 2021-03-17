@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_log_in.*
 import kotlinx.android.synthetic.main.activity_register.*
 
@@ -17,15 +18,20 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        tv_login.setOnClickListener{
+        val db : FirebaseFirestore
+
+        tv_login.setOnClickListener {
             startActivity(Intent(this@RegisterActivity,LogInActivity::class.java))
         }
+
         btn_register.setOnClickListener {
             when {
+
+                //errori vari  !!!AGGIUNGERE CONTROLLO CONFERMA PASSWORD UGUALE ALLA PW
                 TextUtils.isEmpty(et_register_email.text.toString().trim { it <= ' ' }) -> {
                     Toast.makeText(
                         this@RegisterActivity,
-                        "please enter email",
+                        R.string.req_mail,
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -33,13 +39,25 @@ class RegisterActivity : AppCompatActivity() {
                 TextUtils.isEmpty(et_register_password.text.toString().trim { it <= ' ' }) -> {
                     Toast.makeText(
                         this@RegisterActivity,
-                        "please enter password", Toast.LENGTH_SHORT
+                        R.string.req_pw,
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
+
+                TextUtils.isEmpty(et_register_password2.text.toString().trim { it <= ' ' }) -> {
+                    Toast.makeText(
+                            this@RegisterActivity,
+                            R.string.req_pw2,
+                            Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                //dati ok
                 else -> {
                     val email: String = et_register_email.text.toString().trim { it <= ' ' }
                     val password: String = et_register_password.text.toString().trim { it <= ' ' }
 
+                    //crei utente
                     FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(
                             OnCompleteListener<AuthResult> { task ->
@@ -49,7 +67,7 @@ class RegisterActivity : AppCompatActivity() {
 
                                     Toast.makeText(
                                         this@RegisterActivity,
-                                        "you were registered successfully",
+                                        R.string.succ_signin,
                                         Toast.LENGTH_SHORT
                                     ).show()
 
@@ -69,6 +87,11 @@ class RegisterActivity : AppCompatActivity() {
                                     ).show()
                                 }
                             })
+
+                    //registra utente in db (FirebaseFirestore)
+
+
+
                 }
             }
 

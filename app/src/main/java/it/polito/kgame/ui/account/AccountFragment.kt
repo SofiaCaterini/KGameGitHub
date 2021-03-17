@@ -11,6 +11,8 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.view.KeyEvent
+import android.view.KeyEvent.*
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.NumberPicker
@@ -19,11 +21,13 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.kgame.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -35,7 +39,11 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
     val viewModel by activityViewModels<AccountViewModel>()
     val REQUEST_CODE = 100
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val db = viewModel.db
+
         //Toolbar
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_account)
         //i frammenti non sono lifecycleowner
@@ -45,44 +53,9 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         val tView: View = requireActivity().toolbar
         val nView: View = requireActivity().nav_view
 
-        /////////////////////////////////////////////////////////////////////
-        val np: NumberPicker = view.findViewById(R.id.numberPicker)
-        np.isVisible = false
-        ok.isVisible = false
 
-        val kgValues = arrayOfNulls<String>(200)
 
-        for (i in 0..199) {
-            kgValues[i] = i.toString() + " Kg"
-        }
-        np.minValue = 0
-        np.maxValue = 199
-        np.value = 50 //mettere obiettivo precedente
-        np.displayedValues = kgValues
-
-        dx.setOnClickListener {
-            np.isVisible = true
-            ok.isVisible = true
-            ok.setOnClickListener {
-                np.isVisible = false
-                ok.isVisible = false
-                var messag : String = getString(R.string.question_message_obj)
-                var kg : String = getString(R.string.kg)
-                var peso : String = np.value.toString()
-                var message2 : String = "$messag $peso $kg"
-
-                MaterialAlertDialogBuilder(requireContext())
-                        .setTitle(R.string.question_title_obj_ok)
-                        .setMessage(message2)
-                        .setPositiveButton(R.string.ok) { _, _ ->
-
-                        }
-                        .show()
-            }
-        }
-
-        ////////////////////////////////////////////////////////////////////////////
-
+        //keyboard management
         fun View.hideKeyboard(){
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(windowToken, 0)
@@ -91,12 +64,23 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         tView.setOnClickListener { view.hideKeyboard()  }
         nView.setOnClickListener { view.hideKeyboard()  }
 
+        //profile picture management
         but_cambiaFoto.setOnClickListener {
             if (askForPermissions()) {
                 // Permissions are already granted, do your stuff
                 openGalleryForImage()
             }
         }
+
+        //nickname management
+        readNickname(db)
+        edit_nickname.setOnKeyListener { v, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                updateNickname(db)
+            }
+            false
+        }
+
 
     }
 
@@ -165,6 +149,57 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                         })
                 .setNegativeButton(R.string.annulla, null)
                 .show()
+    }
+
+    fun updateNickname(db : FirebaseFirestore) {
+
+        val nickname : String = "NICKNAME"
+        var data : MutableMap<String,String> = mutableMapOf()
+        data.put(nickname, edit_nickname.text.toString())
+
+
+        db.collection("Accounts")
+                .document("pippo@sowlo.it")
+                .update(data as Map<String, Any>)
+                .addOnSuccessListener {
+                    Toast.makeText(
+                            requireContext(),
+                            R.string.succ_newNN,
+                            Toast.LENGTH_SHORT
+                    ).show();
+                    println("update Nickname success")
+                }
+                .addOnFailureListener {
+                    Toast.makeText(
+                            requireContext(),
+                            R.string.fail_newNN,
+                            Toast.LENGTH_SHORT
+                    ).show();
+                    println("update Nickname epic fail")
+                }
+    }
+
+    fun readNickname(db: FirebaseFirestore) {
+        val nickname : String = "NICKNAME"
+
+        db.collection("Accounts")
+                .document("pippo@sowlo.it")
+                .get()
+                .addOnSuccessListener {
+                    if(it.exists()){
+                        edit_nickname.setText(it.getString(nickname))
+                    } else {
+                        Toast.makeText(
+                                requireContext(),
+                                R.string.req_doc,
+                                Toast.LENGTH_SHORT
+                        ).show()
+
+                    }
+                }
+                .addOnFailureListener {
+
+                }
     }
 
 }

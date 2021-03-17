@@ -7,7 +7,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.kgame.R
 
 class HomeViewModel : ViewModel() {
-        val db : FirebaseFirestore = FirebaseFirestore.getInstance()
 
         private val _items= mutableListOf(
                 ItemUsers( 1, "Raff", R.drawable.dog),

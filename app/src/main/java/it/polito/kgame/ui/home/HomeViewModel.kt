@@ -3,9 +3,11 @@ package it.polito.kgame.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.kgame.R
 
 class HomeViewModel : ViewModel() {
+
         private val _items= mutableListOf(
                 ItemUsers( 1, "Raff", R.drawable.dog),
                 ItemUsers( 2,"Liuk", R.drawable.lion),

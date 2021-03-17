@@ -44,10 +44,7 @@
     <string name="annulla">Annulla</string>
     <string name="ok">OK</string>
   
-    //Permission alert dialog
-    <string name="permesso_negato">Permesso negato</string>
-    <string name="impostazioni_app">Il permesso per accedere alla Galleria è negato. Per favore consenti il permesso dalle Impostazioni dell\'App.</string>
-    <string name="butt_imp_app">Impostazioni dell\'App</string>
+
   
     <string name="ricorda">Ricorda: è meglio pesarsi sempre allo stesso orario, preferibilmente al mattino o prima dei pasti!</string>
     //growFrag - obiettivo
@@ -69,6 +66,31 @@
     <string name="ott"> OTT</string>
     <string name="nov"> NOV</string>
     <string name="dic"> DIC</string>
+
+
+    //System messages
+        //Permission alert dialog
+        <string name="permesso_negato">Permesso negato</string>
+        <string name="impostazioni_app">Il permesso per accedere alla Galleria è negato. Per favore consenti il permesso dalle Impostazioni dell\'App.</string>
+        <string name="butt_imp_app">Impostazioni dell\'App</string>
+
+        //Toasts
+        <string name="req_mail">Inserisci un\'email per procedere</string>
+        <string name="req_pw">Inserisci una password per procedere</string>
+        <string name="req_pw2">Conferma la password per procedere</string>
+
+            //Log in
+        <string name="succ_login">Hai effettuato il login!</string>
+
+            //Sign in
+        <string name="succ_signin">Ti sei registrato con successo!</string>
+        <string name="fail_signin">Non hai effettuato il login!</string>
+
+            //Nickname update
+        <string name="succ_newNN">Nickname aggiornato</string>
+        <string name="fail_newNN">Il nickname non è stato aggiornato correttamente</string>
+
+        <string name="req_doc">Errore: il documento non esiste.</string>
 
 
 </resources>

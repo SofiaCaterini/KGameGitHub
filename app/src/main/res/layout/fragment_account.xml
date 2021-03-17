@@ -9,6 +9,7 @@
     android:background="@drawable/sfondo_orange_profilo"
     tools:context=".ui.account.AccountFragment">
 
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView3"
         android:layout_width="376dp"

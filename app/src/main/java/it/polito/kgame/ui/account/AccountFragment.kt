@@ -13,6 +13,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
+import android.view.KeyEvent
+import android.view.KeyEvent.*
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
@@ -21,17 +23,20 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
+
 import it.polito.kgame.R
 import it.polito.kgame.Upload
 import kotlinx.android.synthetic.main.activity_main.*
@@ -48,7 +53,13 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
     private var mDatabaseRef: FirebaseFirestore? = null
     private var mUploadTask: StorageTask<*>? = null
 
+
+    private var db : FirebaseFirestore? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        db = viewModel.db
+
         //Toolbar
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_account)
         //i frammenti non sono lifecycleowner
@@ -58,10 +69,13 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         val tView: View = requireActivity().toolbar
         val nView: View = requireActivity().nav_view
 
+
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads")
-        mDatabaseRef = FirebaseFirestore.getInstance()
+       
 
 
+
+        //keyboard management
         fun View.hideKeyboard(){
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(windowToken, 0)
@@ -70,6 +84,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         tView.setOnClickListener { view.hideKeyboard()  }
         nView.setOnClickListener { view.hideKeyboard()  }
 
+        //profile picture management
         but_cambiaFoto.setOnClickListener {
             if (askForPermissions()) {
                 // Permissions are already granted, do your stuff
@@ -78,7 +93,18 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         }
 
 
+        readNickname()
+        edit_nickname.setOnKeyListener { v, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                updateNickname()
+            }
+            false
+        }
+
+
     }
+
+
 
 
     // access to gallery
@@ -100,13 +126,11 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
     //permission
 
-    fun isPermissionsAllowed(): Boolean {
-        return if (ContextCompat.checkSelfPermission(
+    private fun isPermissionsAllowed(): Boolean {
+        return ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED) {
-            false
-        } else true
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     fun askForPermissions(): Boolean {
@@ -151,6 +175,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                 .setTitle(R.string.permesso_negato)
                 .setMessage(R.string.impostazioni_app)
                 .setPositiveButton(R.string.butt_imp_app,
+
                     DialogInterface.OnClickListener { dialogInterface, i ->
                         // send to app settings if permission is denied permanently
                         val intent = Intent()
@@ -165,6 +190,58 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                     })
                 .setNegativeButton(R.string.annulla, null)
                 .show()
+    }
+
+
+    fun updateNickname() {
+
+        val nickname : String = "NICKNAME"
+        var data : MutableMap<String,String> = mutableMapOf()
+        data.put(nickname, edit_nickname.text.toString())
+
+
+        db?.collection("Accounts")
+                ?.document("pippo@sowlo.it")
+                ?.update(data as Map<String, Any>)
+                ?.addOnSuccessListener {
+                    Toast.makeText(
+                            requireContext(),
+                            R.string.succ_newNN,
+                            Toast.LENGTH_SHORT
+                    ).show();
+                    println("update Nickname success")
+                }
+                ?.addOnFailureListener {
+                    Toast.makeText(
+                            requireContext(),
+                            R.string.fail_newNN,
+                            Toast.LENGTH_SHORT
+                    ).show();
+                    println("update Nickname epic fail")
+                }
+    }
+
+    fun readNickname() {
+        val nickname: String = "NICKNAME"
+
+        db?.collection("Accounts")
+                ?.document("pippo@sowlo.it")
+                ?.get()
+                ?.addOnSuccessListener {
+                    if (it.exists()) {
+                        edit_nickname.setText(it.getString(nickname))
+                    } else {
+                        Toast.makeText(
+                                requireContext(),
+                                R.string.req_doc,
+                                Toast.LENGTH_SHORT
+                        ).show()
+
+                    }
+                }
+                ?.addOnFailureListener {
+
+                }
     }
 
     private fun getFileExtension(uri: Uri): String? {
@@ -193,7 +270,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                         var url = taskSnapshot.result
                         println ("url =" + url.toString())
                         data.put(img, url.toString())
-                        mDatabaseRef?.collection("Accounts")
+                        db?.collection("Accounts")
                                 ?.document("pippo@sowlo.it")
                                 ?.update(data as Map<String, Any>)
                                 ?.addOnSuccessListener {
@@ -220,6 +297,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
             print("errore")
             Toast.makeText(context, "No file selected", Toast.LENGTH_SHORT).show()
         }
+
     }
 
 }

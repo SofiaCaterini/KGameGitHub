@@ -32,7 +32,7 @@ class LogInActivity : AppCompatActivity() {
                 TextUtils.isEmpty(et_login_email.text.toString().trim { it <= ' ' }) -> {
                     Toast.makeText(
                         this@LogInActivity,
-                        "please enter email",
+                        R.string.req_mail,
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -40,7 +40,8 @@ class LogInActivity : AppCompatActivity() {
                 TextUtils.isEmpty(et_login_password.text.toString().trim { it <= ' ' }) -> {
                     Toast.makeText(
                         this@LogInActivity,
-                        "please enter password", Toast.LENGTH_SHORT
+                        R.string.req_pw,
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
                 else -> {
@@ -54,7 +55,7 @@ class LogInActivity : AppCompatActivity() {
 
                                     Toast.makeText(
                                         this@LogInActivity,
-                                        "you are logged successfully",
+                                        R.string.succ_login,
                                         Toast.LENGTH_SHORT
                                     ).show()
 

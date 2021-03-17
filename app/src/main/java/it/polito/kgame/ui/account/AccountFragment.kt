@@ -54,9 +54,11 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
     private var mUploadTask: StorageTask<*>? = null
 
 
+    private var db : FirebaseFirestore? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val db = viewModel.db
+
+        db = viewModel.db
 
         //Toolbar
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_account)
@@ -91,10 +93,10 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         }
 
 
-        readNickname(db)
+        readNickname()
         edit_nickname.setOnKeyListener { v, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
-                updateNickname(db)
+                updateNickname()
             }
             false
         }
@@ -102,7 +104,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
     }
 
-    }
+
 
 
     // access to gallery
@@ -124,13 +126,11 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
     //permission
 
-    fun isPermissionsAllowed(): Boolean {
-        return if (ContextCompat.checkSelfPermission(
+    private fun isPermissionsAllowed(): Boolean {
+        return ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED) {
-            false
-        } else true
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     fun askForPermissions(): Boolean {
@@ -193,17 +193,17 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
     }
 
 
-    fun updateNickname(db : FirebaseFirestore) {
+    fun updateNickname() {
 
         val nickname : String = "NICKNAME"
         var data : MutableMap<String,String> = mutableMapOf()
         data.put(nickname, edit_nickname.text.toString())
 
 
-        db.collection("Accounts")
-                .document("pippo@sowlo.it")
-                .update(data as Map<String, Any>)
-                .addOnSuccessListener {
+        db?.collection("Accounts")
+                ?.document("pippo@sowlo.it")
+                ?.update(data as Map<String, Any>)
+                ?.addOnSuccessListener {
                     Toast.makeText(
                             requireContext(),
                             R.string.succ_newNN,
@@ -211,7 +211,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                     ).show();
                     println("update Nickname success")
                 }
-                .addOnFailureListener {
+                ?.addOnFailureListener {
                     Toast.makeText(
                             requireContext(),
                             R.string.fail_newNN,
@@ -221,14 +221,14 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                 }
     }
 
-    fun readNickname(db: FirebaseFirestore) {
-        val nickname : String = "NICKNAME"
+    fun readNickname() {
+        val nickname: String = "NICKNAME"
 
-        db.collection("Accounts")
-                .document("pippo@sowlo.it")
-                .get()
-                .addOnSuccessListener {
-                    if(it.exists()){
+        db?.collection("Accounts")
+                ?.document("pippo@sowlo.it")
+                ?.get()
+                ?.addOnSuccessListener {
+                    if (it.exists()) {
                         edit_nickname.setText(it.getString(nickname))
                     } else {
                         Toast.makeText(
@@ -239,9 +239,10 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
                     }
                 }
-                .addOnFailureListener {
+                ?.addOnFailureListener {
 
                 }
+    }
 
     private fun getFileExtension(uri: Uri): String? {
         val cR: ContentResolver = requireContext().contentResolver

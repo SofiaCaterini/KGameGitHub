@@ -36,9 +36,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
+import com.squareup.picasso.Picasso
 
 import it.polito.kgame.R
-import it.polito.kgame.Upload
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_account.*
@@ -66,11 +66,8 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         val tView: View = requireActivity().toolbar
         val nView: View = requireActivity().nav_view
 
-
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads")
        
-
-
 
         //keyboard management
         fun View.hideKeyboard(){
@@ -81,6 +78,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         tView.setOnClickListener { view.hideKeyboard()  }
         nView.setOnClickListener { view.hideKeyboard()  }
 
+        readImgProfilo()
         //profile picture management
         but_cambiaFoto.setOnClickListener {
             if (askForPermissions()) {
@@ -102,8 +100,6 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
     }
 
 
-
-
     // access to gallery
     private fun openGalleryForImage() {
         val intent = Intent(Intent.ACTION_PICK)
@@ -116,7 +112,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE){
             imageView.setImageURI(data?.data) // handle chosen image
             mImageUri = data?.data
-            uploadFile()
+            uploadImgProfilo()
         }
 
     }
@@ -247,7 +243,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         return mime.getExtensionFromMimeType(cR.getType(uri))
     }
 
-    private fun uploadFile() {
+    private fun uploadImgProfilo() {
         if (mImageUri != null) {
             val fileReference = mStorageRef!!.child(
                 System.currentTimeMillis()
@@ -256,11 +252,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
             mUploadTask = fileReference.putFile(mImageUri!!)
                 .addOnSuccessListener { taskSnapshot ->
                     Toast.makeText(requireContext(), "Upload successful", Toast.LENGTH_LONG).show()
-                    /*var FileName :String = "ImmagineProfilo"
-                    val upload = Upload(
-                        FileName,
-                        taskSnapshot.storage.downloadUrl.toString()
-                    )*/
+
                     var data : MutableMap<String,String> = mutableMapOf()
                     val img : String = "IMGPROFILO"
                     fileReference.downloadUrl.addOnCompleteListener () { taskSnapshot ->
@@ -295,6 +287,29 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
             Toast.makeText(context, "No file selected", Toast.LENGTH_SHORT).show()
         }
 
+    }
+
+    fun readImgProfilo() {
+        val img: String = "IMGPROFILO"
+
+        db?.collection("Accounts")
+                ?.document("pippo@sowlo.it")
+                ?.get()
+                ?.addOnSuccessListener {
+                    if (it.exists()) {
+                        Picasso.get().load(it.getString(img)).into(imageView)
+                    } else {
+                        Toast.makeText(
+                                requireContext(),
+                                R.string.req_doc,
+                                Toast.LENGTH_SHORT
+                        ).show()
+
+                    }
+                }
+                ?.addOnFailureListener {
+
+                }
     }
 
 }

@@ -15,15 +15,18 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_log_in.*
 import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.android.synthetic.main.fragment_account.*
 
 class RegisterActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+
+    val db : FirebaseFirestore = FirebaseFirestore.getInstance()
+
+
+        override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
         val view: View = findViewById(R.id.sfondoreg)
         view.setOnClickListener { hideKeyboard(this@RegisterActivity) }
-
-        val db : FirebaseFirestore
 
         tv_login.setOnClickListener {
             startActivity(Intent(this@RegisterActivity,LogInActivity::class.java))
@@ -94,13 +97,27 @@ class RegisterActivity : AppCompatActivity() {
                             })
 
                     //registra utente in db (FirebaseFirestore)
-
-
+                    setData(et_nickame.text.toString(), et_register_email.text.toString() )
 
                 }
             }
 
         }
+    }
+    fun setData(nickname : String, mail : String) {
+
+        val nickname  = nickname
+        val mail = mail
+        var data : MutableMap<String,String> = mutableMapOf()
+        data.put("NICKNAME", nickname)
+
+
+        db.collection("Accounts")
+            .document(mail)
+            .set(data as Map<String, Any>)
+            .addOnFailureListener {
+                println("save on db epic fail: $it")
+            }
     }
     fun hideKeyboard(context: Activity) {
         val inputMethodManager =

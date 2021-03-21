@@ -50,10 +50,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
     val REQUEST_CODE = 100
     private var mImageUri: Uri? = null
     private var mStorageRef: StorageReference? = null
-    private var mDatabaseRef: FirebaseFirestore? = null
     private var mUploadTask: StorageTask<*>? = null
-
-
     private var db : FirebaseFirestore? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

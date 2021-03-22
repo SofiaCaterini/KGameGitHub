@@ -6,19 +6,19 @@
     <string name="leaderboard">Classifica</string>
     <string name="open">open</string>
     <string name="close">close</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="large_text"></string>
 
-        <!-- impostazioni profilo -->
-    <string name="cambia">Cambia foto profilo</string>
-    <string name="cambia_pedina">Cambia pedina</string>
-    <string name="cambia_nickname">Cambia username</string>
-    <string name="famiglie">Le tue famiglie:</string>
-    <string name="famiglia">AGGIUNGI FAMIGLIA</string>
-    <string name="question_title">Imposta sveglia</string>
-
-
-       <!-- menu Navigazione -->
+    <string name="large_text">     //cosa è? perchè è vuoto?
+    </string>
+    <string name="title_activity_main2">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>                     //se qualcuno sistemasse ste robe sarebbe carino
+    <string name="nav_header_subtitle">android.studio@android.com</string>      //ordinando tipo in: messaggi base (come possono essere: ok, si, no...)
+    <string name="nav_header_desc">Navigation header</string>                   //che vanno bene per tutte le schermate; e per schermate tipo:
+    <string name="action_settings">Impostazioni</string>                        //string di grow, string di account, string di calendar...
+    <string name="ob_settings">IMPOSTA OBIETTIVO</string>
+    <string name="clock_settings">IMPOSTA SVEGLIA GIORNALIERA</string>
+    <string name="weight_settings">Ultima pesata:</string>
     <string name="menu_home">Home</string>
     <string name="menu_account">Profilo</string>
     <string name="menu_calendar">Calendario</string>
@@ -41,28 +41,66 @@
     <string name="title_activity_main2">MainActivity</string>
     <string name="question_title_weight">Aggiungi peso</string>
     <string name="question_title_weight_ok">Peso aggiunto correttamente</string>
-    <string name="question_title_obj_ok">Hai aggiunto il tuo nuovo peso di </string>
+
+    <string name="question_message">Sei sicuro di voler impostare la sveglia alle </string>
     <string name="question_message_weight">Sei salito sopra la bilancia e vuoi aggiungere il tuo peso? </string>
+    <string name="question_message_weight_ok">Obiettivo aggiunto correttamente</string>
+    <string name="question_message_obj_ok">Hai aggiunto correttamente il peso di</string>
 
-        <!-- notifiche -->
-    <string name="permesso_negato">Permesso negato</string>
-    <string name="impostazioni_app">Il permesso per accedere alla Galleria è negato. Per favore consenti il permesso dalle Impostazioni dell\'App.</string>
-    <string name="ricorda">Ricorda: è meglio pesarsi sempre allo stesso orario, preferibilmente al mattino o prima dei pasti!</string>
 
-        <!-- pulsanti o valori -->
-    <string name="kg">kg.</string>
     <string name="yes">Sì</string>
     <string name="no">No</string>
-    <string name="ok">OK</string>
-    <string name="butt_imp_app">Impostazioni dell\'App</string>
-    <string name="annulla">Annulla</string>
 
-    <!-- navigazione -->
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Impostazioni</string>
+    <string name="annulla">Annulla</string>
+    <string name="ok">OK</string>
+  
+
+
+  
+    <string name="ricorda">Ricorda: è meglio pesarsi sempre allo stesso orario, preferibilmente al mattino o prima dei pasti!</string>
+    //growFrag - obiettivo
+    <string name="question_title_obj_ok">Conferma aggiunta obiettivo</string>
+    <string name="question_message_obj">Vuoi davvero impostare il tuo nuovo obiettivo di peso su </string>
+    <string name="kgq">kg?</string>
+    <string name="kg">kg.</string>
+
+    //months of year
+    <string name="gen"> GEN</string>
+    <string name="feb"> FEB</string>
+    <string name="mar"> MAR</string>
+    <string name="apr"> APR</string>
+    <string name="mag"> MAG</string>
+    <string name="giu"> GIU</string>
+    <string name="lug"> LUG</string>
+    <string name="ago"> AGO</string>
+    <string name="set"> SET</string>
+    <string name="ott"> OTT</string>
+    <string name="nov"> NOV</string>
+    <string name="dic"> DIC</string>
+
+
+    //System messages
+        //Permission alert dialog
+        <string name="permesso_negato">Permesso negato</string>
+        <string name="impostazioni_app">Il permesso per accedere alla Galleria è negato. Per favore consenti il permesso dalle Impostazioni dell\'App.</string>
+        <string name="butt_imp_app">Impostazioni dell\'App</string>
+
+        //Toasts
+        <string name="req_mail">Inserisci un\'email per procedere</string>
+        <string name="req_pw">Inserisci una password per procedere</string>
+        <string name="req_pw2">Conferma la password per procedere</string>
+
+            //Log in
+        <string name="succ_login">Hai effettuato il login!</string>
+
+            //Sign in
+        <string name="succ_signin">Ti sei registrato con successo!</string>
+        <string name="fail_signin">Non hai effettuato il login!</string>
+
+            //Nickname update
+        <string name="succ_newNN">Nickname aggiornato</string>
+        <string name="fail_newNN">Il nickname non è stato aggiornato correttamente</string>
+
+        <string name="req_doc">Errore: il documento non esiste.</string>
 
 </resources>

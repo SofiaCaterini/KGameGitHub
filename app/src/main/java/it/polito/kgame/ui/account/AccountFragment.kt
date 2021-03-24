@@ -420,6 +420,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                     DbManager.uploadProfileImg(requireContext(), uri)
                     Toast.makeText(requireContext(), "Stai salvando la nuova immagine profilo", Toast.LENGTH_SHORT).show()
                     requireActivity().saveUpdates.visibility = View.GONE
+                    switch=null
                 }
             }
             1 -> {  //case where only pawn/nickname is getting uploaded
@@ -428,6 +429,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                         viewModel.saveUpdates(requireContext())
                         Toast.makeText(requireContext(), "Stai salvando le nuove impostazioni", Toast.LENGTH_SHORT).show()
                         requireActivity().saveUpdates.visibility = View.GONE
+                        switch=null
                     }
             }
             2 -> {  //case where both profile image and pawn/nickname are getting uploaded
@@ -436,6 +438,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                     viewModel.saveUpdates(requireContext())
                     Toast.makeText(requireContext(), "Stai salvando le nuove impostazioni!", Toast.LENGTH_SHORT).show()
                     requireActivity().saveUpdates.visibility = View.GONE
+                    switch=null
                 }
             }
         }

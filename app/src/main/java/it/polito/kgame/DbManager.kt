@@ -273,13 +273,7 @@ object DbManager {
                             .toString() + "." + getFileExtension(imageUri)
             )
             mUploadTask = fileReference.putFile(imageUri)
-                    .addOnSuccessListener { taskSnapshot ->
-                        Toast.makeText(
-                                context,
-                                R.string.profPicUpdated,
-                                Toast.LENGTH_LONG
-                        ).show()
-
+                    .addOnSuccessListener { _ ->
                         val data : MutableMap<String,String> = mutableMapOf()
 
                         fileReference.downloadUrl.addOnCompleteListener () { taskSnapshot ->
@@ -294,7 +288,7 @@ object DbManager {
                                             .addOnSuccessListener {
                                                                     Toast.makeText(
                                                                             context,
-                                                                            R.string.ok,
+                                                                            R.string.profPicUpdated,
                                                                             Toast.LENGTH_SHORT
                                                                     ).show()
                                             }

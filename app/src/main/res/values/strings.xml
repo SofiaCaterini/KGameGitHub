@@ -7,15 +7,15 @@
     <string name="open">open</string>
     <string name="close">close</string>
 
-    <string name="large_text">     //cosa è? perchè è vuoto?
+  <string name="large_text">        <!--  cosa è? perchè è vuoto?-->
     </string>
     <string name="title_activity_main2">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>                     //se qualcuno sistemasse ste robe sarebbe carino
-    <string name="nav_header_subtitle">android.studio@android.com</string>      //ordinando tipo in: messaggi base (come possono essere: ok, si, no...)
-    <string name="nav_header_desc">Navigation header</string>                   //che vanno bene per tutte le schermate; e per schermate tipo:
-    <string name="action_settings">Impostazioni</string>                        //string di grow, string di account, string di calendar...
+    <string name="nav_header_title">Android Studio</string>                    <!--se qualcuno sistemasse ste robe sarebbe carino-->
+    <string name="nav_header_subtitle">android.studio@android.com</string>     <!--ordinando tipo in: messaggi base (come possono essere: ok, si, no...)-->
+    <string name="nav_header_desc">Navigation header</string>                  <!--che vanno bene per tutte le schermate; e per schermate tipo:-->
+    <string name="action_settings">Impostazioni</string>                       <!--string di grow, string di account, string di calendar...-->
     <string name="menu_home">Home</string>
     <string name="menu_account">Profilo</string>
     <string name="menu_calendar">Calendario</string>
@@ -28,11 +28,13 @@
     <string name="impegno">AGGIUNGI UN TUO IMPEGNO</string>
     <string name="sincronizza">SINCRONIZZA CON GOOGLE</string>
 
-        <!-- impostazioni grafico -->
+        <!-- fragment grow -->
     <string name="weight_settings">Ultima pesata:</string>
     <string name="ob_settings">IMPOSTA OBIETTIVO</string>
     <string name="clock_settings">IMPOSTA SVEGLIA GIORNALIERA</string>
+        <!-- Dialog fragment grow -->
     <string name="question_message_weight_ok">Obiettivo aggiunto correttamente</string>
+    <string name="question_title">Imposta sveglia</string>
     <string name="question_message">Sei sicuro di voler impostare la sveglia alle </string>
 
         <!-- Pagina iniziale -->
@@ -46,7 +48,7 @@
     <string name="yes">Sì</string>
     <string name="no">No</string>
 
-    <string name="annulla">Annulla</string>
+    <string name="cancel">Annulla</string>
     <string name="ok">OK</string>
   
 
@@ -103,7 +105,7 @@
         <string name="req_doc">Errore: il documento non esiste.</string>
         <string name="succ_newPawn">Pedina aggiornata</string>
         <string name="fail_newPawn">La pedina non è stata aggiornata</string>
-    <string name="profPicUpdated">Foto profilo aggiornata!</string>
-    <string name="file_missing">Foto mancante, riprova</string>
+        <string name="profPicUpdated">Foto profilo aggiornata!</string>
+        <string name="file_missing">Foto mancante, riprova</string>
 
 </resources>

@@ -80,7 +80,7 @@ class RegisterActivity : AppCompatActivity() {
                                     ).show()
 
                                     val intent =
-                                        Intent(this@RegisterActivity, setUpProfileActivity::class.java)
+                                        Intent(this@RegisterActivity, SetUpProfileActivity::class.java)
                                     intent.flags =
                                         Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                    /* intent.putExtra("user_id", firebaseUser.uid)
@@ -96,29 +96,15 @@ class RegisterActivity : AppCompatActivity() {
                                 }
                             })
 
-                    //registra utente in db (FirebaseFirestore)
-                    setData(et_nickame.text.toString(), et_register_email.text.toString() )
+                    //registra utente in db: FirebaseFirestore
+                    DbManager.registerUser(et_nickame.text.toString(), et_register_email.text.toString() )
 
                 }
             }
-
         }
     }
-    fun setData(nickname : String, mail : String) {
-
-        val nickname  = nickname
-        val mail = mail
-        var data : MutableMap<String,String> = mutableMapOf()
-        data.put("NICKNAME", nickname)
 
 
-        db.collection("Accounts")
-            .document(mail)
-            .set(data as Map<String, Any>)
-            .addOnFailureListener {
-                println("save on db epic fail: $it")
-            }
-    }
     fun hideKeyboard(context: Activity) {
         val inputMethodManager =
             context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager

@@ -23,7 +23,7 @@
         android:roundIcon="@drawable/logo_stilizzato"
         android:supportsRtl="true"
         android:theme="@style/Theme.KGame.NoActionBar">
-        <activity android:name=".setUpProfileActivity"></activity>
+        <activity android:name=".SetUpProfileActivity"></activity>
         <activity android:name=".RegisterActivity">
 
         </activity>

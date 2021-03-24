@@ -37,6 +37,10 @@
     <string name="question_message_weight">Sei salito sopra la bilancia e vuoi aggiungere il tuo peso? </string>
     <string name="question_message_weight_ok">Obiettivo aggiunto correttamente</string>
     <string name="question_message_obj_ok">Hai aggiunto correttamente il peso di</string>
+    <string name="titolo">titolo</string>
+    <string name="luogo">luogo</string>
+    <string name="descrizione">descrizione</string>
+    <string name="crea">Crea evento</string>
 
 
     <string name="yes">Sì</string>

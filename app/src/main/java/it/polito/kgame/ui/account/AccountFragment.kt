@@ -57,8 +57,6 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
     private val REQUEST_CODE = 100
     private var mImageUri: Uri? = null
 
-    //    private var mStorageRef: StorageReference? = null
-//    private var mUploadTask: StorageTask<*>? = null
     private var db: FirebaseFirestore? = null
     private var pawnCode: Int = 0
     private var switch: Int? = null
@@ -92,6 +90,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
             if (pawnCode <= 0) {
                 pawnCode = 2
             } else pawnCode--
+
             changePawnView()
             if (switch == 0) switch = 2
             activateUpdateButton(switch ?: 1, null)
@@ -101,14 +100,10 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
             if (pawnCode >= 2) {
                 pawnCode = 0
             } else pawnCode++
+
             changePawnView()
-            println("switch1: $switch")
-
             if (switch == 0) switch = 2
-            println("switch2: $switch")
-
             activateUpdateButton(switch ?: 1, null)
-            println("switch3: $switch")
 
         }
 
@@ -142,7 +137,6 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         //nickname edit text management
         edit_nickname.setOnKeyListener { _, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
-//                DbManager.updateNickname(requireContext(), edit_nickname.text.toString())
                 viewModel.changeUsername(edit_nickname.text.toString())
                 if (switch == 0) switch = 2
                 activateUpdateButton(switch ?: 1, null)
@@ -164,17 +158,10 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         val uri: Uri? = data?.data
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
             imageView.setImageURI(uri) // handle chosen image
-            //send acquired image to db
-//            DbManager.uploadImgProfilo(requireContext(), uri)
+            //send acquired image to saveUpdates method
             viewModel.changeImg(uri.toString())
-            println("switch1: $switch")
-
             if (switch == 1) switch = 2
-            println("switch2: $switch")
-
             activateUpdateButton(switch ?: 0, uri)
-            println("switch3: $switch")
-
         }
     }
 
@@ -247,166 +234,10 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         }
     }
 
-//    private fun showPermissionDeniedDialog() {
-//        AlertDialog.Builder(requireContext())
-//                .setTitle(R.string.permesso_negato)
-//                .setMessage(R.string.impostazioni_app)
-//                .setPositiveButton(R.string.butt_imp_app,
-//
-//                    DialogInterface.OnClickListener { dialogInterface, i ->
-//                        // send to app settings if permission is denied permanently
-//                        val intent = Intent()
-//                        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-//                        val uri = Uri.fromParts(
-//                            "package",
-//                            requireActivity().getPackageName(),
-//                            null
-//                        )
-//                        intent.data = uri
-//                        startActivity(intent)
-//                    })
-//                .setNegativeButton(R.string.annulla, null)
-//                .show()
-//    }
-
-
-//    fun updateNickname() {
-//
-//        var data : MutableMap<String,String> = mutableMapOf()
-//        data.put(DbManager.NICKNAME, edit_nickname.text.toString())
-//
-//
-//        db?.collection(DbManager.ACCOUNTS)
-//                ?.document(viewModel.thisUser.mail)
-//                ?.update(data as Map<String, Any>)
-//                ?.addOnSuccessListener {
-//                    Toast.makeText(
-//                            requireContext(),
-//                            R.string.succ_newNN,
-//                            Toast.LENGTH_SHORT
-//                    ).show();
-//                    println("update Nickname success")
-//                }
-//                ?.addOnFailureListener {
-//                    Toast.makeText(
-//                            requireContext(),
-//                            R.string.fail_newNN,
-//                            Toast.LENGTH_SHORT
-//                    ).show();
-//                    println("update Nickname epic fail")
-//                }
-//    }
-
-//    fun readNickname() {
-//
-//        db?.collection(DbManager.ACCOUNTS)
-//                ?.document(viewModel.thisUser.mail)
-//                ?.get()
-//                ?.addOnSuccessListener {
-//                    if (it.exists()) {
-//                        edit_nickname.setText(it.getString(DbManager.NICKNAME))
-//                    } else {
-//                        Toast.makeText(
-//                                requireContext(),
-//                                R.string.req_doc,
-//                                Toast.LENGTH_SHORT
-//                        ).show()
-//
-//                    }
-//                }
-//                ?.addOnFailureListener {
-//
-//                }
-//    }
-
-//    private fun getFileExtension(uri: Uri): String? {
-//        val cR: ContentResolver = requireContext().contentResolver
-//        val mime = MimeTypeMap.getSingleton()
-//        return mime.getExtensionFromMimeType(cR.getType(uri))
-//    }
-//
-//    private fun uploadImgProfilo() {
-//        if (mImageUri != null) {
-//            val fileReference = mStorageRef!!.child(
-//                System.currentTimeMillis()
-//                    .toString() + "." + getFileExtension(mImageUri!!)
-//            )
-//            mUploadTask = fileReference.putFile(mImageUri!!)
-//                .addOnSuccessListener { taskSnapshot ->
-//                    Toast.makeText(
-//                            requireContext(),
-//                            "Upload successful",
-//                            Toast.LENGTH_LONG
-//                    ).show()
-//
-//                    var data : MutableMap<String,String> = mutableMapOf()
-//
-//                    fileReference.downloadUrl.addOnCompleteListener () { taskSnapshot ->
-//                        var url = taskSnapshot.result
-//                        println ("url =" + url.toString())
-//                        data.put(DbManager.PROF_PIC, url.toString())
-//                        viewModel.fbUser.value?.let {
-//                            db?.collection(DbManager.ACCOUNTS)
-//                                    ?.document(it.email)
-//                                    ?.update(data as Map<String, Any>)
-//                                    ?.addOnSuccessListener {
-//                                        Toast.makeText(
-//                                                requireContext(),
-//                                                R.string.ok,
-//                                                Toast.LENGTH_SHORT
-//                                        )
-//                                    }
-//                        }
-//
-//                    }
-//
-//
-//                }
-//                .addOnFailureListener { e ->
-//                    Toast.makeText(
-//                        context,
-//                        e.message,
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//
-//        } else {
-//            print("errore")
-//            Toast.makeText(
-//                    context,
-//                    "No file selected",
-//                    Toast.LENGTH_SHORT
-//            ).show()
-//        }
-//
-//    }
-
-//    fun readImgProfilo() {
-//
-//        db?.collection(DbManager.ACCOUNTS)
-//                ?.document(viewModel.thisUser.mail)
-//                ?.get()
-//                ?.addOnSuccessListener {
-//                    if (it.exists()) {
-//                        Picasso.get().load(it.getString(DbManager.PROF_PIC)).into(imageView)
-//                    } else {
-//                        Toast.makeText(
-//                                requireContext(),
-//                                R.string.req_doc,
-//                                Toast.LENGTH_SHORT
-//                        ).show()
-//
-//                    }
-//                }
-//                ?.addOnFailureListener {
-//
-//                }
-//    }
 
     private fun changePawnView() {
         imageViewpedina.setImageResource(pedina(pawnCode))
         viewModel.changePawn(pawnCode)
-//        DbManager.updatePawnCode(requireContext(),pawnCode)     //in questo modo carichi il dato sul db ogni volta che lo cambi. È meglio aggiungere un pulsante per salvare tutte le modifiche
     }
 
     var uriBuffer : Uri? = null

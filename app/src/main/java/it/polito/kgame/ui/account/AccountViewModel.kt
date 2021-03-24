@@ -41,6 +41,7 @@ class AccountViewModel : ViewModel() {
 
 
     init {
+        areUpdatesBeenMade = false
         _fbUser.value = FirebaseAuth.getInstance().currentUser
 
         viewModelScope.launch {
@@ -86,10 +87,6 @@ class AccountViewModel : ViewModel() {
         _thisUser.value?.profileImg = uri
         areUpdatesBeenMade = true
     }
-
-//    fun updatePawn(context: Context, pawnCode: Int) {
-//        DbManager.updatePawnCode(context, pawnCode)
-//    }
 
     fun saveUpdates(context: Context) {
         if (areUpdatesBeenMade) {

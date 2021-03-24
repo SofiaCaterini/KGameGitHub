@@ -6,7 +6,7 @@ class Pedina (id: Int?) {
         //empty constructor needed
     }
 
-    fun Pedina(id:Int?) : Int? {
+    fun pedina(id:Int?) : Int? {
         var idpedina : Int? = null
         when (id) {
             0 -> {
@@ -29,6 +29,6 @@ class Pedina (id: Int?) {
             }
         }
         return idpedina
-}
+    }
 
 }

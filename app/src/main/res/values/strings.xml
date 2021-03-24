@@ -70,7 +70,7 @@
 
     //System messages
         //Permission alert dialog
-        <string name="permesso_negato">Permesso negato</string>
+        <string name="permession_denied">Permesso negato</string>
         <string name="impostazioni_app">Il permesso per accedere alla Galleria è negato. Per favore consenti il permesso dalle Impostazioni dell\'App.</string>
         <string name="butt_imp_app">Impostazioni dell\'App</string>
 
@@ -90,7 +90,15 @@
         <string name="succ_newNN">Nickname aggiornato</string>
         <string name="fail_newNN">Il nickname non è stato aggiornato correttamente</string>
 
+        <string name="succ_newNNorPP">Nickname e/o pedina aggiornati</string>
+        <string name="fail_newNNorPP">Il nickname e la pedina non sono stati aggiornati correttamente</string>
+
+
         <string name="req_doc">Errore: il documento non esiste.</string>
+        <string name="succ_newPawn">Pedina aggiornata</string>
+        <string name="fail_newPawn">La pedina non è stata aggiornata</string>
+    <string name="profPicUpdated">Foto profilo aggiornata!</string>
+    <string name="file_missing">Foto mancante, riprova</string>
 
 
 </resources>

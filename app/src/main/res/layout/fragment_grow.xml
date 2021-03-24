@@ -220,7 +220,7 @@
         android:id="@+id/cancel"
         android:layout_width="wrap_content"
         android:layout_height="47dp"
-        android:text="@string/annulla"
+        android:text="@string/cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ok"
         app:layout_constraintHorizontal_chainStyle="spread"

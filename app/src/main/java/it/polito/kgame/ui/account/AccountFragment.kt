@@ -118,8 +118,6 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
         //i frammenti non sono lifecycleowner
         viewModel.data.observe(viewLifecycleOwner, Observer { data -> adapter.setData(data) })
-        rv.layoutManager = LinearLayoutManager(requireContext())
-        rv.adapter = adapter
         val tView: View = requireActivity().toolbar
         val nView: View = requireActivity().nav_view
 
@@ -208,7 +206,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                                 intent.data = uri
                                 startActivity(intent)
                             })
-                    .setNegativeButton(R.string.annulla, null)
+                    .setNegativeButton(R.string.cancel, null)
                     .show()
         }
 
@@ -422,6 +420,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                     DbManager.uploadProfileImg(requireContext(), uri)
                     Toast.makeText(requireContext(), "Stai salvando la nuova immagine profilo", Toast.LENGTH_SHORT).show()
                     requireActivity().saveUpdates.visibility = View.GONE
+                    switch=null
                 }
             }
             1 -> {  //case where only pawn/nickname is getting uploaded
@@ -430,6 +429,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                         viewModel.saveUpdates(requireContext())
                         Toast.makeText(requireContext(), "Stai salvando le nuove impostazioni", Toast.LENGTH_SHORT).show()
                         requireActivity().saveUpdates.visibility = View.GONE
+                        switch=null
                     }
             }
             2 -> {  //case where both profile image and pawn/nickname are getting uploaded
@@ -438,6 +438,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                     viewModel.saveUpdates(requireContext())
                     Toast.makeText(requireContext(), "Stai salvando le nuove impostazioni!", Toast.LENGTH_SHORT).show()
                     requireActivity().saveUpdates.visibility = View.GONE
+                    switch=null
                 }
             }
         }

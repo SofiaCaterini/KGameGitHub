@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import android.view.autofill.AutofillManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
@@ -24,6 +25,11 @@ class RegisterActivity : AppCompatActivity() {
         view.setOnClickListener { hideKeyboard(this@RegisterActivity) }
 
         val db : FirebaseFirestore
+
+        val autofillManager = getSystemService(AutofillManager::class.java)
+        autofillManager.disableAutofillServices()
+        et_register_email.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO
+        et_register_password.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO
 
         tv_login.setOnClickListener {
             startActivity(Intent(this@RegisterActivity,LogInActivity::class.java))

@@ -22,11 +22,6 @@ class LogInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
 
-//        val autofillManager = getSystemService(AutofillManager::class.java)
-//        autofillManager.disableAutofillServices()
-//        et_login_email.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO
-//        et_login_password.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO
-
         val view: View = findViewById(R.id.sfondologin)
         view.setOnClickListener { hideKeyboard(this@LogInActivity) }
 

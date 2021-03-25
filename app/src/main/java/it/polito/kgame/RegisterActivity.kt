@@ -26,11 +26,12 @@ class RegisterActivity : AppCompatActivity() {
 
         val db : FirebaseFirestore
 
-        val autofillManager = getSystemService(AutofillManager::class.java)
-        autofillManager.disableAutofillServices()
-        et_register_email.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO
-        et_register_password.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO
-
+//        val autofillManager = getSystemService(AutofillManager::class.java)
+//        autofillManager.disableAutofillServices()
+//        et_register_email.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO
+//        et_register_password.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO
+//        et_register_password2.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO
+//
         tv_login.setOnClickListener {
             startActivity(Intent(this@RegisterActivity,LogInActivity::class.java))
         }

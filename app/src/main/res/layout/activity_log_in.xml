@@ -30,7 +30,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6"
-        app:layout_constraintVertical_bias="0.01999998" />
+        app:layout_constraintVertical_bias="0.01999998"
+        android:importantForAutofill="no"/>
 
     <TextView
         android:id="@+id/textViewlog"
@@ -80,7 +81,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8"
-        app:layout_constraintVertical_bias="0.01999998" />
+        app:layout_constraintVertical_bias="0.01999998"
+        android:importantForAutofill="no"/>
 
     <TextView
         android:id="@+id/tv_register"

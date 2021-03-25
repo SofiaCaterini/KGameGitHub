@@ -216,7 +216,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
                 var message : String = "$messaggiosalvato $orarioscelto?"
 
                 AlertDialog.Builder(requireContext())
-                        .setTitle(R.string.question_title)
+                        .setTitle(R.string.question_title_weight)
                         .setMessage(message)
                         .setPositiveButton(R.string.yes) { _, _ ->
                             val intent = Intent(AlarmClock.ACTION_SET_ALARM)

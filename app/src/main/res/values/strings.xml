@@ -41,7 +41,9 @@
     <string name="luogo">luogo</string>
     <string name="descrizione">descrizione</string>
     <string name="crea">Crea evento</string>
-
+    <string name="data">data</string>
+    <string name="orainizio">orario inizio</string>
+    <string name="durata">durata</string>
 
     <string name="yes">Sì</string>
     <string name="no">No</string>

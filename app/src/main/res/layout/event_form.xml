@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/eventform"
     android:layout_width="wrap_content"
-    android:layout_height="330dp"
-    android:background="#F3ECEC">
+    android:layout_height="wrap_content"
+    android:background="#F3ECEC"
+    android:elevation="5dp">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/annulla"
@@ -69,6 +70,24 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:hint="@string/descrizione" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:ems="10"
+            android:hint="@string/data"
+            android:inputType="datetime" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/orainizio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:ems="10"
+            android:hint="@string/orainizio"
+            android:inputType="time" />
 
     </LinearLayout>
 

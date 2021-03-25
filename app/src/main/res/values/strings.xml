@@ -7,55 +7,65 @@
     <string name="open">open</string>
     <string name="close">close</string>
 
-    <string name="large_text">     //cosa è? perchè è vuoto?
-    </string>
+       <!-- navigazione -->
     <string name="title_activity_main2">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>                     //se qualcuno sistemasse ste robe sarebbe carino
-    <string name="nav_header_subtitle">android.studio@android.com</string>      //ordinando tipo in: messaggi base (come possono essere: ok, si, no...)
-    <string name="nav_header_desc">Navigation header</string>                   //che vanno bene per tutte le schermate; e per schermate tipo:
-    <string name="action_settings">Impostazioni</string>                        //string di grow, string di account, string di calendar...
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Impostazioni</string>
     <string name="menu_home">Home</string>
     <string name="menu_account">Profilo</string>
-    <string name="menu_calendar">Calendario</string>
-    <string name="menu_grow">La tua crescita</string>
+
+    <!-- profilo -->
     <string name="cambia">Cambia foto profilo</string>
     <string name="cambia_pedina">Cambia pedina</string>
     <string name="cambia_nickname">Cambia nickname</string>
-      <!-- calendario -->
-    <string name="evento">PROPONI NUOVO EVENTO</string>
-    <string name="impegno">AGGIUNGI UN TUO IMPEGNO</string>
-    <string name="sincronizza">SINCRONIZZA CON GOOGLE</string>
 
+      <!-- calendario -->
+    <string name="evento">Proponi un nuovo evento</string>
+    <string name="impegno">Aggiungi un tuo impegno</string>
+    <string name="sincronizza">Sincronizza</string>
+    <string name="menu_calendar">Calendario</string>
+
+    <!-- Login/register -->
+    <string name="login">Login</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="conferma">conferma</string>
+    <string name="newUser">Nuovo utente?</string>
+    <string name="register">Registrati</string>
+    <string name="username">username</string>
+    <string name="add_user_photo">Aggiungi una foto al tuo profilo</string>
+    <string name="crea_Fam">+ Crea una famiglia</string>
+    <string name="join_Fam">UNISCITI A UNA FAMIGLIA</string>
+    <string name="fam_code">codice famiglia</string>
         <!-- impostazioni grafico -->
     <string name="weight_settings">Ultima pesata:</string>
     <string name="ob_settings">IMPOSTA OBIETTIVO</string>
     <string name="clock_settings">IMPOSTA SVEGLIA GIORNALIERA</string>
     <string name="question_message_weight_ok">Obiettivo aggiunto correttamente</string>
     <string name="question_message">Sei sicuro di voler impostare la sveglia alle </string>
+    <string name="menu_grow">La tua crescita</string>
+    <string name="question_title_obj_ok">Conferma aggiunta obiettivo</string>
+    <string name="question_message_obj">Vuoi davvero impostare il tuo nuovo obiettivo di peso su </string>
 
-        <!-- Pagina iniziale -->
+        <!-- home -->
     <string name="question_title_weight">Aggiungi peso</string>
     <string name="question_title_weight_ok">Peso aggiunto correttamente</string>
-
     <string name="question_message_weight">Sei salito sopra la bilancia e vuoi aggiungere il tuo peso? </string>
     <string name="question_message_obj_ok">Hai aggiunto correttamente il peso di</string>
 
-
+    <!-- varie -->
     <string name="yes">Sì</string>
     <string name="no">No</string>
-
     <string name="annulla">Annulla</string>
     <string name="ok">OK</string>
-  
-
-
-  
     <string name="ricorda">Ricorda: è meglio pesarsi sempre allo stesso orario, preferibilmente al mattino o prima dei pasti!</string>
     //growFrag - obiettivo
-    <string name="question_title_obj_ok">Conferma aggiunta obiettivo</string>
-    <string name="question_message_obj">Vuoi davvero impostare il tuo nuovo obiettivo di peso su </string>
+
+    <!-- unità di misura -->
     <string name="kgq">kg?</string>
     <string name="kg">kg.</string>
 

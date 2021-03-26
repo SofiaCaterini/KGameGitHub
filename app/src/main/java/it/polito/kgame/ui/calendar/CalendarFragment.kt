@@ -2,10 +2,8 @@ package it.polito.kgame.ui.calendar
 
 import android.content.Context
 import android.content.Intent
-import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.icu.util.Calendar.getInstance
-import android.net.ParseException
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.util.Log
@@ -16,16 +14,11 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.google.android.material.datepicker.CalendarConstraints.DateValidator
 import it.polito.kgame.R
 import it.polito.kgame.ui.home.HomeViewModel
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.event_form.*
 import kotlinx.android.synthetic.main.fragment_calendar.*
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
-import java.util.*
 
 
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
@@ -38,7 +31,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_calendar)
         creare.isVisible = false
         var orainiziovalid : Boolean = false
-        var datavalid : Boolean = false
+        var dataIsValid : Boolean = false
 
         fun View.hideKeyboard() {
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -53,22 +46,22 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         data.setText(refactorDate(selectedDayCal))
 
-        datavalid = true
+        dataIsValid = true
 
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
 
             selectedDayCal.set(year, month , dayOfMonth, 23, 59)
             data.error = null
 
-            if (todayMillis <= selectedDayCal.timeInMillis){
+            if (todayMillis <= selectedDayCal.timeInMillis) {
                 data.setText(refactorDate(selectedDayCal))
                 data.error = null
-                datavalid = true
+                dataIsValid = true
             }
             else {
                 data.setText("")
                 data.error = "Inserisci data corretta"
-                datavalid = false
+                dataIsValid = false
             }
 
         }
@@ -87,7 +80,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
             orainizio.doAfterTextChanged {
 
-                if (!it.isNullOrBlank() && it.contains(":") && !it.endsWith(":")){
+                if (!it.isNullOrBlank() && it.contains(":") && !it.endsWith(":") && it.count { x -> x == ':'} ==1) {
 
                     val ore = orainizio.text.toString().split(":")[0]
                     val minuti =  orainizio.text.toString().split(":")[1]
@@ -131,26 +124,26 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
             data.doAfterTextChanged {
 
-                if (!it.isNullOrBlank() && slashesAreRight(it) && it.length == 10) {
+                if (!it.isNullOrBlank() && slashesAreRight(it) && it.length in 8..10) {        //formato corretto. Controllare data
                     val giorno = data.text.toString().split("/")[0]
                     val mese =  data.text.toString().split("/")[1]
                     val anno =  data.text.toString().split("/")[2]
-                    selectedDayCal.set(anno.toInt(), mese.toInt() - 1, giorno.toInt(), 12,0)
+                    selectedDayCal.set(anno.toInt(), mese.toInt() - 1, giorno.toInt(), 23,59)
                     val todayCal2 : Calendar = getInstance()
                     todayCal2.timeInMillis = todayMillis
 
                     Log.d("millisevento", eventDateCal.timeInMillis.toString())
-                    if ((anno.toInt()>todayCal2.get(Calendar.YEAR)) || (anno.toInt() == todayCal2.get(Calendar.YEAR) && mese.toInt() > todayCal2.get(Calendar.MONTH))
-                            || (anno.toInt() == todayCal2.get(Calendar.YEAR) && mese.toInt() == todayCal2.get(Calendar.MONTH)
-                                    && giorno.toInt() >= todayCal2.get(Calendar.DAY_OF_MONTH)) ){
+//                    if ((anno.toInt()>todayCal2.get(Calendar.YEAR))
+//                            || (anno.toInt() == todayCal2.get(Calendar.YEAR) && mese.toInt() -1 > todayCal2.get(Calendar.MONTH))
+//                            || (anno.toInt() == todayCal2.get(Calendar.YEAR) && mese.toInt() -1 == todayCal2.get(Calendar.MONTH)
+//                                    && giorno.toInt() >= todayCal2.get(Calendar.DAY_OF_MONTH)) ){
+                    if(selectedDayCal.timeInMillis >= System.currentTimeMillis()) {
                         //se data dopo o uguale a oggi
                         //controllare se formato corretto
                         Log.d("tag", "datadopooggi")
                         //se inserisco 31 febbraio e faccio la conversione dei suoi millis ottengo 02 marzo
-                        var s : Calendar = getInstance()
-                        s.timeInMillis = (selectedDayCal.timeInMillis)
-                        datavalid = ((anno.toInt() == s.get(Calendar.YEAR)) && (mese.toInt() == s.get(Calendar.MONTH)) &&
-                                (giorno.toInt() == s.get(Calendar.DAY_OF_MONTH)))
+                        dataIsValid = ((anno.toInt() == selectedDayCal.get(Calendar.YEAR)) && (mese.toInt() -1 == selectedDayCal.get(Calendar.MONTH)) &&
+                                (giorno.toInt() == selectedDayCal.get(Calendar.DAY_OF_MONTH)))
 
 
                         //datavalid = data.text.toString() == refactorDate((selectedDayCal))
@@ -162,18 +155,18 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                         Log.d("annomillis", selectedDayCal.get(Calendar.YEAR).toString())
 
                         ////////////////////////////////////////////////////////////////////
-                        if (datavalid == false) {data.error = "Inserisci data corretta"}
-                        if (datavalid) {eventDateCal.set(anno.toInt(), mese.toInt(), giorno.toInt())}
+                        if (!dataIsValid) {data.error = "Inserisci data corretta"}
+                        if (dataIsValid) {eventDateCal.set(anno.toInt(), mese.toInt(), giorno.toInt())}
                     } else {
                         //data prima di oggi
                         //controllare formato corretto
-                        datavalid = false
-                        if (datavalid == false) {data.error = "Inserisci data corretta"}
+                        dataIsValid = false
+                        if (!dataIsValid) {data.error = "Inserisci data corretta"}
                         //orainiziovalid = false
                     }
 
                 } else {
-                    datavalid = false
+                    dataIsValid = false
                     data.error = "Inserisci formato dd/mm/yyyy"
                 }
 
@@ -195,7 +188,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 println("ok")
                 Log.d("millisevento", eventDateCal.timeInMillis.toString())
                 if ((titolo.text.toString().isNotEmpty() && luogo.text.toString().isNotEmpty()
-                            && descrizione.text.toString().isNotEmpty()) && orainiziovalid && datavalid
+                            && descrizione.text.toString().isNotEmpty()) && orainiziovalid && dataIsValid
                 ) {
                     Log.d("myTag", "campi giusti")
                     val intent = Intent(Intent.ACTION_INSERT).apply {
@@ -237,15 +230,9 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         val day : String = if(cal.get(Calendar.DAY_OF_MONTH)>=10) cal.get(Calendar.DAY_OF_MONTH).toString()
                 else  "0" + cal.get(Calendar.DAY_OF_MONTH)
-        val month : String = if (cal.get(Calendar.MONTH)>=10) cal.get((Calendar.MONTH+1)).toString()
-                else "0"+ (cal.get(Calendar.MONTH+1))
+        val month : String = if (cal.get(Calendar.MONTH)>=9) (cal.get(Calendar.MONTH)+1).toString()
+                else "0"+ (cal.get(Calendar.MONTH)+1)
 
         return day + "/" + month + "/" + cal.get(Calendar.YEAR)
     }
-
-
-
-
-
-
 }

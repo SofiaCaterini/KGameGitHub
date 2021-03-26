@@ -2,8 +2,10 @@ package it.polito.kgame.ui.calendar
 
 import android.content.Context
 import android.content.Intent
+import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.icu.util.Calendar.getInstance
+import android.net.ParseException
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.util.Log
@@ -14,11 +16,17 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.google.android.material.datepicker.CalendarConstraints.DateValidator
 import it.polito.kgame.R
 import it.polito.kgame.ui.home.HomeViewModel
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.event_form.*
 import kotlinx.android.synthetic.main.fragment_calendar.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+import java.util.*
+
 
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
@@ -49,7 +57,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
 
-            selectedDayCal.set(year, month, dayOfMonth, 23, 59)
+            selectedDayCal.set(year, month , dayOfMonth, 23, 59)
             data.error = null
 
             if (todayMillis <= selectedDayCal.timeInMillis){
@@ -123,11 +131,11 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
             data.doAfterTextChanged {
 
-                if (!it.isNullOrBlank() && slashesAreRight(it)) {
+                if (!it.isNullOrBlank() && slashesAreRight(it) && it.length == 10) {
                     val giorno = data.text.toString().split("/")[0]
                     val mese =  data.text.toString().split("/")[1]
                     val anno =  data.text.toString().split("/")[2]
-                    selectedDayCal.set(anno.toInt(), mese.toInt(), giorno.toInt())
+                    selectedDayCal.set(anno.toInt(), mese.toInt() - 1, giorno.toInt(), 12,0)
                     val todayCal2 : Calendar = getInstance()
                     todayCal2.timeInMillis = todayMillis
 
@@ -138,9 +146,21 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                         //se data dopo o uguale a oggi
                         //controllare se formato corretto
                         Log.d("tag", "datadopooggi")
-                        ////////////////////////////////////////////////////////////////////
-                        datavalid = true
-                        //datavalid = giorno.toInt() in 1..31 && mese.toInt() in 1..12
+                        //se inserisco 31 febbraio e faccio la conversione dei suoi millis ottengo 02 marzo
+                        var s : Calendar = getInstance()
+                        s.timeInMillis = (selectedDayCal.timeInMillis)
+                        datavalid = ((anno.toInt() == s.get(Calendar.YEAR)) && (mese.toInt() == s.get(Calendar.MONTH)) &&
+                                (giorno.toInt() == s.get(Calendar.DAY_OF_MONTH)))
+
+
+                        //datavalid = data.text.toString() == refactorDate((selectedDayCal))
+                        //Log.d("datascritta", data.text.toString())
+                        //Log.d("datadaimillis", refactorDate(selectedDayCal) )
+                        Log.d("datascritta", data.text.toString())
+                        Log.d("giornomillis", selectedDayCal.get(Calendar.DAY_OF_MONTH).toString())
+                        Log.d("mesemillis", selectedDayCal.get(Calendar.MONTH).toString())
+                        Log.d("annomillis", selectedDayCal.get(Calendar.YEAR).toString())
+
                         ////////////////////////////////////////////////////////////////////
                         if (datavalid == false) {data.error = "Inserisci data corretta"}
                         if (datavalid) {eventDateCal.set(anno.toInt(), mese.toInt(), giorno.toInt())}
@@ -167,6 +187,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 view.hideKeyboard()
                 println("annulla")
                 Log.d("myTag", "annulla")
+                Log.d("datadaimillis", refactorDate(selectedDayCal) )
             }
 
 
@@ -209,17 +230,22 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         val slash = '/'
         return  chars.count{it == slash} == 2 &&        //ci sono 2 slash
                 !chars.startsWith(slash) && !chars.endsWith(slash) &&       //non inizia nè finisce con lo slash
-                chars.substring(chars.indexOf(slash), chars.lastIndexOf(slash)).isNotBlank()    //gli slash non sono consecutivi
+                chars.substring(chars.indexOf(slash)+1, chars.lastIndexOf(slash)).isNotBlank()    //gli slash non sono consecutivi
     }
 
     private fun refactorDate(cal: Calendar): String {
 
         val day : String = if(cal.get(Calendar.DAY_OF_MONTH)>=10) cal.get(Calendar.DAY_OF_MONTH).toString()
                 else  "0" + cal.get(Calendar.DAY_OF_MONTH)
-        val month : String = if (cal.get(Calendar.MONTH)>=10) cal.get((Calendar.MONTH)+1).toString()
-                else "0"+ (cal.get(Calendar.MONTH)+1)
+        val month : String = if (cal.get(Calendar.MONTH)>=10) cal.get((Calendar.MONTH+1)).toString()
+                else "0"+ (cal.get(Calendar.MONTH+1))
 
         return day + "/" + month + "/" + cal.get(Calendar.YEAR)
     }
+
+
+
+
+
 
 }

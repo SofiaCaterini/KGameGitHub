@@ -226,7 +226,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
                             requireActivity().startActivity(intent)
 
                         }
-                        .setNegativeButton(R.string.ok) { _, _ -> noClicked() }
+                        .setNegativeButton(R.string.cancel) { _, _ -> noClicked() }
                         .show()
             }
             TimePickerDialog(context, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()

@@ -24,8 +24,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
-    val db : FirebaseFirestore = FirebaseFirestore.getInstance()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         if (pView != null) {
             val imm = pActivity
                     .getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            imm?.hideSoftInputFromWindow(pView.getWindowToken(), 0)
+            imm.hideSoftInputFromWindow(pView.getWindowToken(), 0)
 
 
         }

@@ -228,6 +228,8 @@
         android:backgroundTint="#FFFFFF"
         android:text="@string/annulla"
         android:textColor="@color/toolbar_grow"
+        android:text="@string/cancel"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ok"
         app:layout_constraintHorizontal_chainStyle="spread"

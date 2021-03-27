@@ -42,10 +42,10 @@
         app:layout_constraintVertical_bias="0.0">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/crea"
+            android:id="@+id/aggiungi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/crea"
+            android:text="@string/aggiungi"
             android:textAlignment="center"
             android:textSize="30sp"
             android:textStyle="bold" />
@@ -55,21 +55,24 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:hint="@string/titolo" />
+            android:hint="@string/titolo"
+            android:inputType="textShortMessage" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/luogo"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:hint="@string/luogo" />
+            android:hint="@string/luogo"
+            android:inputType="textShortMessage" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/descrizione"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:hint="@string/descrizione" />
+            android:hint="@string/descrizione"
+            android:inputType="textShortMessage" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/data"

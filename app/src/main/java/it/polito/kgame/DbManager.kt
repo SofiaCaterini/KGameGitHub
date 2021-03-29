@@ -9,16 +9,16 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.fragment_account.*
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.tasks.await
+import java.util.*
 
 object DbManager {
 
@@ -60,8 +60,7 @@ object DbManager {
     fun registerUser(nickname : String, mail : String) {
 
         val data : MutableMap<String,String> = mutableMapOf()
-        data.put(NICKNAME, nickname)
-
+        data[NICKNAME] = nickname
 
         db.collection(ACCOUNTS)
                 .document(mail)
@@ -71,22 +70,92 @@ object DbManager {
                 }
     }
 
+    private fun createFamily(familyName: String?) {
+
+        val data : MutableMap<String,String> = mutableMapOf()
+        if(familyName != null) data[FAM_NAME] = familyName
+
+        val code = randomCode()
+        var codeIsGood = false
+
+        db.collection(FAMILIES).document(code).get().addOnSuccessListener {
+            codeIsGood = !it.exists()
+
+            if (codeIsGood) {
+                db.collection(FAMILIES)
+                    .document(code)
+                    .set(data as Map<String, Any>)
+                    .addOnSuccessListener {
+                        joinFamily(code)            //if family is correctly created, add creator user to it
+                    }
+                    .addOnFailureListener {
+                        println("save on db epic fail: $it")
+                    }
+            } else createFamily(familyName)
+        }
+    }
+
+    private fun joinFamily(familyCode: String) {
+        val data : MutableMap<String, Any> = mutableMapOf()
+        val empty : MutableMap<String, Any> = mutableMapOf()
+        data[FAM_CODE] = familyCode
+        empty["exists"] = true
+        if (fbUser != null) {
+            db.collection(FAMILIES)
+                .document(familyCode)
+                .collection(FAM_COMPS)
+                .document(fbUser.email)
+                .set(empty)
+
+            db.collection(ACCOUNTS)
+                .document(fbUser.email)
+                .update(data)
+        }
+    }
+
+    fun setUpUserProfile(profilePic: Uri?, familyCode: String?, familyName: String?, context: Context) {
+
+        if(profilePic != null) {
+            uploadProfileImg(context, profilePic)
+        }
+
+        if (familyCode == null) {   //create family       
+            createFamily(familyName)
+        } else {              //join family
+            joinFamily(familyCode)
+        }
+    }
+
     suspend fun getUserDoc() : DocumentReference? {
 
-        if (fbUser != null && fbUser.email != null) {
-            return withContext(Dispatchers.IO) {
+        return if (fbUser != null && fbUser.email != null) {
+            withContext(Dispatchers.IO) {
 
                 db.collection(ACCOUNTS)
-                        .document(fbUser.email)
+                    .document(fbUser.email!!)
             }
-        }
-        else{
+        } else{
             println("Error when retrieving user's document: DbManager.getUserDoc()")
-            return null
+            null
+        }
+    }
+
+    suspend fun getFamilyDoc(code: String) : DocumentReference? {
+        return if (fbUser != null && fbUser.email != null) {
+            withContext(Dispatchers.IO) {
+
+                db.collection(FAMILIES)
+                    .document(code)
+            }
+        } else{
+            println("Error when retrieving family document: DbManager.getUserDoc()")
+            null
         }
     }
 
 
+ 
+=======
 //        suspend fun getUser() : User? {                                                         //DEPRECATED
 //                                                                                                //DEPRECATED
 //            if (fbUser != null) {                                                               //DEPRECATED
@@ -118,30 +187,33 @@ object DbManager {
 //        }                                                                                       //DEPRECATED
 
 
-    fun updateUser(context: Context, user: User) {
+    fun updateUser(context: Context?, user: User) {
         val data : MutableMap<String, Any> = mutableMapOf()
-        data[NICKNAME] = user.username!!
-        data[PAWN_CODE] = user.pawnCode!!
+        if(user.username != null) data[NICKNAME] = user.username!!
+        if(user.pawnCode != null) data[PAWN_CODE] = user.pawnCode!!
+        if(user.profileImg != null) data[PROF_PIC] = user.profileImg!!
+        if(user.familyCode != null) data[FAM_CODE] = user.familyCode!!
+
 
         if (fbUser != null) {
             db.collection(ACCOUNTS)
                     .document(fbUser.email)
                     .update(data as Map<String, Any>)
                     .addOnSuccessListener {
-                        Toast.makeText(
+                        if(context != null) Toast.makeText(
                                 context,
-                                R.string.succ_newNNorPP,
+                                R.string.succ_update,
                                 Toast.LENGTH_SHORT
                         ).show()
-                        println("update Nickname/Pawn success")
+                        println("update success")
                     }
                     .addOnFailureListener {
-                        Toast.makeText(
+                        if(context != null) Toast.makeText(
                                 context,
-                                R.string.fail_newNNorPP,
+                                R.string.fail_update,
                                 Toast.LENGTH_SHORT
                         ).show();
-                        println("update Nickname/Pawn epic fail")
+                        println("update epic fail")
                     }
         }
     }
@@ -174,7 +246,7 @@ object DbManager {
                                             .addOnSuccessListener {
                                                                     Toast.makeText(
                                                                             context,
-                                                                            R.string.profPicUpdated,
+                                                                            R.string.prof_pic_updated,
                                                                             Toast.LENGTH_SHORT
                                                                     ).show()
                                             }
@@ -200,5 +272,15 @@ object DbManager {
             println("errore")
         }
 
+    }
+
+    private fun randomCode(): String {
+        val allowedChars = "0123456789qwertyuiopasdfghjklzxcvbnm"
+        val sizeOfRandomString = 6
+        val random = Random()
+        val sb = StringBuilder(sizeOfRandomString)
+        for (i in 0 until sizeOfRandomString)
+            sb.append(allowedChars[random.nextInt(allowedChars.length)])
+        return sb.toString()
     }
 }

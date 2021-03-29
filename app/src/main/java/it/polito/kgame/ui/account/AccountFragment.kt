@@ -54,8 +54,8 @@ import kotlinx.android.synthetic.main.fragment_account.*
 class AccountFragment : Fragment(R.layout.fragment_account) {
     private val adapter = ItemAdapterFamily()
     private val viewModel by activityViewModels<AccountViewModel>()
+    //questo serve per la gallery
     private val REQUEST_CODE = 100
-    private var mImageUri: Uri? = null
 
     private var db: FirebaseFirestore? = null
     private var pawnCode: Int = 0

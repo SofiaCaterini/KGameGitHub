@@ -20,13 +20,14 @@ import kotlinx.android.synthetic.main.fragment_account.*
 
 class RegisterActivity : AppCompatActivity() {
 
-    val db : FirebaseFirestore = FirebaseFirestore.getInstance()
 
 
-        override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+
         val view: View = findViewById(R.id.sfondoreg)
+
         view.setOnClickListener { hideKeyboard(this@RegisterActivity) }
 
 
@@ -69,38 +70,36 @@ class RegisterActivity : AppCompatActivity() {
 
                     //crei utente
                     FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(
-                            OnCompleteListener<AuthResult> { task ->
+                        .addOnCompleteListener { task ->
 
-                                if (task.isSuccessful) {
-                                    val firebaseUser: FirebaseUser = task.result!!.user!!
+                            if (task.isSuccessful) {
+                                //logIn
+                                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                                //registra utente in db: FirebaseFirestore
+                                DbManager.registerUser(et_nickame.text.toString(), et_register_email.text.toString() )
 
-                                    Toast.makeText(
+                                Toast.makeText(
                                         this@RegisterActivity,
                                         R.string.succ_signin,
                                         Toast.LENGTH_SHORT
-                                    ).show()
+                                ).show()
 
-                                    val intent =
+                                val intent =
                                         Intent(this@RegisterActivity, SetUpProfileActivity::class.java)
-                                    intent.flags =
+                                intent.flags =
                                         Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                   /* intent.putExtra("user_id", firebaseUser.uid)
-                                    intent.putExtra("email_id", email)*/
-                                    startActivity(intent)
-                                    finish()
-                                } else {
-                                    Toast.makeText(
+                                /* intent.putExtra("user_id", firebaseUser.uid)
+                                 intent.putExtra("email_id", email)*/
+                                startActivity(intent)
+                                finish()
+                            } else {
+                                Toast.makeText(
                                         this@RegisterActivity,
                                         task.exception!!.message.toString(),
                                         Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            })
-
-                    //registra utente in db: FirebaseFirestore
-                    DbManager.registerUser(et_nickame.text.toString(), et_register_email.text.toString() )
-
+                                ).show()
+                            }
+                        }
                 }
             }
         }
@@ -110,6 +109,8 @@ class RegisterActivity : AppCompatActivity() {
     fun hideKeyboard(context: Activity) {
         val inputMethodManager =
             context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(context.currentFocus!!.windowToken, 0)
+        if(context.currentFocus != null) {
+            inputMethodManager.hideSoftInputFromWindow(context.currentFocus!!.windowToken, 0)
+        }
     }
 }

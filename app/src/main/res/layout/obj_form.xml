@@ -40,7 +40,7 @@
 
         android:backgroundTint="#FFFFFF"
         android:elevation="7dp"
-        android:text="@string/annulla"
+        android:text="@string/cancel"
         android:textColor="@color/toolbar_grow"
         app:elevation="7dp"
         app:layout_constraintBottom_toBottomOf="@+id/numPick_bg"

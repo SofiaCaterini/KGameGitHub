@@ -193,7 +193,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                                 intent.data = uri
                                 startActivity(intent)
                             })
-                    .setNegativeButton(R.string.cancel, null)
+                    .setNegativeButton(R.string.annulla, null)
                     .show()
         }
 

@@ -95,7 +95,6 @@
         android:fadingEdge="horizontal|vertical"
         android:outlineAmbientShadowColor="#F1EDED"
         android:selectedWeekBackgroundColor="@color/white"
-        android:theme="@style/calendar_theme"
         android:unfocusedMonthDateColor="@color/white"
         android:weekNumberColor="#FFFFFF"
         android:weekSeparatorLineColor="@color/white"

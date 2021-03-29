@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/obiettivo"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:elevation="6dp">
+
+    <ImageView
+        android:id="@+id/numPick_bg"
+        android:layout_width="302dp"
+        android:layout_height="300dp"
+        android:layout_marginBottom="-32dp"
+        android:src="@color/teal_200"
+        android:tintMode="screen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/progress_horizontal"
+        app:tint="@color/toolbar_grow" />
+
+    <NumberPicker
+        android:id="@+id/numberPicker"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/numPick_bg"
+        app:layout_constraintEnd_toEndOf="@+id/numPick_bg"
+        app:layout_constraintStart_toStartOf="@+id/numPick_bg"
+        app:layout_constraintTop_toTopOf="@+id/numPick_bg"
+        app:layout_constraintVertical_bias="0.32999998" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="47dp"
+
+
+        android:backgroundTint="#FFFFFF"
+        android:elevation="7dp"
+        android:text="@string/annulla"
+        android:textColor="@color/toolbar_grow"
+        app:elevation="7dp"
+        app:layout_constraintBottom_toBottomOf="@+id/numPick_bg"
+        app:layout_constraintEnd_toStartOf="@+id/ok"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/numberPicker" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
+        android:elevation="5dp"
+        android:text="@string/ok"
+        android:textColor="@color/toolbar_grow"
+        app:layout_constraintBottom_toBottomOf="@+id/numPick_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cancel"
+        app:layout_constraintTop_toBottomOf="@+id/numberPicker" />
+</androidx.constraintlayout.widget.ConstraintLayout>

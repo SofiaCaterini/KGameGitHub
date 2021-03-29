@@ -51,8 +51,6 @@
         android:foregroundTintMode="src_in"
         app:layout_constraintBottom_toTopOf="@+id/materialTextView4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.65"
-        app:layout_constraintStart_toEndOf="@+id/numberPicker"
         app:layout_constraintTop_toBottomOf="@+id/graph" />
 
     <ImageView
@@ -65,8 +63,6 @@
         android:foregroundTintMode="src_in"
         android:rotation="180"
         app:layout_constraintBottom_toTopOf="@+id/materialTextView4"
-        app:layout_constraintEnd_toStartOf="@+id/numberPicker"
-        app:layout_constraintHorizontal_bias="0.35"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graph" />
 
@@ -136,6 +132,7 @@
         android:id="@+id/obiettivo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:elevation="0dp"
         android:fontFamily="@font/asap"
         android:padding="20dp"
         android:text="@string/ob_settings"
@@ -145,6 +142,7 @@
         android:textStyle="bold"
         app:backgroundTint="#FFFFFF"
         app:cornerRadius="5dp"
+        app:elevation="0dp"
         app:iconSize="4dp"
         app:layout_constraintBottom_toTopOf="@+id/sveglia"
         app:layout_constraintEnd_toEndOf="parent"
@@ -158,6 +156,7 @@
         android:layout_width="277dp"
         android:layout_height="97dp"
         android:layout_marginBottom="8dp"
+        android:elevation="0dp"
         android:fontFamily="@font/asap"
         android:padding="20dp"
         android:text="@string/clock_settings"
@@ -168,6 +167,7 @@
         android:textStyle="bold"
         app:backgroundTint="#F6F3F3"
         app:cornerRadius="5dp"
+        app:elevation="0dp"
         app:icon="@drawable/clock"
         app:iconPadding="20dp"
         app:iconSize="36dp"
@@ -176,65 +176,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graph"
-        app:layout_constraintVertical_bias="0.85">
+        app:layout_constraintVertical_bias="0.97">
 
     </com.google.android.material.button.MaterialButton>
 
-    <ImageView
-        android:id="@+id/numPick_bg"
-        android:layout_width="302dp"
-        android:layout_height="259dp"
-        android:layout_marginBottom="-32dp"
-        android:contentDescription="TODO"
-        android:src="@color/teal_200"
-        android:tintMode="screen"
-        app:layout_constraintBottom_toBottomOf="@+id/cancel"
-        app:layout_constraintEnd_toEndOf="@+id/ok"
-        app:layout_constraintStart_toStartOf="@+id/cancel"
-        app:layout_constraintTop_toTopOf="@+id/numberPicker"
-        app:srcCompat="@android:drawable/progress_horizontal"
-        app:tint="@color/toolbar_grow" />
-
-    <NumberPicker
-        android:id="@+id/numberPicker"
-        android:layout_width="100dp"
+    <include
+        android:id="@+id/obb"
+        layout="@layout/obj_form"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="@color/white"
+        android:elevation="7dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/ok"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FFFFFF"
-        android:text="@string/ok"
-        android:textColor="@color/toolbar_grow"
-        app:layout_constraintBottom_toBottomOf="@+id/cancel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/cancel"
-        app:layout_constraintTop_toTopOf="@+id/cancel" />
-
-    <Button
-        android:id="@+id/cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="47dp"
-        android:backgroundTint="#FFFFFF"
-        android:text="@string/annulla"
-        android:textColor="@color/toolbar_grow"
-        android:text="@string/cancel"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/ok"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/numberPicker"
-        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

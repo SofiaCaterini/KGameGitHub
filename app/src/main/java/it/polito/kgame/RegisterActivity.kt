@@ -16,16 +16,20 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_log_in.*
 import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.android.synthetic.main.fragment_account.*
 
 class RegisterActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+
+    val db : FirebaseFirestore = FirebaseFirestore.getInstance()
+
+
+        override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
         val view: View = findViewById(R.id.sfondoreg)
         view.setOnClickListener { hideKeyboard(this@RegisterActivity) }
 
-        val db : FirebaseFirestore
-        
+
         tv_login.setOnClickListener {
             startActivity(Intent(this@RegisterActivity,LogInActivity::class.java))
         }
@@ -78,7 +82,7 @@ class RegisterActivity : AppCompatActivity() {
                                     ).show()
 
                                     val intent =
-                                        Intent(this@RegisterActivity, setUpProfileActivity::class.java)
+                                        Intent(this@RegisterActivity, SetUpProfileActivity::class.java)
                                     intent.flags =
                                         Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                    /* intent.putExtra("user_id", firebaseUser.uid)
@@ -94,15 +98,15 @@ class RegisterActivity : AppCompatActivity() {
                                 }
                             })
 
-                    //registra utente in db (FirebaseFirestore)
-
-
+                    //registra utente in db: FirebaseFirestore
+                    DbManager.registerUser(et_nickame.text.toString(), et_register_email.text.toString() )
 
                 }
             }
-
         }
     }
+
+
     fun hideKeyboard(context: Activity) {
         val inputMethodManager =
             context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager

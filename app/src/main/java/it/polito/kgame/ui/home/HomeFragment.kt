@@ -49,8 +49,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         homeAddWeight.setOnClickListener {
 
-            var messaggiosalvato : String = getString(R.string.question_message_weight)
-            var message : String = "$messaggiosalvato"
+            val messaggiosalvato : String = getString(R.string.question_message_weight)
+            val message : String = messaggiosalvato
 
             MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.question_title_weight)

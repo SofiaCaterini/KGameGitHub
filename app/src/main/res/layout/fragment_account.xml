@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android = "http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,22 +8,18 @@
     android:background="@drawable/sfondo_orange_profilo"
     tools:context=".ui.account.AccountFragment">
 
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView3"
-        android:layout_width="376dp"
-        android:layout_height="153dp"
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FFAC31"
+        android:text="@string/ok"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.514"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/famiglie"
-        app:layout_constraintVertical_bias="0.100000024">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </androidx.core.widget.NestedScrollView>
+        app:layout_constraintTop_toBottomOf="@+id/edit_nickname"
+        app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/cambianickname"
@@ -32,6 +27,7 @@
         android:layout_height="38dp"
         android:fontFamily="@font/asap"
         android:text="@string/cambia_nickname"
+        android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="#F8F2F2"
         android:textSize="24sp"
@@ -40,10 +36,9 @@
         app:cornerRadius="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.345"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dx"
-        app:layout_constraintVertical_bias="0.050000012">
+        app:layout_constraintVertical_bias="0.110000014">
 
     </com.google.android.material.textview.MaterialTextView>
 
@@ -51,14 +46,18 @@
         android:id="@+id/edit_nickname"
         android:layout_width="165dp"
         android:layout_height="59dp"
+        android:backgroundTint="#FFFFFF"
+        android:drawableTint="#FFFFFF"
         android:fontFamily="@font/asap"
+        android:foregroundTint="#FFFFFF"
         android:inputType="textPersonName"
         android:text="@string/nickname"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cambianickname"
         app:layout_constraintVertical_bias="0.0">
@@ -66,32 +65,12 @@
     </com.google.android.material.textfield.TextInputEditText>
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/famiglie"
-        android:layout_width="301dp"
-        android:layout_height="38dp"
-        android:fontFamily="@font/asap"
-        android:text="@string/famiglie"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="#F8F2F2"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:backgroundTint="#00FFFFFF"
-        app:cornerRadius="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.35"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_nickname"
-        app:layout_constraintVertical_bias="0.06999999">
-
-    </com.google.android.material.textview.MaterialTextView>
-
-    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/cambiapedina"
         android:layout_width="301dp"
         android:layout_height="38dp"
         android:fontFamily="@font/asap"
         android:text="@string/cambia_pedina"
+        android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="#F8F2F2"
         android:textSize="24sp"
@@ -100,10 +79,9 @@
         app:cornerRadius="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.33"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.01999998">
+        app:layout_constraintTop_toBottomOf="@+id/but_cambiaFoto"
+        app:layout_constraintVertical_bias="0.071">
 
     </com.google.android.material.textview.MaterialTextView>
 
@@ -113,6 +91,7 @@
         android:layout_height="50dp"
         android:rotationY="180"
         android:src="@drawable/right_arrow"
+        android:tint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/imageViewpedina"
         app:layout_constraintEnd_toStartOf="@+id/imageViewpedina"
         app:layout_constraintHorizontal_bias="0.5"
@@ -120,43 +99,67 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageViewpedina" />
 
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/but_cambiaFoto"
-        android:layout_width="184dp"
-        android:layout_height="112dp"
+        android:layout_width="190dp"
+        android:layout_height="56dp"
         android:fontFamily="@font/asap"
-        android:padding="20dp"
+        android:padding="10dp"
         android:text="@string/cambia"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="#0C0C0C"
-        android:textSize="24sp"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
         android:textStyle="bold"
-        app:backgroundTint="#F6F3F3"
+        app:backgroundTint="#FFAC31"
         app:cornerRadius="5dp"
         app:iconSize="4dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintEnd_toStartOf="@+id/imageView"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.00999999">
 
     </com.google.android.material.button.MaterialButton>
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageView"
-        android:layout_width="113dp"
-        android:layout_height="133dp"
-        android:layout_marginTop="8dp"
-        android:adjustViewBounds="false"
-        android:background="#FAF8F8"
-        android:src="@drawable/user"
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="158dp"
+        android:layout_height="158dp"
+        android:background="#FFAC31"
+        android:contentDescription="TODO"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/but_cambiaFoto"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.029999971" />
+        app:layout_constraintVertical_bias="0.057"
+        app:srcCompat="@android:drawable/gallery_thumb"
+        app:tint="#AFAFAF" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="127dp"
+        android:layout_height="115dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+        app:layout_constraintEnd_toEndOf="@+id/imageView3"
+        app:layout_constraintStart_toStartOf="@+id/imageView3"
+        app:layout_constraintTop_toTopOf="@+id/imageView3"
+        app:srcCompat="@drawable/user_white" />
+
+    <ImageView
+        android:id="@+id/imageView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:backgroundTint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/ic_menu_camera"
+        app:tint="#FFFFFF" />
 
     <ImageView
         android:id="@+id/imageViewpedina"
@@ -170,41 +173,20 @@
         app:layout_constraintStart_toEndOf="@+id/sx"
         app:layout_constraintTop_toTopOf="@+id/dx" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/cambia2"
-        android:layout_width="317dp"
-        android:layout_height="89dp"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="@font/asap"
-        android:padding="20dp"
-        android:text="@string/famiglia"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="#0C0C0C"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:backgroundTint="#F6F3F3"
-        app:cornerRadius="5dp"
-        app:icon="@drawable/plus"
-        app:iconPadding="8dp"
-        app:iconSize="40dp"
-        app:iconTint="#171616"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nestedScrollView3">
-
-    </com.google.android.material.button.MaterialButton>
-
     <ImageView
         android:id="@+id/dx"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:backgroundTint="#FFFFFF"
+        android:foregroundTint="#FFFFFF"
         android:src="@drawable/right_arrow"
+        android:tint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/imageViewpedina"
         app:layout_constraintTop_toBottomOf="@+id/cambiapedina"
-        app:layout_constraintVertical_bias="0.01999998" />
+        app:layout_constraintVertical_bias="0.01999998"
+        android:contentDescription="TODO" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

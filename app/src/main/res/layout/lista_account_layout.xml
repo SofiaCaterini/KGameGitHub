@@ -17,6 +17,7 @@
         android:paddingBottom="5dp"
         android:text="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#FFFFFF"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/nickname2"
@@ -26,8 +27,8 @@
 
     <TextView
         android:id="@+id/nickname2"
-        android:layout_width="184dp"
-        android:layout_height="55dp"
+        android:layout_width="130dp"
+        android:layout_height="34dp"
         android:fontFamily="@font/asap"
         android:gravity="clip_vertical"
         android:paddingTop="5dp"
@@ -35,7 +36,10 @@
         android:paddingBottom="5dp"
         android:text="@string/nickname"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textSize="30sp"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:flow_horizontalAlign="center"
+        android:flow_verticalAlign="center"
         app:layout_constraintBottom_toBottomOf="@+id/numero"
         app:layout_constraintEnd_toStartOf="@+id/pedina"
         app:layout_constraintHorizontal_bias="0.5"
@@ -44,8 +48,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pedina"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="35dp"
+        android:layout_height="41dp"
         android:backgroundTint="#EFE9E9"
         android:padding="2dp"
         app:icon="@drawable/lion"
@@ -56,6 +60,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/nickname2"
         app:layout_constraintTop_toTopOf="@+id/nickname2"
+        app:layout_constraintVertical_bias="0.571"
         app:srcCompat="@drawable/lion" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

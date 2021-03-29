@@ -11,6 +11,7 @@
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
@@ -22,23 +23,36 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@drawable/logo_stilizzato"
         android:supportsRtl="true"
-        android:theme="@style/Theme.KGame.NoActionBar">
-        <activity android:name=".SetUpProfileActivity"></activity>
-        <activity android:name=".RegisterActivity">
+
+        android:theme="@style/Theme.KGame.NoActionBar"
+        >
+        <activity android:name=".setUpProfileActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".RegisterActivity"
+            android:screenOrientation="portrait">
+
 
         </activity>
-        <activity android:name=".LogInActivity">
+
+        <activity android:name=".LogInActivity"
+            android:screenOrientation="portrait">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".MainActivity"
-            android:theme="@style/Theme.KGame.NoActionBar">
+            android:name=".MainActivity"    
+            android:theme="@style/Theme.KGame.NoActionBar"
+            android:screenOrientation="portrait">
+          
+            <intent-filter>
+                <action android:name="android.intent.action.INSERT" />
+                <data android:mimeType="vnd.android.cursor.dir/event" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
 
         </activity>
         

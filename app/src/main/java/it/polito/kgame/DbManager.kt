@@ -119,7 +119,7 @@ object DbManager {
             uploadProfileImg(context, profilePic)
         }
 
-        if (familyCode == null) {   //create family         //CHECK IF CODE NOT ALREADY USED!!
+        if (familyCode == null) {   //create family       
             createFamily(familyName)
         } else {              //join family
             joinFamily(familyCode)
@@ -141,7 +141,6 @@ object DbManager {
     }
 
     suspend fun getFamilyDoc(code: String) : DocumentReference? {
-
         return if (fbUser != null && fbUser.email != null) {
             withContext(Dispatchers.IO) {
 
@@ -155,86 +154,38 @@ object DbManager {
     }
 
 
-    suspend fun getUser() : User? {                                                         //DEPRECATED
-                                                                                                //DEPRECATED
-            if (fbUser != null) {                                                               //DEPRECATED
-                return withContext(Dispatchers.IO) {                                            //DEPRECATED
-                    val user = db.collection(ACCOUNTS)                                          //DEPRECATED
-                            .document(fbUser.email)                                             //DEPRECATED
-                            .get()                                                              //DEPRECATED
-                            .await()                                                            //DEPRECATED
-                    //user.toObject<User>()                                                     //DEPRECATED
-                    if (user[FAM_CODE]!=null){                                                  //DEPRECATED
-                                                                                                //DEPRECATED
-                    }                                                                           //DEPRECATED
-                                                                                                //DEPRECATED
-                    User(                                                                       //DEPRECATED
-                            fbUser.uid,                                                         //DEPRECATED
-                            fbUser.email,                                                       //DEPRECATED
-                            user[NICKNAME].toString(),                                          //DEPRECATED
-                            user[FAM_CODE]?.toString(),                                         //DEPRECATED
-                            user[PAWN_CODE]?.toString()?.toInt(),                               //DEPRECATED
-                            user[OBJ]?.toString()?.toDouble())                                  //DEPRECATED
-                }                                                                               //DEPRECATED
-            }                                                                                   //DEPRECATED
-            else {                                                                              //DEPRECATED
-                println("Error while retrieving user: DbManager.getuser()")                     //DEPRECATED
-                return null                                                                     //DEPRECATED
-            }                                                                                   //DEPRECATED
-        }    //DEPRECATED                         //DEPRECATED                                  //DEPRECATED
+ 
+=======
+//        suspend fun getUser() : User? {                                                         //DEPRECATED
+//                                                                                                //DEPRECATED
+//            if (fbUser != null) {                                                               //DEPRECATED
+//                return withContext(Dispatchers.IO) {                                            //DEPRECATED
+//                    val user = db.collection(ACCOUNTS)                                          //DEPRECATED
+//                            .document(fbUser.email)                                             //DEPRECATED
+//                            .get()                                                              //DEPRECATED
+//                            .await()                                                            //DEPRECATED
+//                    //user.toObject<User>()                                                     //DEPRECATED
+//                    if (user[FAM_CODE]==null){                                                  //DEPRECATED
+//                                                                                                //DEPRECATED
+//                    }                                                                           //DEPRECATED
+//                    if (user.getLong(PAWN_CODE) in 0..2 &&                                      //DEPRECATED
+//                            user.getLong(PAWN_CODE)?.toInt() != null) {                         //DEPRECATED
+//                    }                                                                           //DEPRECATED
+//                    User(                                                                       //DEPRECATED
+//                            fbUser.uid,                                                         //DEPRECATED
+//                            fbUser.email,                                                       //DEPRECATED
+//                            user[NICKNAME].toString(),                                          //DEPRECATED
+//                            user[FAM_CODE]?.toString(),                                         //DEPRECATED
+//                            user[PAWN_CODE]?.toString()?.toInt(),                               //DEPRECATED
+//                            user[OBJ]?.toString()?.toDouble())                                  //DEPRECATED
+//                }                                                                               //DEPRECATED
+//            }                                                                                   //DEPRECATED
+//            else {                                                                              //DEPRECATED
+//                println("Error while retrieving user: DbManager.getuser()")                     //DEPRECATED
+//                return null                                                                     //DEPRECATED
+//            }                                                                                   //DEPRECATED
+//        }                                                                                       //DEPRECATED
 
-
-//        db.collection(ACCOUNTS)
-//            .document(fbUser.email)
-//            .get()
-//            .addOnSuccessListener {
-//                if (it.exists()) {
-//                    println("STC ACCAAAAAAAAAAAAAAAAAAAAAAAAAA")
-//
-//                    nickname = it.getString(NICKNAME)
-//                    familyCode = it.getString(FAM_CODE)
-//                    profImg = it.getString(PROF_PIC)
-//                    if (it.getLong(PAWN_CODE) in 0..2 && it.getLong(PAWN_CODE)?.toInt() != null) {
-//                        pawnCode = it.getLong(PAWN_CODE)!!.toInt()
-//                    }
-//                    obj = it.getDouble(OBJ)
-//
-//
-//                } else {
-//                    println("Errore: l'account non esiste")
-//                }
-//            }.result?.toObject<User>()
-
-
-        //User(fbUser.uid, fbUser.email, nickname, familyCode, pawnCode, obj)
-
-
-
-    fun readNickname(context: Context) : String? {
-
-        var ret : String? = null
-
-        if (fbUser != null) {
-            db.collection(DbManager.ACCOUNTS)
-                    .document(fbUser.email)
-                    .get()
-                    .addOnSuccessListener {
-                        if (it.exists()) {
-                            ret = it.getString(NICKNAME).toString()
-                        } else {
-                            Toast.makeText(
-                                    context,
-                                    R.string.req_doc,
-                                    Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                    .addOnFailureListener {
-                        println("Error: $it")
-                    }
-        }
-        return ret
-    }
 
     fun updateUser(context: Context?, user: User) {
         val data : MutableMap<String, Any> = mutableMapOf()
@@ -243,7 +194,6 @@ object DbManager {
         if(user.profileImg != null) data[PROF_PIC] = user.profileImg!!
         if(user.familyCode != null) data[FAM_CODE] = user.familyCode!!
 
-        //        data[PROF_PIC] = user.profileImg
 
         if (fbUser != null) {
             db.collection(ACCOUNTS)
@@ -267,69 +217,6 @@ object DbManager {
                     }
         }
     }
-
-
-    fun updateNickname(context: Context, newNick : String) {
-
-        val data : MutableMap<String,String> = mutableMapOf()
-        data[NICKNAME] = newNick
-
-        if (fbUser != null) {
-            db.collection(ACCOUNTS)
-                    .document(fbUser.email)
-                    .update(data as Map<String, Any>)
-                    .addOnSuccessListener {
-                        Toast.makeText(
-                                context,
-                                R.string.succ_newNN,
-                                Toast.LENGTH_SHORT
-                        ).show()
-                        println("update Nickname success")
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(
-                                context,
-                                R.string.fail_newNN,
-                                Toast.LENGTH_SHORT
-                        ).show();
-                        println("update Nickname epic fail")
-                    }
-        }
-    }
-
-    fun updatePawnCode(context: Context, pawnCode : Int) {
-        val data : MutableMap<String,Int> = mutableMapOf()
-        data[PAWN_CODE] = pawnCode
-
-
-        if (fbUser != null) {
-            db.collection(ACCOUNTS)
-                    .document(fbUser.email)
-                    .update(data as Map<String, Any>)
-                    .addOnSuccessListener {
-                        Toast.makeText(
-                                context,
-                                R.string.succ_newPawn,
-                                Toast.LENGTH_SHORT
-                        ).show();
-                        println("update Pawn success")
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(
-                                context,
-                                R.string.fail_newPawn,
-                                Toast.LENGTH_SHORT
-                        ).show();
-                        println("update Pawn epic fail")
-                    }
-        }
-    }
-
-//        private fun getFileExtension(uri: Uri): String? {
-//        val cR: ContentResolver = requireContext().contentResolver
-//        val mime = MimeTypeMap.getSingleton()
-//        return mime.getExtensionFromMimeType(cR.getType(uri))
-//    }
 
     fun uploadProfileImg(context: Context, imageUri : Uri?) {
         fun getFileExtension(uri: Uri): String? {

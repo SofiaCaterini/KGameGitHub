@@ -50,15 +50,15 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/asap"
             android:text="@string/family_name"
-            android:textColor="#000000"
-            android:textSize="36sp"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/guideline4"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.34"
+            app:layout_constraintHorizontal_bias="0.397"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.104" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline4"
@@ -73,7 +73,7 @@
             android:layout_height="29dp"
             android:background="#00FF0000"
             android:foreground="@drawable/exchange"
-            android:foregroundTint="#000000"
+            android:foregroundTint="#FFFFFF"
             android:foregroundTintMode="src_in"
             android:src="@drawable/exchange"
             app:layout_constraintBottom_toTopOf="@+id/guideline4"

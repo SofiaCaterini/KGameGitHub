@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import android.view.autofill.AutofillManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
@@ -27,6 +28,7 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_register)
         val view: View = findViewById(R.id.sfondoreg)
         view.setOnClickListener { hideKeyboard(this@RegisterActivity) }
+
 
         tv_login.setOnClickListener {
             startActivity(Intent(this@RegisterActivity,LogInActivity::class.java))

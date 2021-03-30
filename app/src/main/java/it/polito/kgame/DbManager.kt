@@ -14,10 +14,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.tasks.await
 import java.util.*
 
 object DbManager {
@@ -154,8 +151,7 @@ object DbManager {
     }
 
 
- 
-=======
+
 //        suspend fun getUser() : User? {                                                         //DEPRECATED
 //                                                                                                //DEPRECATED
 //            if (fbUser != null) {                                                               //DEPRECATED

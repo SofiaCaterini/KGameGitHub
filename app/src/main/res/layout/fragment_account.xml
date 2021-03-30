@@ -91,7 +91,7 @@
         android:layout_height="50dp"
         android:rotationY="180"
         android:src="@drawable/right_arrow"
-        android:tint="#FFFFFF"
+        app:tint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/imageViewpedina"
         app:layout_constraintEnd_toStartOf="@+id/imageViewpedina"
         app:layout_constraintHorizontal_bias="0.5"
@@ -180,13 +180,13 @@
         android:backgroundTint="#FFFFFF"
         android:foregroundTint="#FFFFFF"
         android:src="@drawable/right_arrow"
-        android:tint="#FFFFFF"
+        app:tint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/imageViewpedina"
         app:layout_constraintTop_toBottomOf="@+id/cambiapedina"
         app:layout_constraintVertical_bias="0.01999998"
-        android:contentDescription="TODO" />
+       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

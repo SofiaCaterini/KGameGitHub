@@ -2,32 +2,33 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/eventoform"
+    android:id="@+id/impegnoform"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#F3ECEC"
+    android:background="#F8BBBB"
+    android:backgroundTint="#F8BBBB"
     android:elevation="5dp">
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/annullae"
+        android:id="@+id/annullai"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:text="@string/cancel"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/evoke"
+        app:layout_constraintEnd_toStartOf="@+id/evoki"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/evoke"
+        android:id="@+id/evoki"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:text="@string/ok"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/annullae"
+        app:layout_constraintStart_toEndOf="@+id/annullai"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <LinearLayout
@@ -42,17 +43,17 @@
         app:layout_constraintVertical_bias="0.0">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/aggiungie"
+            android:id="@+id/aggiungii"
             android:layout_width="match_parent"
-            android:layout_height="95dp"
+            android:layout_height="74dp"
             android:padding="5dp"
-            android:text="@string/aggiungievento"
+            android:text="@string/aggiungi"
             android:textAlignment="center"
             android:textSize="30sp"
             android:textStyle="bold" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/titoloe"
+            android:id="@+id/titoloi"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -60,7 +61,7 @@
             android:inputType="textShortMessage" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/luogoe"
+            android:id="@+id/luogoi"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -68,7 +69,7 @@
             android:inputType="textShortMessage" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/descrizionee"
+            android:id="@+id/descrizionei"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -76,7 +77,7 @@
             android:inputType="textShortMessage" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/datae"
+            android:id="@+id/datai"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -85,7 +86,7 @@
             android:inputType="datetime" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/orainizioe"
+            android:id="@+id/orainizioi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"

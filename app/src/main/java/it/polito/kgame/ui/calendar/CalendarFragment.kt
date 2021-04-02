@@ -43,16 +43,16 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         creareimp.isVisible = false
         var orainiziovalid : Boolean = false
         var dataIsValid : Boolean = false
-
+        val impegnoDateCal : java.util.Calendar = java.util.Calendar.getInstance()
         val selectedDayCal : java.util.Calendar = java.util.Calendar.getInstance()
         val todayMillis = System.currentTimeMillis()
         selectedDayCal.timeInMillis = todayMillis
 
         selectedDayCal.set(
-                selectedDayCal.get(Calendar.YEAR),
-                selectedDayCal.get(Calendar.MONTH),
+                selectedDayCal.get(java.util.Calendar.YEAR),
+                selectedDayCal.get(java.util.Calendar.MONTH),
                 selectedDayCal.get(
-                        Calendar.DAY_OF_MONTH
+                        java.util.Calendar.DAY_OF_MONTH
                 ),
                 23,
                 59
@@ -74,21 +74,22 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
 
         val mEventDays: MutableList<EventDay> = ArrayList()
+        val mImpegniDays: MutableList<EventDay> = ArrayList()
+
 
         calendarView.setOnDayClickListener(object : OnDayClickListener {
             override fun onDayClick(eventDay: EventDay) {
                 selectedDayCal.set(
-                        eventDay.calendar.get(Calendar.YEAR),
-                        eventDay.calendar.get(Calendar.MONTH),
+                        eventDay.calendar.get(java.util.Calendar.YEAR),
+                        eventDay.calendar.get(java.util.Calendar.MONTH),
                         eventDay.calendar.get(
-                                Calendar.DAY_OF_MONTH
+                                java.util.Calendar.DAY_OF_MONTH
                         ),
                         23,
                         59
                 )
                 datai.error = null
                 datae.error = null
-
 
                 if (todayMillis <= selectedDayCal.timeInMillis) {
                     datai.setText(refactorDate(selectedDayCal))
@@ -107,14 +108,17 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     datae.error = "Inserisci data corretta"
                     dataeIsValid = false
                 }
-                Log.d("eventi", mEventDays.toString())
+                mEventDays.forEach {
+                    Log.d("mevent", it.calendar.timeInMillis.toString())
+                }
+                mImpegniDays.forEach {
+                    Log.d("mimpe", it.calendar.timeInMillis.toString())
+                }
 
             }
 
 
         })
-
-
 
         /*calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
 
@@ -145,7 +149,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         }*/
 
-        val impegnoDateCal : java.util.Calendar = java.util.Calendar.getInstance()
+
         impegno.setOnClickListener {
             creareimp.isVisible = true
             calendarView.isClickable = false
@@ -163,38 +167,37 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
                     val ore = orainizioi.text.toString().split(":")[0]
                     val minuti =  orainizioi.text.toString().split(":")[1]
-                    val todayCal : Calendar = getInstance()
+                    val todayCal : java.util.Calendar = java.util.Calendar.getInstance()
                     todayCal.timeInMillis = todayMillis
 
                     impegnoDateCal.set(
-                            selectedDayCal.get(Calendar.YEAR),
-                            selectedDayCal.get(Calendar.MONTH),
-                            selectedDayCal.get(Calendar.DAY_OF_MONTH),
+                            selectedDayCal.get(java.util.Calendar.YEAR),
+                            selectedDayCal.get(java.util.Calendar.MONTH),
+                            selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH),
                             ore.toInt(), minuti.toInt()
                     )
 
-                    Log.d("millisevento", impegnoDateCal.timeInMillis.toString())
-                    if ((selectedDayCal.get(Calendar.YEAR)>todayCal.get(Calendar.YEAR))
-                            || (selectedDayCal.get(Calendar.YEAR) == todayCal.get(Calendar.YEAR) &&
-                                    selectedDayCal.get(Calendar.MONTH) > todayCal.get(Calendar.MONTH))
-                            || (selectedDayCal.get(Calendar.YEAR) == todayCal.get(Calendar.YEAR) &&
-                                    selectedDayCal.get(Calendar.MONTH) == todayCal.get(Calendar.MONTH) &&
-                                    selectedDayCal.get(Calendar.DAY_OF_MONTH) > todayCal.get(
-                                    Calendar.DAY_OF_MONTH
+                    if ((selectedDayCal.get(java.util.Calendar.YEAR)>todayCal.get(java.util.Calendar.YEAR))
+                            || (selectedDayCal.get(java.util.Calendar.YEAR) == todayCal.get(java.util.Calendar.YEAR) &&
+                                    selectedDayCal.get(java.util.Calendar.MONTH) > todayCal.get(java.util.Calendar.MONTH))
+                            || (selectedDayCal.get(java.util.Calendar.YEAR) == todayCal.get(java.util.Calendar.YEAR) &&
+                                    selectedDayCal.get(java.util.Calendar.MONTH) == todayCal.get(java.util.Calendar.MONTH) &&
+                                    selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH) > todayCal.get(
+                                    java.util.Calendar.DAY_OF_MONTH
                             )) ) {
                         //se data dopo oggi
                         //controllare se formato corretto
-                        Log.d("tag", "datadopooggi")
+
                         orainiziovalid = ore.toInt() in 0..23 && minuti.toInt() in 0..59
                         if (!orainiziovalid) {orainizioi.error = "Inserisci orario corretto"}
                     } else {
                         //controllare formato corretto
-                        Log.d("tag", "dataoggi")
+
                         orainiziovalid = ore.toInt() in 0..23 && minuti.toInt() in 0..59 && ((ore.toInt() > todayCal.get(
-                                Calendar.HOUR_OF_DAY
+                                java.util.Calendar.HOUR_OF_DAY
                         ))
-                                || (((ore.toInt() == todayCal.get(Calendar.HOUR_OF_DAY)) && minuti.toInt() > todayCal.get(
-                                Calendar.MINUTE
+                                || (((ore.toInt() == todayCal.get(java.util.Calendar.HOUR_OF_DAY)) && minuti.toInt() > todayCal.get(
+                                java.util.Calendar.MINUTE
                         ))))
                         //controllo con ora e minuti correnti
 
@@ -215,10 +218,10 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     val mese =  datai.text.toString().split("/")[1]
                     val anno =  datai.text.toString().split("/")[2]
                     selectedDayCal.set(anno.toInt(), mese.toInt() - 1, giorno.toInt(), 23, 59)
-                    val todayCal2 : Calendar = getInstance()
+                    val todayCal2 : java.util.Calendar = java.util.Calendar.getInstance()
                     todayCal2.timeInMillis = todayMillis
 
-                    Log.d("millisevento", impegnoDateCal.timeInMillis.toString())
+
 //                    if ((anno.toInt()>todayCal2.get(Calendar.YEAR))
 //                            || (anno.toInt() == todayCal2.get(Calendar.YEAR) && mese.toInt() -1 > todayCal2.get(Calendar.MONTH))
 //                            || (anno.toInt() == todayCal2.get(Calendar.YEAR) && mese.toInt() -1 == todayCal2.get(Calendar.MONTH)
@@ -226,23 +229,17 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     if(selectedDayCal.timeInMillis >= System.currentTimeMillis()) {
                         //se data dopo o uguale a oggi
                         //controllare se formato corretto
-                        Log.d("tag", "datadopooggi")
+
                         //se inserisco 31 febbraio e faccio la conversione dei suoi millis ottengo 02 marzo
-                        dataIsValid = ((anno.toInt() == selectedDayCal.get(Calendar.YEAR)) && (mese.toInt() -1 == selectedDayCal.get(
-                                Calendar.MONTH
+                        dataIsValid = ((anno.toInt() == selectedDayCal.get(java.util.Calendar.YEAR)) && (mese.toInt() -1 == selectedDayCal.get(
+                                java.util.Calendar.MONTH
                         )) &&
-                                (giorno.toInt() == selectedDayCal.get(Calendar.DAY_OF_MONTH)))
+                                (giorno.toInt() == selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH)))
 
 
                         //datavalid = data.text.toString() == refactorDate((selectedDayCal))
-                        //Log.d("datascritta", data.text.toString())
-                        //Log.d("datadaimillis", refactorDate(selectedDayCal) )
-                        Log.d("datascritta", datai.text.toString())
-                        Log.d("giornomillis", selectedDayCal.get(Calendar.DAY_OF_MONTH).toString())
-                        Log.d("mesemillis", selectedDayCal.get(Calendar.MONTH).toString())
-                        Log.d("annomillis", selectedDayCal.get(Calendar.YEAR).toString())
 
-                        ////////////////////////////////////////////////////////////////////
+
                         if (!dataIsValid) {datai.error = "Inserisci data corretta"}
                         if (dataIsValid) {impegnoDateCal.set(
                                 anno.toInt(),
@@ -270,19 +267,16 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 calendarView.isEnabled = true
                 calendarView.isVisible = true
                 view.hideKeyboard()
-                println("annulla")
-                Log.d("myTag", "annulla")
-                Log.d("datadaimillis", refactorDate(selectedDayCal))
+
             }
 
 
             evoki.setOnClickListener {
                 println("ok")
-                Log.d("millisevento", impegnoDateCal.timeInMillis.toString())
+
                 if ((titoloi.text.toString().isNotEmpty() && luogoi.text.toString().isNotEmpty()
                             && descrizionei.text.toString().isNotEmpty()) && orainiziovalid && dataIsValid
                 ) {
-                    Log.d("myTag", "campi giusti")
                     val intent = Intent(Intent.ACTION_INSERT).apply {
                         data = CalendarContract.Events.CONTENT_URI
                         putExtra(CalendarContract.Events.TITLE, titoloi.text.toString())
@@ -294,7 +288,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                         )
                     }
                     if (intent.resolveActivity(requireActivity().packageManager) != null) {
-                        Log.d("myTag", "ok")
+
                         requireActivity().startActivity(intent)
 
                         creareimp.isVisible = false
@@ -302,8 +296,25 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                         calendarView.isClickable = true
                         calendarView.isEnabled = true
 
-                        mEventDays.add(EventDay(impegnoDateCal, R.drawable.blackicon))
-                        calendarView.setEvents(mEventDays)
+                        val dataprova2 : java.util.Calendar = java.util.Calendar.getInstance()
+
+                        dataprova2.set(impegnoDateCal.get(java.util.Calendar.YEAR), impegnoDateCal.get(java.util.Calendar.MONTH),
+                                impegnoDateCal.get(java.util.Calendar.DAY_OF_MONTH))
+
+                        if (mEventDays.find {
+                                    (it.calendar.get(java.util.Calendar.DAY_OF_MONTH) == dataprova2.get(java.util.Calendar.DAY_OF_MONTH)
+                                            && it.calendar.get(java.util.Calendar.MONTH) == dataprova2.get(java.util.Calendar.MONTH)
+                                            && it.calendar.get(java.util.Calendar.YEAR) == dataprova2.get(java.util.Calendar.YEAR))
+                        }!= null) {
+                            mImpegniDays.add(EventDay(dataprova2, R.drawable.blackandgreenicon))
+                        }
+                        else {
+                            mImpegniDays.add(EventDay(dataprova2, R.drawable.blackicon))
+                        }
+
+                        calendarView.setEvents(mImpegniDays.plus(mEventDays))
+
+
 
 
                     } else {
@@ -351,34 +362,31 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     todayCal.timeInMillis = todayMillis
 
                     eventDateCal.set(
-                            selectedDayCal.get(Calendar.YEAR),
-                            selectedDayCal.get(Calendar.MONTH),
-                            selectedDayCal.get(Calendar.DAY_OF_MONTH),
+                            selectedDayCal.get(java.util.Calendar.YEAR),
+                            selectedDayCal.get(java.util.Calendar.MONTH),
+                            selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH),
                             ore.toInt(), minuti.toInt()
                     )
 
-                    Log.d("millisevento", eventDateCal.timeInMillis.toString())
-                    if ((selectedDayCal.get(Calendar.YEAR)>todayCal.get(Calendar.YEAR))
-                            || (selectedDayCal.get(Calendar.YEAR) == todayCal.get(Calendar.YEAR) &&
-                                    selectedDayCal.get(Calendar.MONTH) > todayCal.get(Calendar.MONTH))
-                            || (selectedDayCal.get(Calendar.YEAR) == todayCal.get(Calendar.YEAR) &&
-                                    selectedDayCal.get(Calendar.MONTH) == todayCal.get(Calendar.MONTH) &&
-                                    selectedDayCal.get(Calendar.DAY_OF_MONTH) > todayCal.get(
-                                    Calendar.DAY_OF_MONTH
+                    if ((selectedDayCal.get(java.util.Calendar.YEAR)>todayCal.get(java.util.Calendar.YEAR))
+                            || (selectedDayCal.get(java.util.Calendar.YEAR) == todayCal.get(java.util.Calendar.YEAR) &&
+                                    selectedDayCal.get(java.util.Calendar.MONTH) > todayCal.get(java.util.Calendar.MONTH))
+                            || (selectedDayCal.get(java.util.Calendar.YEAR) == todayCal.get(java.util.Calendar.YEAR) &&
+                                    selectedDayCal.get(java.util.Calendar.MONTH) == todayCal.get(java.util.Calendar.MONTH) &&
+                                    selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH) > todayCal.get(
+                                    java.util.Calendar.DAY_OF_MONTH
                             )) ) {
                         //se data dopo oggi
                         //controllare se formato corretto
-                        Log.d("tag", "datadopooggi")
                         orainizioevalid = ore.toInt() in 0..23 && minuti.toInt() in 0..59
                         if (!orainizioevalid) {orainizioe.error = "Inserisci orario corretto"}
                     } else {
                         //controllare formato corretto
-                        Log.d("tag", "dataoggi")
                         orainizioevalid = ore.toInt() in 0..23 && minuti.toInt() in 0..59 && ((ore.toInt() > todayCal.get(
-                                Calendar.HOUR_OF_DAY
+                                java.util.Calendar.HOUR_OF_DAY
                         ))
-                                || (((ore.toInt() == todayCal.get(Calendar.HOUR_OF_DAY)) && minuti.toInt() > todayCal.get(
-                                Calendar.MINUTE
+                                || (((ore.toInt() == todayCal.get(java.util.Calendar.HOUR_OF_DAY)) && minuti.toInt() > todayCal.get(
+                                java.util.Calendar.MINUTE
                         ))))
                         //controllo con ora e minuti correnti
 
@@ -399,34 +407,19 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     val mese =  datae.text.toString().split("/")[1]
                     val anno =  datae.text.toString().split("/")[2]
                     selectedDayCal.set(anno.toInt(), mese.toInt() - 1, giorno.toInt(), 23, 59)
-                    val todayCal2 : Calendar = getInstance()
+                    val todayCal2 : java.util.Calendar = java.util.Calendar.getInstance()
                     todayCal2.timeInMillis = todayMillis
 
-                    Log.d("millisevento", eventDateCal.timeInMillis.toString())
-//                    if ((anno.toInt()>todayCal2.get(Calendar.YEAR))
-//                            || (anno.toInt() == todayCal2.get(Calendar.YEAR) && mese.toInt() -1 > todayCal2.get(Calendar.MONTH))
-//                            || (anno.toInt() == todayCal2.get(Calendar.YEAR) && mese.toInt() -1 == todayCal2.get(Calendar.MONTH)
-//                                    && giorno.toInt() >= todayCal2.get(Calendar.DAY_OF_MONTH)) ){
                     if(selectedDayCal.timeInMillis >= System.currentTimeMillis()) {
                         //se data dopo o uguale a oggi
                         //controllare se formato corretto
-                        Log.d("tag", "datadopooggi")
+
                         //se inserisco 31 febbraio e faccio la conversione dei suoi millis ottengo 02 marzo
-                        dataeIsValid = ((anno.toInt() == selectedDayCal.get(Calendar.YEAR)) && (mese.toInt() -1 == selectedDayCal.get(
-                                Calendar.MONTH
+                        dataeIsValid = ((anno.toInt() == selectedDayCal.get(java.util.Calendar.YEAR)) && (mese.toInt() -1 == selectedDayCal.get(
+                                java.util.Calendar.MONTH
                         )) &&
-                                (giorno.toInt() == selectedDayCal.get(Calendar.DAY_OF_MONTH)))
+                                (giorno.toInt() == selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH)))
 
-
-                        //datavalid = data.text.toString() == refactorDate((selectedDayCal))
-                        //Log.d("datascritta", data.text.toString())
-                        //Log.d("datadaimillis", refactorDate(selectedDayCal) )
-                        Log.d("datascritta", datae.text.toString())
-                        Log.d("giornomillis", selectedDayCal.get(Calendar.DAY_OF_MONTH).toString())
-                        Log.d("mesemillis", selectedDayCal.get(Calendar.MONTH).toString())
-                        Log.d("annomillis", selectedDayCal.get(Calendar.YEAR).toString())
-
-                        ////////////////////////////////////////////////////////////////////
                         if (!dataeIsValid) {datae.error = "Inserisci data corretta"}
                         if (dataeIsValid) {eventDateCal.set(
                                 anno.toInt(),
@@ -455,18 +448,14 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 calendarView.isVisible = true
                 view.hideKeyboard()
                 println("annulla")
-                Log.d("myTag", "annulla")
-                Log.d("datadaimillis", refactorDate(selectedDayCal))
+
             }
 
 
             evoke.setOnClickListener {
-                println("ok")
-                Log.d("millisevento", eventDateCal.timeInMillis.toString())
                 if ((titoloe.text.toString().isNotEmpty() && luogoe.text.toString().isNotEmpty()
                             && descrizionee.text.toString().isNotEmpty()) && orainizioevalid && dataeIsValid
                 ) {
-                    Log.d("myTag", "campi giusti")
                     val intent = Intent(Intent.ACTION_INSERT).apply {
                         data = CalendarContract.Events.CONTENT_URI
                         putExtra(CalendarContract.Events.TITLE, titoloe.text.toString())
@@ -478,14 +467,33 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                         putExtra(Intent.EXTRA_EMAIL, "pippo@coca.it")
                     }
                     if (intent.resolveActivity(requireActivity().packageManager) != null) {
-                        Log.d("myTag", "ok")
                         requireActivity().startActivity(intent)
                         creareeve.isVisible = false
                         calendarView.isVisible = true
                         calendarView.isClickable = true
                         calendarView.isEnabled = true
-                        mEventDays.add(EventDay(eventDateCal, R.drawable.blackicon))
-                        calendarView.setEvents(mEventDays)
+
+                        val dataprova1 : java.util.Calendar = java.util.Calendar.getInstance()
+
+                        dataprova1.set(eventDateCal.get(java.util.Calendar.YEAR), eventDateCal.get(java.util.Calendar.MONTH),
+                                eventDateCal.get(java.util.Calendar.DAY_OF_MONTH))
+                        Log.d("dataprova1==mimp", dataprova1.timeInMillis.toString())
+
+                        if (mImpegniDays.find {
+                                    (it.calendar.get(java.util.Calendar.DAY_OF_MONTH) == dataprova1.get(java.util.Calendar.DAY_OF_MONTH)
+                                            && it.calendar.get(java.util.Calendar.MONTH) == dataprova1.get(java.util.Calendar.MONTH)
+                                            && it.calendar.get(java.util.Calendar.YEAR) == dataprova1.get(java.util.Calendar.YEAR))
+                                }!= null) {
+                            mEventDays.add(EventDay(dataprova1, R.drawable.blackandgreenicon))
+                        }
+                        else {
+                            mEventDays.add(EventDay(dataprova1, R.drawable.greenicon))
+                        }
+
+
+                        calendarView.setEvents(mEventDays.plus(mImpegniDays))
+
+
                     } else {
                         Toast.makeText(
                                 requireContext(), "There is no app that can support this action",
@@ -516,11 +524,11 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
     private fun refactorDate(cal: java.util.Calendar): String {
 
-        val day : String = if(cal.get(Calendar.DAY_OF_MONTH)>=10) cal.get(Calendar.DAY_OF_MONTH).toString()
-                else  "0" + cal.get(Calendar.DAY_OF_MONTH)
-        val month : String = if (cal.get(Calendar.MONTH)>=9) (cal.get(Calendar.MONTH)+1).toString()
-                else "0"+ (cal.get(Calendar.MONTH)+1)
+        val day : String = if(cal.get(java.util.Calendar.DAY_OF_MONTH)>=10) cal.get(java.util.Calendar.DAY_OF_MONTH).toString()
+                else  "0" + cal.get(java.util.Calendar.DAY_OF_MONTH)
+        val month : String = if (cal.get(java.util.Calendar.MONTH)>=9) (cal.get(java.util.Calendar.MONTH)+1).toString()
+                else "0"+ (cal.get(java.util.Calendar.MONTH)+1)
 
-        return day + "/" + month + "/" + cal.get(Calendar.YEAR)
+        return day + "/" + month + "/" + cal.get(java.util.Calendar.YEAR)
     }
 }

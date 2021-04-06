@@ -61,13 +61,13 @@
     <string name="ob_settings">IMPOSTA OBIETTIVO</string>
     <string name="clock_settings">IMPOSTA SVEGLIA GIORNALIERA</string>
   
-        <!-- Dialog fragment grow -->
+        <!-- fragment grow -->
     <string name="question_message_weight_ok">Obiettivo aggiunto correttamente</string>
     <string name="question_title">Imposta sveglia</string>
     <string name="question_message">Sei sicuro di voler impostare la sveglia alle </string>
-    <string name="menu_grow">La tua crescita</string>
     <string name="question_title_obj_ok">Conferma aggiunta obiettivo</string>
     <string name="question_message_obj">Vuoi davvero impostare il tuo nuovo obiettivo di peso su </string>
+    <string name="ricorda">Ricorda: è meglio pesarsi sempre allo stesso orario, preferibilmente al mattino o prima dei pasti!</string>
 
         <!-- home -->
     <string name="question_title_weight">Aggiungi peso</string>
@@ -89,7 +89,7 @@
   
     <string name="yes">Sì</string>
     <string name="no">No</string>
-    <string name="annulla">Annulla</string>
+    <string name="cancel">Annulla</string>
     <string name="ok">OK</string>
     <string name="or">oppure</string>
     <string name="confirm">Conferma</string>
@@ -97,13 +97,6 @@
 
 
 
-
-
-        <!--growFrag - obiettivo-->
-    <string name="question_title_obj_ok">Conferma aggiunta obiettivo</string>
-    <string name="question_message_obj">Vuoi davvero impostare il tuo nuovo obiettivo di peso su </string>
-
-    <string name="ricorda">Ricorda: è meglio pesarsi sempre allo stesso orario, preferibilmente al mattino o prima dei pasti!</string>
 
 
     <!-- unità di misura -->

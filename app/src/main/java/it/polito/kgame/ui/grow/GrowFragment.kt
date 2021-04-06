@@ -20,6 +20,8 @@ import com.jjoe64.graphview.series.LineGraphSeries
 import it.polito.kgame.R
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_grow.*
+import kotlinx.android.synthetic.main.fragment_grow.obiettivo
+import kotlinx.android.synthetic.main.obj_form.*
 
 
 class GrowFragment : Fragment(R.layout.fragment_grow){
@@ -114,10 +116,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
         var obj : Int = 0
         var objIsActive = false
         val np: NumberPicker = view.findViewById(R.id.numberPicker)
-        np.isVisible = false
-        cancel.isVisible = false
-        ok.isVisible = false
-        numPick_bg.isVisible = false
+        obb.isVisible = false
 
         var objLine = LineGraphSeries(
                 arrayOf(
@@ -169,16 +168,12 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
         np.displayedValues = kgValues
 
         obiettivo.setOnClickListener {
-            np.isVisible = true
-            cancel.isVisible = true
-            ok.isVisible = true
-            numPick_bg.isVisible = true
+            obb.isVisible = true
+
 
             ok.setOnClickListener {
-                np.isVisible = false
-                cancel.isVisible = false
-                ok.isVisible = false
-                numPick_bg.isVisible = false
+                obb.isVisible = false
+
 
                 var messag : String = getString(R.string.question_message_obj)
                 var kg : String = getString(R.string.kgq)
@@ -197,10 +192,8 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
             }
         }
         cancel.setOnClickListener {
-            np.isVisible = false
-            cancel.isVisible = false
-            ok.isVisible = false
-            numPick_bg.isVisible = false
+            obb.isVisible = false
+
 
         }
 

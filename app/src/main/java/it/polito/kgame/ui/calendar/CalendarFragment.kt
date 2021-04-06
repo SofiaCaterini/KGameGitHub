@@ -75,7 +75,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         val mEventDays: MutableList<EventDay> = ArrayList()
         val mImpegniDays: MutableList<EventDay> = ArrayList()
-
+        val mImpEvDays: MutableList<EventDay> = ArrayList()
 
         calendarView.setOnDayClickListener(object : OnDayClickListener {
             override fun onDayClick(eventDay: EventDay) {
@@ -112,42 +112,16 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     Log.d("mevent", it.calendar.timeInMillis.toString())
                 }
                 mImpegniDays.forEach {
-                    Log.d("mimpe", it.calendar.timeInMillis.toString())
+                    Log.d("mimp", it.calendar.timeInMillis.toString())
+                }
+                mImpEvDays.forEach {
+                    Log.d("mimpeve", it.calendar.timeInMillis.toString())
                 }
 
             }
 
 
         })
-
-        /*calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-
-            selectedDayCal.set(year, month , dayOfMonth, 23, 59)
-            datai.error = null
-            datae.error = null
-
-
-            if (todayMillis <= selectedDayCal.timeInMillis) {
-                datai.setText(refactorDate(selectedDayCal))
-                datai.error = null
-                dataIsValid = true
-
-                datae.setText(refactorDate(selectedDayCal))
-                datae.error = null
-                dataeIsValid = true
-            }
-            else {
-                datai.setText("")
-                datai.error = "Inserisci data corretta"
-                dataIsValid = false
-
-                datae.setText("")
-                datae.error = "Inserisci data corretta"
-                dataeIsValid = false
-            }
-
-
-        }*/
 
 
         impegno.setOnClickListener {
@@ -221,11 +195,6 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     val todayCal2 : java.util.Calendar = java.util.Calendar.getInstance()
                     todayCal2.timeInMillis = todayMillis
 
-
-//                    if ((anno.toInt()>todayCal2.get(Calendar.YEAR))
-//                            || (anno.toInt() == todayCal2.get(Calendar.YEAR) && mese.toInt() -1 > todayCal2.get(Calendar.MONTH))
-//                            || (anno.toInt() == todayCal2.get(Calendar.YEAR) && mese.toInt() -1 == todayCal2.get(Calendar.MONTH)
-//                                    && giorno.toInt() >= todayCal2.get(Calendar.DAY_OF_MONTH)) ){
                     if(selectedDayCal.timeInMillis >= System.currentTimeMillis()) {
                         //se data dopo o uguale a oggi
                         //controllare se formato corretto
@@ -235,10 +204,6 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                                 java.util.Calendar.MONTH
                         )) &&
                                 (giorno.toInt() == selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH)))
-
-
-                        //datavalid = data.text.toString() == refactorDate((selectedDayCal))
-
 
                         if (!dataIsValid) {datai.error = "Inserisci data corretta"}
                         if (dataIsValid) {impegnoDateCal.set(
@@ -299,20 +264,24 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                         val dataprova2 : java.util.Calendar = java.util.Calendar.getInstance()
 
                         dataprova2.set(impegnoDateCal.get(java.util.Calendar.YEAR), impegnoDateCal.get(java.util.Calendar.MONTH),
-                                impegnoDateCal.get(java.util.Calendar.DAY_OF_MONTH))
+                                impegnoDateCal.get(java.util.Calendar.DAY_OF_MONTH), impegnoDateCal.get(java.util.Calendar.HOUR),
+                                impegnoDateCal.get(java.util.Calendar.MINUTE))
 
                         if (mEventDays.find {
                                     (it.calendar.get(java.util.Calendar.DAY_OF_MONTH) == dataprova2.get(java.util.Calendar.DAY_OF_MONTH)
                                             && it.calendar.get(java.util.Calendar.MONTH) == dataprova2.get(java.util.Calendar.MONTH)
                                             && it.calendar.get(java.util.Calendar.YEAR) == dataprova2.get(java.util.Calendar.YEAR))
                         }!= null) {
-                            mImpegniDays.add(EventDay(dataprova2, R.drawable.blackandgreenicon))
+                            mImpEvDays.add(EventDay(dataprova2, R.drawable.blackandgreenicon))
+                            mEventDays.remove(it)
                         }
                         else {
                             mImpegniDays.add(EventDay(dataprova2, R.drawable.blackicon))
+
                         }
 
-                        calendarView.setEvents(mImpegniDays.plus(mEventDays))
+                        calendarView.setEvents(mImpEvDays.plus(mImpegniDays.plus(mEventDays)))
+
 
 
 
@@ -476,7 +445,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                         val dataprova1 : java.util.Calendar = java.util.Calendar.getInstance()
 
                         dataprova1.set(eventDateCal.get(java.util.Calendar.YEAR), eventDateCal.get(java.util.Calendar.MONTH),
-                                eventDateCal.get(java.util.Calendar.DAY_OF_MONTH))
+                                eventDateCal.get(java.util.Calendar.DAY_OF_MONTH), eventDateCal.get(java.util.Calendar.HOUR),
+                                eventDateCal.get(java.util.Calendar.MINUTE))
                         Log.d("dataprova1==mimp", dataprova1.timeInMillis.toString())
 
                         if (mImpegniDays.find {
@@ -484,14 +454,16 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                                             && it.calendar.get(java.util.Calendar.MONTH) == dataprova1.get(java.util.Calendar.MONTH)
                                             && it.calendar.get(java.util.Calendar.YEAR) == dataprova1.get(java.util.Calendar.YEAR))
                                 }!= null) {
-                            mEventDays.add(EventDay(dataprova1, R.drawable.blackandgreenicon))
+                            mImpEvDays.add(EventDay(dataprova1, R.drawable.blackandgreenicon))
+                            mImpegniDays.remove(it)
+
                         }
                         else {
                             mEventDays.add(EventDay(dataprova1, R.drawable.greenicon))
                         }
 
 
-                        calendarView.setEvents(mEventDays.plus(mImpegniDays))
+                        calendarView.setEvents(mImpEvDays.plus(mImpegniDays.plus(mEventDays)))
 
 
                     } else {

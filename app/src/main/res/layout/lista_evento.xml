@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layoutDirection="ltr"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/lista_titolo"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/asap"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="Titolo"
+            android:textAlignment="textStart"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/close2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="#00FBFAFA"
+            android:foreground="@drawable/trash"
+            android:foregroundTint="#0C0C0C"
+            android:foregroundTintMode="src_in" />
+    </LinearLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/lista_data"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Data" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/lista_ora"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Ora" />
+
+</LinearLayout>

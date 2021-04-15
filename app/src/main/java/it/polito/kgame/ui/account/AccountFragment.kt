@@ -105,7 +105,9 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         //keyboard management
         fun View.hideKeyboard() {
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(windowToken, 0)
+            if (requireActivity().currentFocus!=null){
+                imm.hideSoftInputFromWindow(windowToken, 0)
+            }
         }
         view.setOnClickListener { view.hideKeyboard() }
         tView.setOnClickListener { view.hideKeyboard() }

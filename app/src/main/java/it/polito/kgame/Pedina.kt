@@ -1,13 +1,10 @@
 package it.polito.kgame
 
-class Pedina (id: Int?) {
+object Pedina {
 
-    fun Pedina() {
-        //empty constructor needed
-    }
 
-    fun pedina(id:Int?) : Int? {
-        var idpedina : Int? = null
+    fun pedina(id:Int?) : Int {
+        var idpedina = 0
         when (id) {
             0 -> {
                 idpedina= R.drawable.dog //imageviewpedina.setImageResource(idpedina)

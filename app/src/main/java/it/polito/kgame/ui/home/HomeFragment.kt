@@ -42,10 +42,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         //Toolbar
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_home)
 
-        homeViewModel.data.observe(viewLifecycleOwner, Observer { data-> adapter.setData(data) })
+        homeViewModel.thisUsersFam.observe(viewLifecycleOwner,
+                { value ->
+                    if (!value.components.isNullOrEmpty())
+                        value.components?.let { adapter.setData(it) }
+                }
+        )
         rvhome.layoutManager= LinearLayoutManager(requireContext())
         rvhome.adapter = adapter
 
+        homeViewModel.thisUsersFam.observe(viewLifecycleOwner, { fam -> familyName.text = fam.name })
 
         homeAddWeight.setOnClickListener {
 

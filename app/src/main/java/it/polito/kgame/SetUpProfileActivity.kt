@@ -42,10 +42,11 @@ class SetUpProfileActivity : AppCompatActivity() {
         }
 
         but_joinFamily.setOnClickListener {
-            if(et_familyCode.text.isNullOrBlank()) {
+            if(!et_familyCode.text.isNullOrBlank()) {
                 DbManager.setUpUserProfile(profilePic, et_familyCode.text.toString(),"AGGIUNGERE CAMPO NOME FAMIGLIA",this@SetUpProfileActivity)
             } else {
                 //ADD ERROR NOTE!!!
+                println("aggiungi un codice valido")
             }
         }
 

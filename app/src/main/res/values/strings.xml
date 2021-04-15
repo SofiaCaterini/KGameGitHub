@@ -76,6 +76,10 @@
     <string name="question_message_weight">Sei salito sopra la bilancia e vuoi aggiungere il tuo peso? </string>
     <string name="question_message_obj_ok">Hai aggiunto correttamente il peso di</string>
 
+        <!-- account -->
+    <string name="saveUpdates">Salva modifiche</string>
+    <string name="discardUpdates">Annulla modifiche</string>
+
 
             <!-- varie -->
 

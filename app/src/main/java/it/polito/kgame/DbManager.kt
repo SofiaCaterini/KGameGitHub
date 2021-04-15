@@ -8,12 +8,17 @@ import android.webkit.MimeTypeMap
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.*
 
@@ -94,15 +99,50 @@ object DbManager {
 
     private fun joinFamily(familyCode: String) {
         val data : MutableMap<String, Any> = mutableMapOf()
-        val empty : MutableMap<String, Any> = mutableMapOf()
         data[FAM_CODE] = familyCode
-        empty["exists"] = true
+
+        GlobalScope.launch {
+            val comps = getFamilyComps(familyCode)
+            val user = getUser(fbUser?.email)
+            if (user != null && comps != null) {
+                user.pawnCode = comps.size
+                user.id = fbUser?.uid
+                user.mail = fbUser?.email
+            }
+            if (fbUser != null && user != null) {
+                db.collection(FAMILIES)
+                        .document(familyCode)
+                        .collection(FAM_COMPS)
+                        .document(fbUser.email)
+                        .set(user)
+            }
+
+
+//            getUserDoc()?.addSnapshotListener { usDoc, error ->
+//                if (error != null) {
+//                    println("ERRORREEEEEE")
+//                }
+//                if (usDoc != null && usDoc.exists()) {
+//                    if (fbUser != null) {
+//                        //mette l'utente in families/family components
+//                        usDoc.data?.let {
+//                            db.collection(FAMILIES)
+//                                .document(familyCode)
+//                                .collection(FAM_COMPS)
+//                                .document(fbUser.email)
+//                                .set(it)
+//                        }
+//                    }
+//                }
+//            }
+        }
+
         if (fbUser != null) {
-            db.collection(FAMILIES)
-                .document(familyCode)
-                .collection(FAM_COMPS)
-                .document(fbUser.email)
-                .set(empty)
+//            db.collection(FAMILIES)
+//                .document(familyCode)
+//                .collection(FAM_COMPS)
+//                .document(fbUser.email)
+//                .set(empty)
 
             db.collection(ACCOUNTS)
                 .document(fbUser.email)
@@ -123,13 +163,12 @@ object DbManager {
         }
     }
 
-    suspend fun getUserDoc() : DocumentReference? {
-
+    suspend fun getUserDoc(mail: String? = null) : DocumentReference? {
         return if (fbUser != null && fbUser.email != null) {
             withContext(Dispatchers.IO) {
 
                 db.collection(ACCOUNTS)
-                    .document(fbUser.email!!)
+                    .document(mail ?: fbUser.email!!)
             }
         } else{
             println("Error when retrieving user's document: DbManager.getUserDoc()")
@@ -146,6 +185,47 @@ object DbManager {
             }
         } else{
             println("Error when retrieving family document: DbManager.getUserDoc()")
+            null
+        }
+    }
+
+    suspend fun getFamilyComps(code: String) : MutableList<User>? {
+        val users : MutableList<User> = mutableListOf()
+        return if (fbUser != null && fbUser.email != null) {
+            withContext(Dispatchers.IO) {
+                db.collection(FAMILIES)
+                    .document(code)
+                    .collection(FAM_COMPS)
+                    .get()
+                    .addOnSuccessListener {
+                        for (doc in it) {
+                            users.add(doc.toObject())
+                        }
+                    }
+                    .await()
+                users
+            }
+        } else{
+            println("Error when retrieving family document: DbManager.getUserDoc()")
+            null
+        }
+    }
+
+    suspend fun getUser(mail: String? = null) : User? {
+        var user = User()
+        return if (fbUser != null && fbUser.email != null) {
+            withContext(Dispatchers.IO) {
+                db.collection(ACCOUNTS)
+                        .document(mail ?: fbUser.email)
+                        .get()
+                        .addOnSuccessListener {
+                            user = it.toObject()!!
+                        }
+                        .await()
+                user
+            }
+        } else {
+            println("Error when retrieving user: DbManager.getUser()")
             null
         }
     }
@@ -192,7 +272,7 @@ object DbManager {
 
 
         if (fbUser != null) {
-            db.collection(ACCOUNTS)
+            db.collection(ACCOUNTS)         //update in accounts
                     .document(fbUser.email)
                     .update(data as Map<String, Any>)
                     .addOnSuccessListener {
@@ -211,6 +291,15 @@ object DbManager {
                         ).show();
                         println("update epic fail")
                     }
+
+            user.familyCode?.let { famCode ->          //update in families
+                db.collection(FAMILIES)
+                    .document(famCode)
+                    .collection(FAM_COMPS)
+                    .document(fbUser.email)
+                    .update(data as Map<String, Any>)
+            }
+
         }
     }
 

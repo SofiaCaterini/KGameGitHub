@@ -41,6 +41,10 @@ class AccountViewModel : ViewModel() {
 
 
     init {
+        setUser()
+    }
+
+    private fun setUser() {
         areUpdatesBeenMade = false
         _fbUser.value = FirebaseAuth.getInstance().currentUser
 
@@ -95,6 +99,10 @@ class AccountViewModel : ViewModel() {
         else {
             println("There were no updates to save")
         }
+    }
+
+    fun discardUpdates() {
+        setUser()
     }
 
 }

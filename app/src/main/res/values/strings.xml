@@ -39,6 +39,7 @@
     <string name="evento">PROPONI NUOVO EVENTO</string>
     <string name="impegno">AGGIUNGI UN TUO IMPEGNO</string>
     <string name="sincronizza">SINCRONIZZA CON GOOGLE</string>
+    <string name="msganteprimanuovieventi">Visualizza tutti</string>
 
 
 
@@ -83,6 +84,7 @@
     <string name="descrizione">descrizione</string>
     <string name="crea">Crea evento</string>
     <string name="aggiungi">Aggiungi impegno</string>
+    <string name="aggiungievento">Aggiungi evento famiglia</string>
     <string name="data">data</string>
     <string name="orainizio">orario inizio</string>
     <string name="durata">durata</string>
@@ -152,5 +154,30 @@
         <string name="fail_newPawn">La pedina non è stata aggiornata</string>
         <string name="prof_pic_updated">Foto profilo aggiornata!</string>
         <string name="file_missing">Foto mancante, riprova</string>
+
+
+        <!--Per calendario-->
+    <string name="material_calendar_monday">LUN</string>
+    <string name="material_calendar_tuesday">MAR</string>
+    <string name="material_calendar_wednesday">MER</string>
+    <string name="material_calendar_thursday">GIO</string>
+    <string name="material_calendar_friday">VEN</string>
+    <string name="material_calendar_saturday">SAB</string>
+    <string name="material_calendar_sunday">DOM</string>
+
+    <array name="material_calendar_months_array">
+        <item>GENNAIO</item>
+        <item>FEBBRAIO</item>
+        <item>MARZO</item>
+        <item>APRILE</item>
+        <item>MAGGIO</item>
+        <item>GIUGNO</item>
+        <item>LUGLIO</item>
+        <item>AGOSTO</item>
+        <item>SETTEBRE</item>
+        <item>OTTOBRE</item>
+        <item>NOVEMBRE</item>
+        <item>DICEMBRE</item>
+    </array>
 
 </resources>

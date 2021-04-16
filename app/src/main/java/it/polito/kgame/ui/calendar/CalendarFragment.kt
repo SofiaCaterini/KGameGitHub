@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.applandeo.materialcalendarview.EventDay
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener
+import com.google.android.material.button.MaterialButton
 import it.polito.kgame.EventoInfo
 import it.polito.kgame.R
 import kotlinx.android.synthetic.main.anteprima_evento.*
@@ -87,6 +88,10 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         calendarView.setOnDayClickListener(object : OnDayClickListener {
             override fun onDayClick(eventDay: EventDay) {
+                ante.isVisible = false
+                buttonevent.text = ""
+                buttonevent.icon = null
+
                 selectedDayCal.set(
                         eventDay.calendar.get(java.util.Calendar.YEAR),
                         eventDay.calendar.get(java.util.Calendar.MONTH),
@@ -142,7 +147,19 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                                 && (it.cal?.get(java.util.Calendar.MONTH)!! - 1) == selectedDayCal.get(java.util.Calendar.MONTH)
                                 && it.cal?.get(java.util.Calendar.YEAR) == selectedDayCal.get(java.util.Calendar.YEAR))
                     }
-                    Log.d("E", I?.cal?.timeInMillis.toString())
+                    val Ip : Map<Boolean, Int> = (listaimpegni.plus(listaeventi)).groupingBy {
+                        it.cal?.get(java.util.Calendar.DAY_OF_MONTH)  == selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH)
+                                && (it.cal?.get(java.util.Calendar.MONTH)!! - 1) == selectedDayCal.get(java.util.Calendar.MONTH)
+                                && it.cal?.get(java.util.Calendar.YEAR) == selectedDayCal.get(java.util.Calendar.YEAR)}
+                            .eachCount().filter { (it).value > 1 }
+
+                    Log.d("ev", Ip.toString())
+                    if (Ip.isNotEmpty()) {
+                        buttonevent.text = getString(R.string.msganteprimanuovieventi)
+                        buttonevent.setIconResource(R.drawable.ic_arrow_right)
+                        buttonevent.iconGravity = MaterialButton.ICON_GRAVITY_END
+                    }
+
                     if (I != null) {
                         lista_titolo.text = I.titolo
                         lista_ora.text = refactorTime(I.cal)
@@ -189,6 +206,17 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                                 && (it.cal?.get(java.util.Calendar.MONTH)!! - 1) == selectedDayCal.get(java.util.Calendar.MONTH)
                                 && it.cal?.get(java.util.Calendar.YEAR) == selectedDayCal.get(java.util.Calendar.YEAR))
                     }
+                    val Ep : Map<Boolean, Int> = (listaeventi.plus(listaimpegni)).groupingBy {
+                        it.cal?.get(java.util.Calendar.DAY_OF_MONTH)  == selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH)
+                                && (it.cal?.get(java.util.Calendar.MONTH)!! - 1) == selectedDayCal.get(java.util.Calendar.MONTH)
+                                && it.cal?.get(java.util.Calendar.YEAR) == selectedDayCal.get(java.util.Calendar.YEAR)}
+                            .eachCount().filter { it.value > 1 }
+                    if (Ep.isNotEmpty()) {
+                        buttonevent.text = getString(R.string.msganteprimanuovieventi)
+                        buttonevent.setIconResource(R.drawable.ic_arrow_right)
+                        buttonevent.iconGravity = MaterialButton.ICON_GRAVITY_END
+                    }
+
                     Log.d("E", E?.cal?.timeInMillis.toString())
                     if (E != null) {
                         lista_titolo.text = E.titolo

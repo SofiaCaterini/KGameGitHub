@@ -8,19 +8,6 @@
     android:background="@drawable/sfondo_orange_profilo"
     tools:context=".ui.account.AccountFragment">
 
-    <Button
-        android:id="@+id/ok"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FFAC31"
-        android:text="@string/ok"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.514"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_nickname"
-        app:layout_constraintVertical_bias="0.0" />
-
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/cambianickname"
         android:layout_width="301dp"

@@ -34,6 +34,7 @@ object DbManager {
     const val FAMILIES = "Families"
     const val FAM_COMPS = "Family Components"
     const val MATCHES = "Matches"
+    const val ENGAGEMENTS = "Impegni"
 
     //database KEYS
         //account
@@ -46,6 +47,11 @@ object DbManager {
     const val FAM_NAME = "familyName"
         //match
     const val MATCH_START = "matchStartDate"
+        //engagement
+    const val TITLE = "titolo"
+    const val DESCRIPTION = "descrizione"
+    const val CALENDAR = "calendar"
+    const val LOCATION = "luogo"
         //storage
     private var mStorageRef: StorageReference? = FirebaseStorage.getInstance().getReference("uploads")
     private var mUploadTask: StorageTask<*>? = null
@@ -169,6 +175,19 @@ object DbManager {
 
                 db.collection(ACCOUNTS)
                     .document(mail ?: fbUser.email!!)
+            }
+        } else{
+            println("Error when retrieving user's document: DbManager.getUserDoc()")
+            null
+        }
+    }
+
+    suspend fun getUserEngagementDoc() : DocumentReference? {
+        return if (fbUser != null && fbUser.email != null) {
+            withContext(Dispatchers.IO) {
+
+                db.collection(ACCOUNTS)
+                    .document(fbUser.email!!).collection(ENGAGEMENTS).document()
             }
         } else{
             println("Error when retrieving user's document: DbManager.getUserDoc()")
@@ -367,5 +386,59 @@ object DbManager {
         for (i in 0 until sizeOfRandomString)
             sb.append(allowedChars[random.nextInt(allowedChars.length)])
         return sb.toString()
+    }
+
+    fun createEngagement(context: Context?, eng:EventoInfo, code: Long) {
+        val data : MutableMap<String,Any> = mutableMapOf()
+        data[TITLE] = eng.titolo!!
+        data[DESCRIPTION] = eng.descrizione!!
+        data[CALENDAR] = eng.cal!!
+        data[LOCATION] = eng.luogo!!
+
+        if (fbUser != null) {
+            db.collection(ACCOUNTS)
+                .document(fbUser.email)
+                .collection(ENGAGEMENTS)    //update in impegni
+                .document(code.toString())
+                .set(data as Map<String, Any>)
+                .addOnFailureListener {
+                    println("save on db epic fail: $it")
+                }
+        }
+    }
+
+    fun updateEngagement(context: Context?, eng: EventoInfo) {
+        val data : MutableMap<String, Any> = mutableMapOf()
+        if(eng.titolo != null) data[TITLE] = eng.titolo!!
+        if(eng.descrizione != null) data[DESCRIPTION] = eng.descrizione!!
+        if(eng.cal != null) data[CALENDAR] = eng.cal!!
+        if(eng.luogo != null) data[LOCATION] = eng.luogo!!
+
+
+        if (fbUser != null) {
+            db.collection(ACCOUNTS)         //update in accounts
+                .document(fbUser.email)
+                .collection(ENGAGEMENTS)    //update in impegni
+                .document("impegno")
+                .update(data as Map<String, Any>)
+                .addOnSuccessListener {
+                    if(context != null) Toast.makeText(
+                        context,
+                        R.string.succ_update,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    println("update success")
+                }
+                .addOnFailureListener {
+                    if(context != null) Toast.makeText(
+                        context,
+                        R.string.fail_update,
+                        Toast.LENGTH_SHORT
+                    ).show();
+                    println("update epic fail")
+                }
+
+
+        }
     }
 }

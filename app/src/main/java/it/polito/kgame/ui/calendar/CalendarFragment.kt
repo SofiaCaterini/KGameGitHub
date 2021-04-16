@@ -14,14 +14,18 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.applandeo.materialcalendarview.EventDay
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import com.google.android.material.button.MaterialButton
+import com.squareup.picasso.Picasso
+import it.polito.kgame.DbManager
 import it.polito.kgame.EventoInfo
 import it.polito.kgame.R
 import kotlinx.android.synthetic.main.anteprima_evento.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.event_form.*
+import kotlinx.android.synthetic.main.fragment_account.*
 import kotlinx.android.synthetic.main.fragment_calendar.*
 import kotlinx.android.synthetic.main.impegno_form.*
 
@@ -29,13 +33,17 @@ import kotlinx.android.synthetic.main.impegno_form.*
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
     //val adapter = EventAdapter()
-    val calendarViewModel by activityViewModels<CalendarViewModel>()
+    private val calendarViewModel by activityViewModels<CalendarViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //Toolbar
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_calendar)
 
-        //calendarViewModel.data.observe(viewLifecycleOwner, Observer { data-> adapter.setData(data) })
+        calendarViewModel.thisEngagement.observe(viewLifecycleOwner, Observer { engagement ->
+            println("QUIIII: $engagement")
+
+
+        })
         //rveventi.layoutManager= LinearLayoutManager(requireContext())
         //rveventi.adapter = adapter
 
@@ -381,6 +389,9 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 ) {
                     val nuovoimpegno = EventoInfo(titoloi.text.toString(), impegnoDateCal , descrizionei.text.toString(),luogoi.text.toString())
                     listaimpegni.add(nuovoimpegno)
+                    //calendarViewModel.addEngagement(requireContext(),nuovoimpegno)
+                    DbManager.createEngagement(requireContext(), nuovoimpegno, System.currentTimeMillis())
+
                     val intent = Intent(Intent.ACTION_INSERT).apply {
                         data = CalendarContract.Events.CONTENT_URI
                         putExtra(CalendarContract.Events.TITLE, titoloi.text.toString())

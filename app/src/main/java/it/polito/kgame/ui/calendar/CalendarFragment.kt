@@ -42,9 +42,10 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         calendarViewModel.Appointments.observe(viewLifecycleOwner, Observer { appointment ->
             println("APPOINTMENTS: $appointment")
             val mImpegniDays: MutableList<EventDay> = ArrayList()
-            /*appointment.forEach {
+            appointment.forEach {
                 mImpegniDays.add(EventDay(it.cal, R.drawable.blackicon))
-            }*/
+                calendarView.setEvents(mImpegniDays)
+            }
 
 
         })

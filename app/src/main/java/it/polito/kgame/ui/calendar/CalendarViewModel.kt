@@ -56,22 +56,6 @@ class CalendarViewModel : ViewModel() {
                     Log.w(TAG, "Listen failed.", error)
                     return@addSnapshotListener
                 }
-                /*
-                val apps = ArrayList<EventoInfo>()
-                val cals : ArrayList<EventoInfo> = ArrayList()
-                for (doc in value!!) {
-                    apps.add(doc.toObject<EventoInfo>())
-
-                }
-                apps.forEach {
-                    it.cal
-                }
-
-                _Appointments.value = apps
-                Log.d("FAMMI SAPERE Apps", apps.toString())
-                Log.d("FAMMI SAPERE value", _Appointments.value.toString())*/
-
-
 
                 val titoli = ArrayList<String>()
                 val descrizioni = ArrayList<String>()
@@ -96,7 +80,7 @@ class CalendarViewModel : ViewModel() {
                         dat.add(it)
                     }
 
-
+                    cals.clear()
                     for (i in 0 until titoli.size) {
                         cals.add(Calendar.getInstance())
                         cals[i].timeInMillis =dat[i].toLong()

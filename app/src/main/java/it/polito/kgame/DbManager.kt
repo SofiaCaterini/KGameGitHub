@@ -50,7 +50,7 @@ object DbManager {
         //engagement
     const val TITLE = "titolo"
     const val DESCRIPTION = "descrizione"
-    const val CALENDAR = "cal"
+    const val CALENDAR = "calendar"
     const val LOCATION = "luogo"
         //storage
     private var mStorageRef: StorageReference? = FirebaseStorage.getInstance().getReference("uploads")
@@ -411,9 +411,9 @@ object DbManager {
     }
 
     fun createAppointment(context: Context?, app:EventoInfo, code: Long) {
-        val data : MutableMap<String,Any> = mutableMapOf()
+        val data : MutableMap<String,String> = mutableMapOf()
         data[TITLE] = app.titolo!!
-        data[CALENDAR] = app.cal?.timeInMillis!!
+        data[CALENDAR] = app.cal?.timeInMillis!!.toString()!!
         data[DESCRIPTION] = app.descrizione!!
         data[LOCATION] = app.luogo!!
 

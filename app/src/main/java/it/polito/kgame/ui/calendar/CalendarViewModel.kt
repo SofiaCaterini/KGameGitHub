@@ -65,51 +65,39 @@ class CalendarViewModel : ViewModel() {
                 val cals = ArrayList<Calendar>()
 
                 for (doc in value!!) {
+                    if (doc!= null && doc.exists()) {
+                        doc.getString("titolo")?.let {
+                            titoli.add(it)
+                        }
+                        doc.getString("descrizione")?.let {
+                            descrizioni.add(it)
+                        }
+                        doc.getString("luogo")?.let {
+                            luoghi.add(it)
+                        }
 
-                    doc.getString("titolo")?.let {
-                        titoli.add(it)
-                    }
-                    doc.getString("descrizione")?.let {
-                        descrizioni.add(it)
-                    }
-                    doc.getString("luogo")?.let {
-                        luoghi.add(it)
-                    }
+                        doc.getString("calendar")?.let {
+                            dat.add(it)
+                        }
 
-                    doc.getString("cal")?.let {
-                        dat.add(it)
-                    }
+                        cals.clear()
+                        for (i in 0 until titoli.size) {
+                            cals.add(Calendar.getInstance())
+                            cals[i].timeInMillis = dat[i].toLong()
+                        }
 
-                    cals.clear()
-                    for (i in 0 until titoli.size) {
-                        cals.add(Calendar.getInstance())
-                        cals[i].timeInMillis =dat[i].toLong()
-                    }
-
-                    apps.clear()
-                    for (j in 0 until titoli.size) {
-                        apps.add(EventoInfo(titoli[j],cals[j],descrizioni[j],luoghi[j]))
-                    }
+                        apps.clear()
+                        for (j in 0 until titoli.size) {
+                            apps.add(EventoInfo(titoli[j], cals[j], descrizioni[j], luoghi[j]))
+                        }
 
 
+                    }
+                    Log.d("date", dat.toString())
+                    Log.d("cals", cals.toString())
+                    Log.d("FAMMI SAPERE Appp", apps.toString())
+                    _Appointments.value = apps
                 }
-                Log.d("date", dat.toString())
-                Log.d("cals", cals.toString())
-                Log.d("FAMMI SAPERE Appp", apps.toString())
-                _Appointments.value = apps
-                /*
-                var apps = mutableMapOf<String, Any?>()
-                for (doc in value!!) {
-                    doc.getData()?.let{
-                        apps = it
-                    }
-
-                    apps.add(doc.toObject<EventoInfo>())
-                    Log.d("FAMMI SAPERE Appp", _Appointments.value.toString())
-                }
-                _Appointments.value?.forEach {
-                    it.cal =
-                } */
             }
         }
     }

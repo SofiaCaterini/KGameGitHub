@@ -34,7 +34,7 @@ object DbManager {
     const val FAMILIES = "Families"
     const val FAM_COMPS = "Family Components"
     const val MATCHES = "Matches"
-    const val ENGAGEMENTS = "Impegni"
+    const val APPOINTMENTS = "Appointments"
 
     //database KEYS
         //account
@@ -50,7 +50,7 @@ object DbManager {
         //engagement
     const val TITLE = "titolo"
     const val DESCRIPTION = "descrizione"
-    const val CALENDAR = "calendar"
+    const val CALENDAR = "cal"
     const val LOCATION = "luogo"
         //storage
     private var mStorageRef: StorageReference? = FirebaseStorage.getInstance().getReference("uploads")
@@ -182,15 +182,37 @@ object DbManager {
         }
     }
 
-    suspend fun getUserEngagementDoc() : DocumentReference? {
+    suspend fun getAppointments() : MutableList<EventoInfo>? {
+        val events : MutableList<EventoInfo> = mutableListOf()
+        return if (fbUser != null && fbUser.email != null) {
+            withContext(Dispatchers.IO) {
+                db.collection(ACCOUNTS)
+                    .document(fbUser.email!!)
+                    .collection(APPOINTMENTS)
+                    .get()
+                    .addOnSuccessListener {
+                        for (doc in it) {
+                            events.add(doc.toObject())
+                        }
+                    }
+                    .await()
+                events
+            }
+        } else{
+            println("Error when retrieving family document: DbManager.getUserDoc()")
+            null
+        }
+    }
+
+    suspend fun getUserAppointmentColl() : CollectionReference? {
         return if (fbUser != null && fbUser.email != null) {
             withContext(Dispatchers.IO) {
 
                 db.collection(ACCOUNTS)
-                    .document(fbUser.email!!).collection(ENGAGEMENTS).document()
+                    .document(fbUser.email!!).collection(APPOINTMENTS)
             }
         } else{
-            println("Error when retrieving user's document: DbManager.getUserDoc()")
+            println("Error when retrieving user's document: DbManager.getUserAppointmentDoc()")
             null
         }
     }
@@ -388,17 +410,17 @@ object DbManager {
         return sb.toString()
     }
 
-    fun createEngagement(context: Context?, eng:EventoInfo, code: Long) {
+    fun createAppointment(context: Context?, app:EventoInfo, code: Long) {
         val data : MutableMap<String,Any> = mutableMapOf()
-        data[TITLE] = eng.titolo!!
-        data[DESCRIPTION] = eng.descrizione!!
-        data[CALENDAR] = eng.cal!!
-        data[LOCATION] = eng.luogo!!
+        data[TITLE] = app.titolo!!
+        data[CALENDAR] = app.cal?.timeInMillis!!
+        data[DESCRIPTION] = app.descrizione!!
+        data[LOCATION] = app.luogo!!
 
         if (fbUser != null) {
             db.collection(ACCOUNTS)
                 .document(fbUser.email)
-                .collection(ENGAGEMENTS)    //update in impegni
+                .collection(APPOINTMENTS)    //update in impegni
                 .document(code.toString())
                 .set(data as Map<String, Any>)
                 .addOnFailureListener {
@@ -407,18 +429,18 @@ object DbManager {
         }
     }
 
-    fun updateEngagement(context: Context?, eng: EventoInfo) {
+    fun updateAppointment(context: Context?, app: EventoInfo) {
         val data : MutableMap<String, Any> = mutableMapOf()
-        if(eng.titolo != null) data[TITLE] = eng.titolo!!
-        if(eng.descrizione != null) data[DESCRIPTION] = eng.descrizione!!
-        if(eng.cal != null) data[CALENDAR] = eng.cal!!
-        if(eng.luogo != null) data[LOCATION] = eng.luogo!!
+        if(app.titolo != null) data[TITLE] = app.titolo!!
+        if(app.cal != null) data[CALENDAR] = app.cal!!
+        if(app.descrizione != null) data[DESCRIPTION] = app.descrizione!!
+        if(app.luogo != null) data[LOCATION] = app.luogo!!
 
 
         if (fbUser != null) {
             db.collection(ACCOUNTS)         //update in accounts
                 .document(fbUser.email)
-                .collection(ENGAGEMENTS)    //update in impegni
+                .collection(APPOINTMENTS)    //update in impegni
                 .document("impegno")
                 .update(data as Map<String, Any>)
                 .addOnSuccessListener {

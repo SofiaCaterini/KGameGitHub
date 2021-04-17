@@ -39,8 +39,12 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         //Toolbar
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_calendar)
 
-        calendarViewModel.thisEngagement.observe(viewLifecycleOwner, Observer { engagement ->
-            println("QUIIII: $engagement")
+        calendarViewModel.Appointments.observe(viewLifecycleOwner, Observer { appointment ->
+            println("APPOINTMENTS: $appointment")
+            val mImpegniDays: MutableList<EventDay> = ArrayList()
+            /*appointment.forEach {
+                mImpegniDays.add(EventDay(it.cal, R.drawable.blackicon))
+            }*/
 
 
         })
@@ -390,7 +394,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     val nuovoimpegno = EventoInfo(titoloi.text.toString(), impegnoDateCal , descrizionei.text.toString(),luogoi.text.toString())
                     listaimpegni.add(nuovoimpegno)
                     //calendarViewModel.addEngagement(requireContext(),nuovoimpegno)
-                    DbManager.createEngagement(requireContext(), nuovoimpegno, System.currentTimeMillis())
+                    DbManager.createAppointment(requireContext(), nuovoimpegno, System.currentTimeMillis())
 
                     val intent = Intent(Intent.ACTION_INSERT).apply {
                         data = CalendarContract.Events.CONTENT_URI

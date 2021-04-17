@@ -1,6 +1,8 @@
 package it.polito.kgame.ui.calendar
 
+import android.content.ContentValues.TAG
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,6 +20,7 @@ import it.polito.kgame.User
 import it.polito.kgame.ui.home.ItemUsers
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.collections.ArrayList
 
 class CalendarViewModel : ViewModel() {
 
@@ -27,39 +30,105 @@ class CalendarViewModel : ViewModel() {
 
     //////////////////////////////////////
     val db : FirebaseFirestore = FirebaseFirestore.getInstance()
-    private var engagementListener: ListenerRegistration? = null
+    private var appointmentListener: ListenerRegistration? = null
     private var areUpdatesBeenMade : Boolean = false
 
     private val _fbUser = MutableLiveData<FirebaseUser>()
     val fbUser: LiveData<FirebaseUser>
         get() = _fbUser
 
-    private val _thisEngagement = MutableLiveData<EventoInfo>()
-    val thisEngagement: MutableLiveData<EventoInfo>
-        get() = _thisEngagement
+    private val _Appointments = MutableLiveData<MutableList<EventoInfo>>()
+    val Appointments: MutableLiveData<MutableList<EventoInfo>>
+        get() = _Appointments
 
 
     init {
-        setUserEngagement()
+        setUserAppointment()
     }
 
-    private fun setUserEngagement() {
+   private fun setUserAppointment() {
         areUpdatesBeenMade = false
         _fbUser.value = FirebaseAuth.getInstance().currentUser
 
         viewModelScope.launch {
-            engagementListener = DbManager.getUserEngagementDoc()?.addSnapshotListener { value, error ->
+            appointmentListener = DbManager.getUserAppointmentColl()?.addSnapshotListener { value, error ->
                 if (error != null) {
-                    println("ERRORREEEEEE")
+                    Log.w(TAG, "Listen failed.", error)
+                    return@addSnapshotListener
                 }
-                if (value != null && value.exists()) {
-                    _thisEngagement.value = value.toObject<EventoInfo>()!!
-                    println("FAMMI SAPERE" +_thisEngagement.value)
+                /*
+                val apps = ArrayList<EventoInfo>()
+                val cals : ArrayList<EventoInfo> = ArrayList()
+                for (doc in value!!) {
+                    apps.add(doc.toObject<EventoInfo>())
+
                 }
+                apps.forEach {
+                    it.cal
+                }
+
+                _Appointments.value = apps
+                Log.d("FAMMI SAPERE Apps", apps.toString())
+                Log.d("FAMMI SAPERE value", _Appointments.value.toString())*/
+
+
+
+                val titoli = ArrayList<String>()
+                val descrizioni = ArrayList<String>()
+                val dat = ArrayList<String>()
+                val luoghi = ArrayList<String>()
+                val apps = ArrayList<EventoInfo>()
+                val cals = ArrayList<Calendar>()
+
+                for (doc in value!!) {
+
+                    doc.getString("titolo")?.let {
+                        titoli.add(it)
+                    }
+                    doc.getString("descrizione")?.let {
+                        descrizioni.add(it)
+                    }
+                    doc.getString("luogo")?.let {
+                        luoghi.add(it)
+                    }
+
+                    doc.getString("cal")?.let {
+                        dat.add(it)
+                    }
+
+
+                    for (i in 0 until titoli.size) {
+                        cals.add(Calendar.getInstance())
+                        cals[i].timeInMillis =dat[i].toLong()
+                    }
+
+                    apps.clear()
+                    for (j in 0 until titoli.size) {
+                        apps.add(EventoInfo(titoli[j],cals[j],descrizioni[j],luoghi[j]))
+                    }
+
+
+                }
+                Log.d("date", dat.toString())
+                Log.d("cals", cals.toString())
+                Log.d("FAMMI SAPERE Appp", apps.toString())
+                _Appointments.value = apps
+                /*
+                var apps = mutableMapOf<String, Any?>()
+                for (doc in value!!) {
+                    doc.getData()?.let{
+                        apps = it
+                    }
+
+                    apps.add(doc.toObject<EventoInfo>())
+                    Log.d("FAMMI SAPERE Appp", _Appointments.value.toString())
+                }
+                _Appointments.value?.forEach {
+                    it.cal =
+                } */
             }
         }
     }
-
 
 
     //chi conosce il viewmodel può vedere i dati
@@ -69,38 +138,38 @@ class CalendarViewModel : ViewModel() {
 
     val data: LiveData<List<EventDay>> = _data
 
-
+/*
     fun changeTitle( titolo : String) {
-        _thisEngagement.value?.titolo = titolo
+        _thisAppointment.value?.titolo = titolo
         areUpdatesBeenMade = true
     }
 
     fun changeDescription(descr: String?) {
-        _thisEngagement.value?.descrizione = descr
+        _thisAppointment.value?.descrizione = descr
         areUpdatesBeenMade = true
     }
 
     fun saveUpdates(context: Context) {
         if (areUpdatesBeenMade) {
-            _thisEngagement.value?.let { DbManager.updateEngagement(context, it) }
+            _thisAppointment.value?.let { DbManager.updateAppointment(context, it) }
         }
         else {
             println("There were no updates to save")
         }
     }
 
-    fun addEngagement(context: Context, eng:EventoInfo, calendar: Calendar){
-        _thisEngagement.value?.cal = eng.cal
-        _thisEngagement.value?.descrizione = eng.descrizione
-        _thisEngagement.value?.luogo = eng.luogo
-        _thisEngagement.value?.titolo = eng.titolo
-        _thisEngagement.value?.let {
-            DbManager.createEngagement(context, it, calendar.timeInMillis)
+    fun addEngagement(context: Context, app:EventoInfo, calendar: Calendar){
+        _thisAppointment.value?.cal = app.cal
+        _thisAppointment.value?.descrizione = app.descrizione
+        _thisAppointment.value?.luogo = app.luogo
+        _thisAppointment.value?.titolo = app.titolo
+        _thisAppointment.value?.let {
+            DbManager.createAppointment(context, it, calendar.timeInMillis)
         }
     }
 
     fun discardUpdates() {
-        setUserEngagement()
+        setUserAppointment()
     }
-
+*/
 }

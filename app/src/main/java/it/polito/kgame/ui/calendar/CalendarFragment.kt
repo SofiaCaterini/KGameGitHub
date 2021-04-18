@@ -39,16 +39,25 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         //Toolbar
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_calendar)
 
+        val mImpegniDays: MutableList<EventDay> = ArrayList()
+
+
         calendarViewModel.Appointments.observe(viewLifecycleOwner, Observer { appointment ->
             println("APPOINTMENTS: $appointment")
-            val mImpegniDays: MutableList<EventDay> = ArrayList()
+            println("napp: ${appointment.size}")
+            mImpegniDays.clear()
+
             appointment.forEach {
                 mImpegniDays.add(EventDay(it.cal, R.drawable.blackicon))
                 calendarView.setEvents(mImpegniDays)
-            }
 
+            }
+            println("imp: $mImpegniDays")
+            println("numimp: ${mImpegniDays.size}")
 
         })
+
+
         //rveventi.layoutManager= LinearLayoutManager(requireContext())
         //rveventi.adapter = adapter
 
@@ -93,7 +102,6 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
 
         val mEventDays: MutableList<EventDay> = ArrayList()
-        val mImpegniDays: MutableList<EventDay> = ArrayList()
         val mImpEvDays: MutableList<EventDay> = ArrayList()
 
         val listaeventi : MutableList<EventoInfo> = ArrayList()
@@ -101,6 +109,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         calendarView.setOnDayClickListener(object : OnDayClickListener {
             override fun onDayClick(eventDay: EventDay) {
+                println("impact: $mImpegniDays")
                 ante.isVisible = false
                 buttonevent.text = ""
                 buttonevent.icon = null
@@ -395,7 +404,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     val nuovoimpegno = EventoInfo(titoloi.text.toString(), impegnoDateCal , descrizionei.text.toString(),luogoi.text.toString())
                     listaimpegni.add(nuovoimpegno)
                     //calendarViewModel.addEngagement(requireContext(),nuovoimpegno)
-                    DbManager.createAppointment(requireContext(), nuovoimpegno, System.currentTimeMillis())
+
 
                     val intent = Intent(Intent.ACTION_INSERT).apply {
                         data = CalendarContract.Events.CONTENT_URI
@@ -430,11 +439,10 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                             mImpEvDays.add(EventDay(dataprova2, R.drawable.blackandgreenicon))
                         }
                         else {
-                            mImpegniDays.add(EventDay(dataprova2, R.drawable.blackicon))
-
+                            DbManager.createAppointment(requireContext(), nuovoimpegno, System.currentTimeMillis())
                         }
 
-                        calendarView.setEvents(mImpEvDays.plus(mImpegniDays.plus(mEventDays)))
+                        //calendarView.setEvents(mImpEvDays.plus(mImpegniDays.plus(mEventDays)))
 
 
 

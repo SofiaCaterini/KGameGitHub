@@ -37,7 +37,7 @@ class CalendarViewModel : ViewModel() {
     val fbUser: LiveData<FirebaseUser>
         get() = _fbUser
 
-    private val _Appointments = MutableLiveData<MutableList<EventoInfo>>()
+    val _Appointments = MutableLiveData<MutableList<EventoInfo>>()
     val Appointments: MutableLiveData<MutableList<EventoInfo>>
         get() = _Appointments
 
@@ -63,7 +63,7 @@ class CalendarViewModel : ViewModel() {
                 val luoghi = ArrayList<String>()
                 val apps = ArrayList<EventoInfo>()
                 val cals = ArrayList<Calendar>()
-
+                apps.clear()
                 for (doc in value!!) {
                     if (doc!= null && doc.exists()) {
                         doc.getString("titolo")?.let {
@@ -93,8 +93,8 @@ class CalendarViewModel : ViewModel() {
 
 
                     }
-                    Log.d("date", dat.toString())
-                    Log.d("cals", cals.toString())
+                    //Log.d("date", dat.toString())
+                    //Log.d("cals", cals.toString())
                     Log.d("FAMMI SAPERE Appp", apps.toString())
                     _Appointments.value = apps
                 }

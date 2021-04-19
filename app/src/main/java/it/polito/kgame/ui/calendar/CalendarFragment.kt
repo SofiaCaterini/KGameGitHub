@@ -43,6 +43,9 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         val listaimpegni : MutableList<EventoInfo> = ArrayList()
 
         rvdettagli.isVisible = false
+        ante.isVisible=false
+        ante.y = 0F
+        var yinit = ante.y
         println("top: $ante.y")
         calendarViewModel.Appointments.observe(viewLifecycleOwner, Observer { appointment ->
             println("APPOINTMENTS: $appointment")
@@ -127,7 +130,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         calendarView.setOnDayClickListener(object : OnDayClickListener {
             override fun onDayClick(eventDay: EventDay) {
-
+                rvdettagli.isVisible = false
+                ante.y = 150F
                 println("impact: $mImpegniDays")
                 println("listaime: $listaimpegni")
                 listaimpegni.forEach {
@@ -205,37 +209,35 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                         lista_titolo.text = I.titolo
                         lista_ora.text = refactorTime(I.cal)
                     }
-                    close.setOnClickListener {
-                        ante.isVisible = false
-                    }
+                    Log.d("seldatecal", selectedDayCal.get(java.util.Calendar.WEEK_OF_MONTH).toString())
 
                     when (selectedDayCal.get(java.util.Calendar.WEEK_OF_MONTH)) {
 
                         1 -> {
-                            Log.d ("week", "1")
-                            ante.y= 450F
-
+                            ante.translationY = 0F
                         }
                         2 -> {
-                            ante.y = 600F
-
-                            Log.d ("week", "2")
+                            ante.translationY = 150F
                         }
                         3 -> {
-                            ante.y = 750F
-
-                            Log.d ("week", "3")}
+                            ante.translationY = 300F
+                        }
                         4 -> {
-                            ante.y = 900F
-
-                            Log.d ("week", "4")}
+                            ante.translationY = 450F
+                        }
                         5 -> {
-                            ante.y = 1050F
+                            ante.translationY = 600F
+                        }
 
-                            Log.d ("week", "5")}
+
 
                     }
+
                     ante.isVisible = true
+                    close.setOnClickListener {
+                        ante.isVisible = false
+                    }
+
                     ante.setOnClickListener {
                         ante.isVisible = false
                         println("Dovrei visualizzare rv")
@@ -262,15 +264,16 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 if (xeve != null) {
                     Log.d("tag", "Ha evento")
                     ante.isVisible = true
-                    val E : EventoInfo? = listaeventi.find{
-                        (it.cal?.get(java.util.Calendar.DAY_OF_MONTH)  == selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH)
+                    val E: EventoInfo? = listaeventi.find {
+                        (it.cal?.get(java.util.Calendar.DAY_OF_MONTH) == selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH)
                                 && (it.cal?.get(java.util.Calendar.MONTH)!! - 1) == selectedDayCal.get(java.util.Calendar.MONTH)
                                 && it.cal?.get(java.util.Calendar.YEAR) == selectedDayCal.get(java.util.Calendar.YEAR))
                     }
-                    val Ep : Map<Boolean, Int> = (listaeventi.plus(listaimpegni)).groupingBy {
-                        it.cal?.get(java.util.Calendar.DAY_OF_MONTH)  == selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH)
+                    val Ep: Map<Boolean, Int> = (listaeventi.plus(listaimpegni)).groupingBy {
+                        it.cal?.get(java.util.Calendar.DAY_OF_MONTH) == selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH)
                                 && (it.cal?.get(java.util.Calendar.MONTH)!! - 1) == selectedDayCal.get(java.util.Calendar.MONTH)
-                                && it.cal?.get(java.util.Calendar.YEAR) == selectedDayCal.get(java.util.Calendar.YEAR)}
+                                && it.cal?.get(java.util.Calendar.YEAR) == selectedDayCal.get(java.util.Calendar.YEAR)
+                    }
                             .eachCount().filter { it.value > 1 }
                     if (Ep.isNotEmpty()) {
                         buttonevent.text = getString(R.string.msganteprimanuovieventi)
@@ -286,26 +289,6 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     }
                     close.setOnClickListener {
                         ante.isVisible = false
-                    }
-                    when (selectedDayCal.get(java.util.Calendar.WEEK_OF_MONTH)) {
-                        1 -> {ante.isVisible = true
-                            ante.y = 450F
-                            Log.d ("week", "1")
-                        }
-                        2 -> {
-                            ante.y = 600F
-                            Log.d ("week", "2")
-                        }
-                        3 -> {
-                            ante.y = 750F
-                            Log.d ("week", "3")}
-                        4 -> {
-                            ante.y = 900F
-                            Log.d ("week", "4")}
-                        5 -> {
-                            ante.y = 1050F
-                            Log.d ("week", "5")}
-
                     }
                 }
                 else {

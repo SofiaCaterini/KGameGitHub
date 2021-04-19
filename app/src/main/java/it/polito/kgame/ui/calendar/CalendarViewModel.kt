@@ -85,75 +85,12 @@ class CalendarViewModel : ViewModel() {
                             apps.add(EventoInfo(titoli[i], cals[i], descrizioni[i], luoghi[i]))
                         }
 
-
-                        /*for (j in 0 until titoli.size) {
-
-                            //(_Appointments.value)?.add(EventoInfo(titoli[j], cals[j], descrizioni[j], luoghi[j]))
-                        }*/
-
-
                     }
-                    Log.d("date", dat.toString())
-                    cals.forEach { Log.d("millis", it.timeInMillis.toString()) }
-                    cals.forEach { Log.d("oreview", it.get(Calendar.HOUR_OF_DAY).toString()) }
-
                     _Appointments.value = apps as MutableList<EventoInfo>
 
-                    /*for (x in 0 until titoli.size) {
-                        (_Appointments.value!!).set(x, EventoInfo(titoli[x], apps[x]., descrizioni[x], luoghi[x]))
-                        //(_Appointments.value)?.add(EventoInfo(titoli[j], cals[j], descrizioni[j], luoghi[j]))
-                    }*/
-
-                    apps.forEach { Log.d("oreviewmillis", it.cal?.timeInMillis.toString()) }
-                    apps.forEach { Log.d("oreviewaaaa", it.cal?.get(Calendar.HOUR_OF_DAY).toString()) }
-                    Log.d("FAMMI SAPERE Appp", apps.toString())
-                    Log.d("FAMMI SAPERE _appoi", _Appointments.value.toString())
-
-                    //
-                    //(_Appointments.value)?.forEach {  for ( x in 0 until cals.size) {it.cal =cals[x]} }
-
-
-                    (_Appointments.value)?.forEach { Log.d("oreviewapps", it.cal?.get(Calendar.HOUR_OF_DAY).toString()) }
                 }
             }
         }
     }
 
-
-
-
-/*
-    fun changeTitle( titolo : String) {
-        _thisAppointment.value?.titolo = titolo
-        areUpdatesBeenMade = true
-    }
-
-    fun changeDescription(descr: String?) {
-        _thisAppointment.value?.descrizione = descr
-        areUpdatesBeenMade = true
-    }
-
-    fun saveUpdates(context: Context) {
-        if (areUpdatesBeenMade) {
-            _thisAppointment.value?.let { DbManager.updateAppointment(context, it) }
-        }
-        else {
-            println("There were no updates to save")
-        }
-    }
-
-    fun addEngagement(context: Context, app:EventoInfo, calendar: Calendar){
-        _thisAppointment.value?.cal = app.cal
-        _thisAppointment.value?.descrizione = app.descrizione
-        _thisAppointment.value?.luogo = app.luogo
-        _thisAppointment.value?.titolo = app.titolo
-        _thisAppointment.value?.let {
-            DbManager.createAppointment(context, it, calendar.timeInMillis)
-        }
-    }
-
-    fun discardUpdates() {
-        setUserAppointment()
-    }
-*/
 }

@@ -49,7 +49,7 @@
             android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/close2"
+            android:id="@+id/delete"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="#00FBFAFA"

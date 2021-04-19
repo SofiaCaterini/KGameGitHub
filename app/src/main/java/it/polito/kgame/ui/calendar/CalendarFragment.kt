@@ -235,7 +235,21 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     close.setOnClickListener {
                         ante.isVisible = false
                     }
+                    delete.setOnClickListener {
+                        DbManager.deleteAppointment(impegnidatacorrente[0])
+                    }
+                    buttonevent.setOnClickListener {
+                        ante.isVisible = false
+                        println("Dovrei visualizzare rv")
+                        //val dati = listaimpegni
+                        val adapter = EventAdapter(impegnidatacorrente)
+                        rvdettagli.adapter = adapter
+                        rvdettagli.isVisible = true
+                        close.setOnClickListener {
+                            ante.isVisible = false
+                        }
 
+                    }
                     ante.setOnClickListener {
                         ante.isVisible = false
                         println("Dovrei visualizzare rv")

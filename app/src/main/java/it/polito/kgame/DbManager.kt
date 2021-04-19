@@ -429,6 +429,38 @@ object DbManager {
         }
     }
 
+    fun deleteAppointment(app:EventoInfo){
+        if (fbUser != null) {
+            var chiave : String = ""
+            db.collection(ACCOUNTS)
+                    .document(fbUser.email)
+                    .collection(APPOINTMENTS)
+                    .whereEqualTo("calendar", app.cal?.timeInMillis?.toLong())//update in impegni
+                    .get()
+                    .addOnSuccessListener {
+                        for (doc in it) {
+                            chiave = doc.id
+                            println("trovato: ${doc.id}")
+                            println("tr: ${doc.reference}")
+                            println("doc: $doc")
+                            //doc.getDocumentReference(doc.reference.toString())?.delete()
+
+                            db.collection(ACCOUNTS)
+                                    .document(fbUser.email)
+                                    .collection(APPOINTMENTS)
+                                    .document(doc.id).delete()
+                        }
+
+                    }
+
+
+
+
+        }
+
+
+    }
+
     fun updateAppointment(context: Context?, app: EventoInfo) {
         val data : MutableMap<String, Any> = mutableMapOf()
         if(app.titolo != null) data[TITLE] = app.titolo!!

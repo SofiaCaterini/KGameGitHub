@@ -43,7 +43,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         val listaimpegni : MutableList<EventoInfo> = ArrayList()
 
         rvdettagli.isVisible = false
-
+        println("top: $ante.y")
         calendarViewModel.Appointments.observe(viewLifecycleOwner, Observer { appointment ->
             println("APPOINTMENTS: $appointment")
             println("napp: ${appointment.size}")
@@ -181,20 +181,21 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 }
                 if (ximp != null) {
                     Log.d("tag", "Ha impegno")
-                    ante.isVisible = true
+
                     val I : EventoInfo? = listaimpegni.find{
                         (it.cal?.get(java.util.Calendar.DAY_OF_MONTH)  == selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH)
                                 && (it.cal?.get(java.util.Calendar.MONTH)!!) == selectedDayCal.get(java.util.Calendar.MONTH)
                                 && it.cal?.get(java.util.Calendar.YEAR) == selectedDayCal.get(java.util.Calendar.YEAR))
                     }
-                    val Ip : Map<Boolean, Int> = (listaimpegni.plus(listaeventi)).groupingBy {
-                        it.cal?.get(java.util.Calendar.DAY_OF_MONTH)  == selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH)
-                                && (it.cal?.get(java.util.Calendar.MONTH)!! ) == selectedDayCal.get(java.util.Calendar.MONTH)
-                                && it.cal?.get(java.util.Calendar.YEAR) == selectedDayCal.get(java.util.Calendar.YEAR)}
-                            .eachCount().filter {  (it).key == true && (it).value > 1 }
 
-                    Log.d("ev", Ip.toString())
-                    if (Ip.isNotEmpty()) {
+                    val impegnidatacorrente : List<EventoInfo> = listaimpegni.filter{
+                        (it.cal?.get(java.util.Calendar.DAY_OF_MONTH)  == selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH)
+                                && (it.cal?.get(java.util.Calendar.MONTH)!!) == selectedDayCal.get(java.util.Calendar.MONTH)
+                                && it.cal?.get(java.util.Calendar.YEAR) == selectedDayCal.get(java.util.Calendar.YEAR))
+                    }
+
+
+                    if (impegnidatacorrente.size > 1) {
                         buttonevent.text = getString(R.string.msganteprimanuovieventi)
                         buttonevent.setIconResource(R.drawable.ic_arrow_right)
                         buttonevent.iconGravity = MaterialButton.ICON_GRAVITY_END
@@ -204,37 +205,47 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                         lista_titolo.text = I.titolo
                         lista_ora.text = refactorTime(I.cal)
                     }
+                    close.setOnClickListener {
+                        ante.isVisible = false
+                    }
+
+                    when (selectedDayCal.get(java.util.Calendar.WEEK_OF_MONTH)) {
+
+                        1 -> {
+                            Log.d ("week", "1")
+                            ante.y= 450F
+
+                        }
+                        2 -> {
+                            ante.y = 600F
+
+                            Log.d ("week", "2")
+                        }
+                        3 -> {
+                            ante.y = 750F
+
+                            Log.d ("week", "3")}
+                        4 -> {
+                            ante.y = 900F
+
+                            Log.d ("week", "4")}
+                        5 -> {
+                            ante.y = 1050F
+
+                            Log.d ("week", "5")}
+
+                    }
+                    ante.isVisible = true
                     ante.setOnClickListener {
+                        ante.isVisible = false
                         println("Dovrei visualizzare rv")
-                        val dati = listaimpegni
-                        val adapter = EventAdapter(dati)
-                        rvdettagli.layoutManager= LinearLayoutManager(requireContext())
+                        //val dati = listaimpegni
+                        val adapter = EventAdapter(impegnidatacorrente)
                         rvdettagli.adapter = adapter
                         rvdettagli.isVisible = true
                         close.setOnClickListener {
                             ante.isVisible = false
                         }
-
-                    }
-
-
-                    when (selectedDayCal.get(java.util.Calendar.WEEK_OF_MONTH)) {
-                        1 -> {
-                            Log.d ("week", "1")
-                        }
-                        2 -> {
-                            ante.translationY = 150F
-                            Log.d ("week", "2")
-                        }
-                        3 -> {
-                            ante.translationY = 300F
-                            Log.d ("week", "3")}
-                        4 -> {
-                            ante.translationY = 450F
-                            Log.d ("week", "4")}
-                        5 -> {
-                            ante.translationY = 600F
-                            Log.d ("week", "5")}
 
                     }
                 }
@@ -278,20 +289,21 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     }
                     when (selectedDayCal.get(java.util.Calendar.WEEK_OF_MONTH)) {
                         1 -> {ante.isVisible = true
+                            ante.y = 450F
                             Log.d ("week", "1")
                         }
                         2 -> {
-                            ante.translationY = 150F
+                            ante.y = 600F
                             Log.d ("week", "2")
                         }
                         3 -> {
-                            ante.translationY = 300F
+                            ante.y = 750F
                             Log.d ("week", "3")}
                         4 -> {
-                            ante.translationY = 450F
+                            ante.y = 900F
                             Log.d ("week", "4")}
                         5 -> {
-                            ante.translationY = 600F
+                            ante.y = 1050F
                             Log.d ("week", "5")}
 
                     }

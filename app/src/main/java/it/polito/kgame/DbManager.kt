@@ -411,9 +411,9 @@ object DbManager {
     }
 
     fun createAppointment(context: Context?, app:EventoInfo, code: Long) {
-        val data : MutableMap<String,String> = mutableMapOf()
+        val data : MutableMap<String,Any> = mutableMapOf()
         data[TITLE] = app.titolo!!
-        data[CALENDAR] = app.cal?.timeInMillis!!.toString()!!
+        data[CALENDAR] = app.cal?.timeInMillis!!
         data[DESCRIPTION] = app.descrizione!!
         data[LOCATION] = app.luogo!!
 

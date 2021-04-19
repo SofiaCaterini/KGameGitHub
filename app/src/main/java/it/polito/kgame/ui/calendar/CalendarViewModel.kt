@@ -37,8 +37,8 @@ class CalendarViewModel : ViewModel() {
     val fbUser: LiveData<FirebaseUser>
         get() = _fbUser
 
-    val _Appointments = MutableLiveData<MutableList<EventoInfo>>()
-    val Appointments: MutableLiveData<MutableList<EventoInfo>>
+    val _Appointments = MutableLiveData<List<EventoInfo>>()
+    val Appointments : MutableLiveData<List<EventoInfo>>
         get() = _Appointments
 
 
@@ -59,7 +59,7 @@ class CalendarViewModel : ViewModel() {
 
                 val titoli = ArrayList<String>()
                 val descrizioni = ArrayList<String>()
-                val dat = ArrayList<String>()
+                val dat = ArrayList<Long>()
                 val luoghi = ArrayList<String>()
                 val apps = ArrayList<EventoInfo>()
                 val cals = ArrayList<Calendar>()
@@ -76,27 +76,48 @@ class CalendarViewModel : ViewModel() {
                             luoghi.add(it)
                         }
 
-                        doc.getString("calendar")?.let {
+                        doc.getLong("calendar")?.let {
                             dat.add(it)
                         }
 
+
                         cals.clear()
+                        apps.clear()
                         for (i in 0 until titoli.size) {
                             cals.add(Calendar.getInstance())
                             cals[i].timeInMillis = dat[i].toLong()
+                            apps.add(EventoInfo(titoli[i], cals[i], descrizioni[i], luoghi[i]))
                         }
 
-                        apps.clear()
-                        for (j in 0 until titoli.size) {
-                            apps.add(EventoInfo(titoli[j], cals[j], descrizioni[j], luoghi[j]))
-                        }
+
+                        /*for (j in 0 until titoli.size) {
+
+                            //(_Appointments.value)?.add(EventoInfo(titoli[j], cals[j], descrizioni[j], luoghi[j]))
+                        }*/
 
 
                     }
-                    //Log.d("date", dat.toString())
-                    //Log.d("cals", cals.toString())
+                    Log.d("date", dat.toString())
+                    cals.forEach { Log.d("millis", it.timeInMillis.toString()) }
+                    cals.forEach { Log.d("oreview", it.get(Calendar.HOUR_OF_DAY).toString()) }
+
+                    _Appointments.value = apps as MutableList<EventoInfo>
+
+                    /*for (x in 0 until titoli.size) {
+                        (_Appointments.value!!).set(x, EventoInfo(titoli[x], apps[x]., descrizioni[x], luoghi[x]))
+                        //(_Appointments.value)?.add(EventoInfo(titoli[j], cals[j], descrizioni[j], luoghi[j]))
+                    }*/
+
+                    apps.forEach { Log.d("oreviewmillis", it.cal?.timeInMillis.toString()) }
+                    apps.forEach { Log.d("oreviewaaaa", it.cal?.get(Calendar.HOUR_OF_DAY).toString()) }
                     Log.d("FAMMI SAPERE Appp", apps.toString())
-                    _Appointments.value = apps
+                    Log.d("FAMMI SAPERE _appoi", _Appointments.value.toString())
+
+                    //
+                    //(_Appointments.value)?.forEach {  for ( x in 0 until cals.size) {it.cal =cals[x]} }
+
+
+                    (_Appointments.value)?.forEach { Log.d("oreviewapps", it.cal?.get(Calendar.HOUR_OF_DAY).toString()) }
                 }
             }
         }

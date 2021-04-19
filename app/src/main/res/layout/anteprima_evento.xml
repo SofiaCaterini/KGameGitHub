@@ -69,6 +69,10 @@
         android:id="@+id/buttonevent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:drawableTint="#FDFCFC"
+        android:drawableTintMode="src_in"
+        android:text="Visualizza dettagli"
+        app:icon="@drawable/ic_arrow_right"
         app:iconGravity="end"
         app:iconTint="#FFFFFF" />
 

@@ -45,7 +45,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         rvdettagli.isVisible = false
         ante.isVisible=false
         ante.y = 0F
-        var yinit = ante.y
+
         println("top: $ante.y")
         calendarViewModel.Appointments.observe(viewLifecycleOwner, Observer { appointment ->
             println("APPOINTMENTS: $appointment")
@@ -141,8 +141,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     Log.d("oreimpdays",it.calendar?.timeInMillis.toString())
                 }
                 ante.isVisible = false
-                buttonevent.text = ""
-                buttonevent.icon = null
+                buttonevent.text = "Visualizza dettagli"
+
 
                 selectedDayCal.set(
                         eventDay.calendar.get(java.util.Calendar.YEAR),
@@ -201,8 +201,6 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
                     if (impegnidatacorrente.size > 1) {
                         buttonevent.text = getString(R.string.msganteprimanuovieventi)
-                        buttonevent.setIconResource(R.drawable.ic_arrow_right)
-                        buttonevent.iconGravity = MaterialButton.ICON_GRAVITY_END
                     }
 
                     if (I != null) {

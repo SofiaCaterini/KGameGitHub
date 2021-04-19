@@ -25,7 +25,7 @@ import kotlin.collections.ArrayList
 class CalendarViewModel : ViewModel() {
 
     private val _items= mutableListOf(
-            EventDay( Calendar.getInstance()),
+            EventoInfo("Titolissimo", Calendar.getInstance(),"ok","luogoo")
     )
 
     //////////////////////////////////////
@@ -37,7 +37,7 @@ class CalendarViewModel : ViewModel() {
     val fbUser: LiveData<FirebaseUser>
         get() = _fbUser
 
-    val _Appointments = MutableLiveData<List<EventoInfo>>()
+    private val _Appointments = MutableLiveData<List<EventoInfo>>()
     val Appointments : MutableLiveData<List<EventoInfo>>
         get() = _Appointments
 
@@ -125,11 +125,11 @@ class CalendarViewModel : ViewModel() {
 
 
     //chi conosce il viewmodel può vedere i dati
-    private val _data: MutableLiveData<List<EventDay>> = MutableLiveData<List<EventDay>>().also {
+    private val _data: MutableLiveData<List<EventoInfo>> = MutableLiveData<List<EventoInfo>>().also {
         it.value = _items
     }
 
-    val data: LiveData<List<EventDay>> = _data
+    val data: LiveData<List<EventoInfo>> = _data
 
 /*
     fun changeTitle( titolo : String) {

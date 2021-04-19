@@ -13,17 +13,16 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.applandeo.materialcalendarview.EventDay
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import com.google.android.material.button.MaterialButton
-import com.squareup.picasso.Picasso
 import it.polito.kgame.DbManager
 import it.polito.kgame.EventoInfo
 import it.polito.kgame.R
 import kotlinx.android.synthetic.main.anteprima_evento.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.event_form.*
-import kotlinx.android.synthetic.main.fragment_account.*
 import kotlinx.android.synthetic.main.fragment_calendar.*
 import kotlinx.android.synthetic.main.impegno_form.*
 import java.util.*
@@ -33,7 +32,7 @@ import kotlin.collections.ArrayList
 
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
-    //val adapter = EventAdapter()
+    //private val adapter = EventAdapter()
     private val calendarViewModel by activityViewModels<CalendarViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,6 +41,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         val mImpegniDays: MutableList<EventDay> = ArrayList()
         val listaimpegni : MutableList<EventoInfo> = ArrayList()
+
+        rvdettagli.isVisible = false
 
         calendarViewModel.Appointments.observe(viewLifecycleOwner, Observer { appointment ->
             println("APPOINTMENTS: $appointment")
@@ -71,9 +72,12 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         })
 
-        //mImpegniDays
-        //rveventi.layoutManager= LinearLayoutManager(requireContext())
-        //rveventi.adapter = adapter
+        val dati = listaimpegni
+        val adapter = EventAdapter(dati)
+        rvdettagli.layoutManager= LinearLayoutManager(requireContext())
+        rvdettagli.adapter = adapter
+
+
 
         fun View.hideKeyboard() {
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -200,11 +204,20 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                         lista_titolo.text = I.titolo
                         lista_ora.text = refactorTime(I.cal)
                     }
+                    ante.setOnClickListener {
+                        println("Dovrei visualizzare rv")
+                        val dati = listaimpegni
+                        val adapter = EventAdapter(dati)
+                        rvdettagli.layoutManager= LinearLayoutManager(requireContext())
+                        rvdettagli.adapter = adapter
+                        rvdettagli.isVisible = true
+                        close.setOnClickListener {
+                            ante.isVisible = false
+                        }
 
-
-                    close.setOnClickListener {
-                        ante.isVisible = false
                     }
+
+
                     when (selectedDayCal.get(java.util.Calendar.WEEK_OF_MONTH)) {
                         1 -> {
                             Log.d ("week", "1")

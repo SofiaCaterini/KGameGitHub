@@ -41,7 +41,6 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_calendar)
 
         val mImpegniDays: MutableList<EventDay> = ArrayList()
-        val calendari : MutableList<java.util.Calendar> = ArrayList()
         val listaimpegni : MutableList<EventoInfo> = ArrayList()
 
         calendarViewModel.Appointments.observe(viewLifecycleOwner, Observer { appointment ->
@@ -53,18 +52,11 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 println("itInizio: $it")
                 var x = java.util.Calendar.getInstance()
                 x.timeInMillis = it.cal?.timeInMillis!!
-                //x = it.cal
-
-                //val y = it.cal
                 mImpegniDays.add(EventDay(x!!, R.drawable.blackicon))
                 calendarView.setEvents(mImpegniDays)
                 listaimpegni.add(it)
-                //println("itcal: ${it.cal}")
-                //calendari.add(it.cal!!)
                 println("listaimpegni: $listaimpegni")
-                //println("y: $y")
                 println("eventday: $mImpegniDays")
-                //println("calendari: $calendari")
             }
 
             println("imp: $mImpegniDays")
@@ -131,10 +123,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         calendarView.setOnDayClickListener(object : OnDayClickListener {
             override fun onDayClick(eventDay: EventDay) {
-                /*listaimpegni.forEach {
-                    mImpegniDays.add(EventDay(it.cal, R.drawable.blackicon))
 
-                }*/
                 println("impact: $mImpegniDays")
                 println("listaime: $listaimpegni")
                 listaimpegni.forEach {
@@ -176,15 +165,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     datae.error = "Inserisci data corretta"
                     dataeIsValid = false
                 }
-                /*mEventDays.forEach {
-                    Log.d("mevent", it.calendar.timeInMillis.toString())
-                }
-                mImpegniDays.forEach {
-                    Log.d("mimp", it.calendar.timeInMillis.toString())
-                }
-                mImpEvDays.forEach {
-                    Log.d("mimpeve", it.calendar.timeInMillis.toString())
-                }*/
+
                 listaeventi.forEach {
                     Log.d("listaev", it.cal?.timeInMillis.toString())
                 }
@@ -204,9 +185,9 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     }
                     val Ip : Map<Boolean, Int> = (listaimpegni.plus(listaeventi)).groupingBy {
                         it.cal?.get(java.util.Calendar.DAY_OF_MONTH)  == selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH)
-                                && (it.cal?.get(java.util.Calendar.MONTH)!!) == selectedDayCal.get(java.util.Calendar.MONTH)
+                                && (it.cal?.get(java.util.Calendar.MONTH)!! ) == selectedDayCal.get(java.util.Calendar.MONTH)
                                 && it.cal?.get(java.util.Calendar.YEAR) == selectedDayCal.get(java.util.Calendar.YEAR)}
-                            .eachCount().filter { (it).value > 1 }
+                            .eachCount().filter {  (it).key == true && (it).value > 1 }
 
                     Log.d("ev", Ip.toString())
                     if (Ip.isNotEmpty()) {
@@ -217,10 +198,9 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
                     if (I != null) {
                         lista_titolo.text = I.titolo
-                        //lista_ora.text = I.cal?.time.toString()
                         lista_ora.text = refactorTime(I.cal)
-                        //lista_ora.text = I.cal?.get(java.util.Calendar.HOUR_OF_DAY).toString()
                     }
+
 
                     close.setOnClickListener {
                         ante.isVisible = false

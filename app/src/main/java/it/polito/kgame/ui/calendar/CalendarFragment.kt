@@ -17,11 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.applandeo.materialcalendarview.EventDay
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import it.polito.kgame.DbManager
 import it.polito.kgame.EventoInfo
 import it.polito.kgame.R
 import kotlinx.android.synthetic.main.anteprima_evento.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.dettagli_impegno.*
 import kotlinx.android.synthetic.main.event_form.*
 import kotlinx.android.synthetic.main.fragment_calendar.*
 import kotlinx.android.synthetic.main.impegno_form.*
@@ -230,13 +232,15 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
 
                     }
-
+                    val adapter = EventAdapter(impegnidatacorrente)
                     ante.isVisible = true
                     close.setOnClickListener {
                         ante.isVisible = false
                     }
                     delete.setOnClickListener {
-                        DbManager.deleteAppointment(impegnidatacorrente[0])
+                        DbManager.deleteAppointment(I!!)
+                        adapter.deleteEvento(I!!)
+                        ante.isVisible = false
                     }
                     buttonevent.setOnClickListener {
                         ante.isVisible = false
@@ -257,11 +261,16 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                         val adapter = EventAdapter(impegnidatacorrente)
                         rvdettagli.adapter = adapter
                         rvdettagli.isVisible = true
+
                         close.setOnClickListener {
                             ante.isVisible = false
                         }
 
                     }
+                    /*deletedettagli.setOnClickListener {
+                        DbManager.deleteAppointment(impegnidatacorrente[0])
+                        adapter.deleteEvento(impegnidatacorrente[0])
+                    }*/
                 }
                 else {
                     Log.d("tag", "Non ha impegno")
@@ -314,6 +323,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
 
         impegno.setOnClickListener {
+            ante.isVisible = false
             impegno.isClickable = false
             evento.isClickable = false
             creareimp.isVisible = true
@@ -460,32 +470,53 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
                     //calendarView.setEvents(mImpEvDays.plus(mImpegniDays.plus(mEventDays)))
 
+                    MaterialAlertDialogBuilder(requireContext())
+                            .setTitle("Aggiungi impegno a Google Calendar")
+                            .setMessage("Vuoi aggiungere questo impegno al tuo Google Calendar?")
+                            .setPositiveButton("Si") { _, _ ->
 
-                    val intent = Intent(Intent.ACTION_INSERT).apply {
-                        data = CalendarContract.Events.CONTENT_URI
-                        putExtra(CalendarContract.Events.TITLE, titoloi.text.toString())
-                        putExtra(CalendarContract.Events.EVENT_LOCATION, luogoi.text.toString())
-                        putExtra(CalendarContract.Events.DESCRIPTION, descrizionei.text.toString())
-                        putExtra(
-                                CalendarContract.EXTRA_EVENT_BEGIN_TIME,
-                                impegnoDateCal.timeInMillis
-                        )
-                    }
-                    if (intent.resolveActivity(requireActivity().packageManager) != null) {
+                                val intent = Intent(Intent.ACTION_INSERT).apply {
+                                    data = CalendarContract.Events.CONTENT_URI
+                                    putExtra(CalendarContract.Events.TITLE, titoloi.text.toString())
+                                    putExtra(CalendarContract.Events.EVENT_LOCATION, luogoi.text.toString())
+                                    putExtra(CalendarContract.Events.DESCRIPTION, descrizionei.text.toString())
+                                    putExtra(
+                                            CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+                                            impegnoDateCal.timeInMillis
+                                    )
+                                }
+                                if (intent.resolveActivity(requireActivity().packageManager) != null) {
 
-                        requireActivity().startActivity(intent)
+                                    requireActivity().startActivity(intent)
 
-                        creareimp.isVisible = false
-                        calendarView.isVisible = true
-                        calendarView.isClickable = true
-                        calendarView.isEnabled = true
+                                    creareimp.isVisible = false
+                                    calendarView.isVisible = true
+                                    calendarView.isClickable = true
+                                    calendarView.isEnabled = true
 
-                    } else {
-                        Toast.makeText(
-                                requireContext(), "There is no app that can support this action",
-                                Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                                } else {
+                                    Toast.makeText(
+                                            requireContext(), "There is no app that can support this action",
+                                            Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                            .setNegativeButton("No"){  _, _ ->
+                                //creareimp.isVisible = false
+                                evento.isClickable = true
+                                impegno.isClickable = true
+                                creareimp.isVisible = false
+                                calendarView.isClickable = true
+                                calendarView.isEnabled = true
+                                calendarView.isVisible = true
+                                view.hideKeyboard()
+                                Toast.makeText(
+                                        requireContext(), "Impegno aggiunto correttamente ",
+                                        Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            .show()
+
 
                 } else {
                     Toast.makeText(
@@ -505,6 +536,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         val eventDateCal : java.util.Calendar = java.util.Calendar.getInstance()
         evento.setOnClickListener {
+            ante.isVisible = false
             creareeve.isVisible = true
             impegno.isClickable = false
             evento.isClickable = false

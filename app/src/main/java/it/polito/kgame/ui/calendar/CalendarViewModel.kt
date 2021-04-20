@@ -33,8 +33,8 @@ class CalendarViewModel : ViewModel() {
     val fbUser: LiveData<FirebaseUser>
         get() = _fbUser
 
-    private val _Appointments = MutableLiveData<List<EventoInfo>>()
-    val Appointments : MutableLiveData<List<EventoInfo>>
+    private val _Appointments = MutableLiveData<MutableList<EventoInfo>>()
+    val Appointments : MutableLiveData<MutableList<EventoInfo>>
         get() = _Appointments
 
 

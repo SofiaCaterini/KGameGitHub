@@ -26,7 +26,7 @@
             android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/delete"
+            android:id="@+id/deletedettagli"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="#00FBFAFA"

@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
@@ -64,10 +65,16 @@ class EventAdapter(var datee: List<EventoInfo>) : RecyclerView.Adapter<EventAdap
                     .setMessage("Sei sicuro di voler eliminare questo impegno?")
                     .setPositiveButton("Si") { _, _ ->
                         //holder.vista.rvdettagli?.isVisible = false
+
                         val list = datee.toMutableList()
                         list.removeAt(position)
                         notifyDataSetChanged()
+                        holder.itemView.visibility = (View.GONE)
                         DbManager.deleteAppointment(datee[position])
+                        Toast.makeText(
+                                holder.contesto, "Impegno eliminato correttamente ",
+                                Toast.LENGTH_SHORT
+                        ).show()
                     }
                     .setNegativeButton("No"){  _, _ ->
 

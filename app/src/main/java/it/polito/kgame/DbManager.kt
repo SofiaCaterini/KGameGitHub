@@ -34,6 +34,7 @@ object DbManager {
     const val FAMILIES = "Families"
     const val FAM_COMPS = "Family Components"
     const val MATCHES = "Matches"
+    const val APPOINTMENTS = "Appointments"
 
     //database KEYS
         //account
@@ -46,6 +47,11 @@ object DbManager {
     const val FAM_NAME = "familyName"
         //match
     const val MATCH_START = "matchStartDate"
+        //engagement
+    const val TITLE = "titolo"
+    const val DESCRIPTION = "descrizione"
+    const val CALENDAR = "calendar"
+    const val LOCATION = "luogo"
         //storage
     private var mStorageRef: StorageReference? = FirebaseStorage.getInstance().getReference("uploads")
     private var mUploadTask: StorageTask<*>? = null
@@ -172,6 +178,41 @@ object DbManager {
             }
         } else{
             println("Error when retrieving user's document: DbManager.getUserDoc()")
+            null
+        }
+    }
+
+    suspend fun getAppointments() : MutableList<EventoInfo>? {
+        val events : MutableList<EventoInfo> = mutableListOf()
+        return if (fbUser != null && fbUser.email != null) {
+            withContext(Dispatchers.IO) {
+                db.collection(ACCOUNTS)
+                    .document(fbUser.email!!)
+                    .collection(APPOINTMENTS)
+                    .get()
+                    .addOnSuccessListener {
+                        for (doc in it) {
+                            events.add(doc.toObject())
+                        }
+                    }
+                    .await()
+                events
+            }
+        } else{
+            println("Error when retrieving family document: DbManager.getUserDoc()")
+            null
+        }
+    }
+
+    suspend fun getUserAppointmentColl() : CollectionReference? {
+        return if (fbUser != null && fbUser.email != null) {
+            withContext(Dispatchers.IO) {
+
+                db.collection(ACCOUNTS)
+                    .document(fbUser.email!!).collection(APPOINTMENTS)
+            }
+        } else{
+            println("Error when retrieving user's document: DbManager.getUserAppointmentDoc()")
             null
         }
     }
@@ -367,5 +408,91 @@ object DbManager {
         for (i in 0 until sizeOfRandomString)
             sb.append(allowedChars[random.nextInt(allowedChars.length)])
         return sb.toString()
+    }
+
+    fun createAppointment(context: Context?, app:EventoInfo, code: Long) {
+        val data : MutableMap<String,Any> = mutableMapOf()
+        data[TITLE] = app.titolo!!
+        data[CALENDAR] = app.cal?.timeInMillis!!
+        data[DESCRIPTION] = app.descrizione!!
+        data[LOCATION] = app.luogo!!
+
+        if (fbUser != null) {
+            db.collection(ACCOUNTS)
+                .document(fbUser.email)
+                .collection(APPOINTMENTS)    //update in impegni
+                .document(code.toString())
+                .set(data as Map<String, Any>)
+                .addOnFailureListener {
+                    println("save on db epic fail: $it")
+                }
+        }
+    }
+
+    fun deleteAppointment(app:EventoInfo){
+        if (fbUser != null) {
+            var chiave : String = ""
+            db.collection(ACCOUNTS)
+                    .document(fbUser.email)
+                    .collection(APPOINTMENTS)
+                    .whereEqualTo("calendar", app.cal?.timeInMillis?.toLong())//update in impegni
+                    .get()
+                    .addOnSuccessListener {
+                        for (doc in it) {
+                            chiave = doc.id
+                            println("trovato: ${doc.id}")
+                            println("tr: ${doc.reference}")
+                            println("doc: $doc")
+                            //doc.getDocumentReference(doc.reference.toString())?.delete()
+
+                            db.collection(ACCOUNTS)
+                                    .document(fbUser.email)
+                                    .collection(APPOINTMENTS)
+                                    .document(doc.id).delete()
+                        }
+
+                    }
+
+
+
+
+        }
+
+
+    }
+
+    fun updateAppointment(context: Context?, app: EventoInfo) {
+        val data : MutableMap<String, Any> = mutableMapOf()
+        if(app.titolo != null) data[TITLE] = app.titolo!!
+        if(app.cal != null) data[CALENDAR] = app.cal!!
+        if(app.descrizione != null) data[DESCRIPTION] = app.descrizione!!
+        if(app.luogo != null) data[LOCATION] = app.luogo!!
+
+
+        if (fbUser != null) {
+            db.collection(ACCOUNTS)         //update in accounts
+                .document(fbUser.email)
+                .collection(APPOINTMENTS)    //update in impegni
+                .document("impegno")
+                .update(data as Map<String, Any>)
+                .addOnSuccessListener {
+                    if(context != null) Toast.makeText(
+                        context,
+                        R.string.succ_update,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    println("update success")
+                }
+                .addOnFailureListener {
+                    if(context != null) Toast.makeText(
+                        context,
+                        R.string.fail_update,
+                        Toast.LENGTH_SHORT
+                    ).show();
+                    println("update epic fail")
+                }
+
+
+        }
     }
 }

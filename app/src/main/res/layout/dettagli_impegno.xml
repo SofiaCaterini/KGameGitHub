@@ -1,34 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="330dp"
     android:layout_height="wrap_content"
-    android:background="#F1ECEC"
+    android:background="#E8D7D7"
     android:elevation="5dp"
     android:orientation="vertical">
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="start"
-        android:layoutDirection="rtl"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/close"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="clip_horizontal|right"
-            android:background="#00FBFAFA"
-            android:foreground="@android:drawable/ic_menu_close_clear_cancel"
-            android:foregroundTint="#D60909"
-            android:foregroundTintMode="src_in" />
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -37,8 +14,8 @@
         android:orientation="horizontal">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/lista_titolo"
-            android:layout_width="200dp"
+            android:id="@+id/dettagli_titolo"
+            android:layout_width="280dp"
             android:layout_height="match_parent"
             android:fontFamily="@font/asap"
             android:gravity="center_vertical"
@@ -49,7 +26,7 @@
             android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/delete"
+            android:id="@+id/deletedettagli"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="#00FBFAFA"
@@ -59,21 +36,38 @@
     </LinearLayout>
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/lista_ora"
+        android:id="@+id/dettagli_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Data" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/dettagli_ora"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:text="Ora" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonevent"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/dettagli_descrizione"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableTint="#FDFCFC"
-        android:drawableTintMode="src_in"
-        android:text="Visualizza dettagli"
-        app:icon="@drawable/ic_arrow_right"
-        app:iconGravity="end"
-        app:iconTint="#FFFFFF" />
+        android:padding="5dp"
+        android:text="Descrizione" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/dettagli_luogo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Luogo" />
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@color/toolbar_calendar"
+        android:foregroundTint="#ED0E0E" />
 
 </LinearLayout>

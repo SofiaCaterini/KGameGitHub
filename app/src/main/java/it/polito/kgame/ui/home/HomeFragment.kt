@@ -21,6 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FirebaseFirestore
+import it.polito.kgame.DbManager
 import it.polito.kgame.R
 import it.polito.kgame.ui.grow.noClicked
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -85,11 +86,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                         val str= URL("http://192.168.4.1/").readText(Charset.forName("UTF-8"))
                                         withContext(Dispatchers.Main) {
 
+                                            DbManager.createWeight(requireContext(), str.toLong(), System.currentTimeMillis())
 
-                                            var messaggiosalvato2 : String = getString(R.string.question_message_obj_ok)
-                                            var kg : String = getString(R.string.kg)
-                                            var peso : String = str
-                                            var message2 : String = "$messaggiosalvato2 $peso $kg"
+                                            val messaggiosalvato2 : String = getString(R.string.question_message_obj_ok)
+                                            val kg : String = getString(R.string.kg)
+                                            val peso : String = str
+                                            val message2 : String = "$messaggiosalvato2 $peso $kg"
 
 
                                             MaterialAlertDialogBuilder(requireContext())
@@ -99,8 +101,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                                                     }
                                                     .show()
-
-
 
                                         }
                                     }

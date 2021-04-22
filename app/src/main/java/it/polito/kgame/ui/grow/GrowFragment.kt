@@ -12,6 +12,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import com.applandeo.materialcalendarview.EventDay
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
@@ -19,6 +21,7 @@ import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import it.polito.kgame.R
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.fragment_calendar.*
 import kotlinx.android.synthetic.main.fragment_grow.*
 import kotlinx.android.synthetic.main.fragment_grow.obiettivo
 import kotlinx.android.synthetic.main.obj_form.*
@@ -35,13 +38,20 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
         val cal = Calendar.getInstance()
         val todayMillis = cal.timeInMillis
 
+
+
         println("UNo " + todayMillis)
         println("dueee " + oneDayInMillis)
         println("dueee * 31 " + 31*oneDayInMillis)
         println("sotttea " + (todayMillis - oneDayInMillis))
         println("sotttea 30 " + (todayMillis - 31*oneDayInMillis))
 
+        growViewModel.Weights.observe(viewLifecycleOwner, Observer { weight ->
+            println("WEIGHTS: $weight")
+            println("nWeight: ${weight.size}")
 
+
+        })
 
 
         //Toolbar

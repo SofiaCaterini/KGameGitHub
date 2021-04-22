@@ -35,6 +35,7 @@ object DbManager {
     const val FAM_COMPS = "Family Components"
     const val MATCHES = "Matches"
     const val APPOINTMENTS = "Appointments"
+    const val WEIGHTSESSIONS = "WeightSessions"
 
     //database KEYS
         //account
@@ -47,14 +48,18 @@ object DbManager {
     const val FAM_NAME = "familyName"
         //match
     const val MATCH_START = "matchStartDate"
-        //engagement
+        //appointment
     const val TITLE = "titolo"
     const val DESCRIPTION = "descrizione"
     const val CALENDAR = "calendar"
     const val LOCATION = "luogo"
+        //weigh
+    const val WEIGHT = "peso"
+    const val DATA = "data"
         //storage
     private var mStorageRef: StorageReference? = FirebaseStorage.getInstance().getReference("uploads")
     private var mUploadTask: StorageTask<*>? = null
+
 
 
 
@@ -213,6 +218,19 @@ object DbManager {
             }
         } else{
             println("Error when retrieving user's document: DbManager.getUserAppointmentDoc()")
+            null
+        }
+    }
+
+    suspend fun getUserWeightColl() : CollectionReference? {
+        return if (fbUser != null && fbUser.email != null) {
+            withContext(Dispatchers.IO) {
+
+                db.collection(ACCOUNTS)
+                        .document(fbUser.email!!).collection(WEIGHTSESSIONS)
+            }
+        } else{
+            println("Error when retrieving user's document: DbManager.getUserWeightDoc()")
             null
         }
     }
@@ -461,7 +479,24 @@ object DbManager {
 
     }
 
-    fun updateAppointment(context: Context?, app: EventoInfo) {
+    fun createWeight(context: Context?, weight: Long, code: Long) {
+        val data : MutableMap<String,Any> = mutableMapOf()
+        data[WEIGHT] = weight
+        data[DATA] = code.toLong()
+
+        if (fbUser != null) {
+            db.collection(ACCOUNTS)
+                    .document(fbUser.email)
+                    .collection(WEIGHTSESSIONS)    //update in impegni
+                    .document(code.toString())
+                    .set(data as Map<String, Any>)
+                    .addOnFailureListener {
+                        println("save weight on db epic fail: $it")
+                    }
+        }
+    }
+
+    /*fun updateAppointment(context: Context?, app: EventoInfo) {
         val data : MutableMap<String, Any> = mutableMapOf()
         if(app.titolo != null) data[TITLE] = app.titolo!!
         if(app.cal != null) data[CALENDAR] = app.cal!!
@@ -494,5 +529,5 @@ object DbManager {
 
 
         }
-    }
+    }*/
 }

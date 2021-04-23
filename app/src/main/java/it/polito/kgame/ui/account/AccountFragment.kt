@@ -15,6 +15,8 @@ import android.view.KeyEvent
 import android.view.KeyEvent.*
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -23,6 +25,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import com.google.android.material.navigation.NavigationView
 
 
 import com.google.firebase.firestore.FirebaseFirestore
@@ -66,6 +69,11 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
             //read nickname
             edit_nickname.setText(user.username)
+
+            //inserimento dati utente nell'header, nel caso venissero aggiornati
+            val header = requireActivity().findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
+            header.findViewById<TextView>(R.id.navHeadNickname)?.text = viewModel.thisUser.value?.username
+            header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(viewModel.thisUser.value?.profileImg).into(it)  }
 
         })
 

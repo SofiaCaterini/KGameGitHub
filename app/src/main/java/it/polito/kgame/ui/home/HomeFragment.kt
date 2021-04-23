@@ -86,13 +86,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                         val str= URL("http://192.168.4.1/").readText(Charset.forName("UTF-8"))
                                         withContext(Dispatchers.Main) {
 
-                                            DbManager.createWeight(requireContext(), str.toLong(), System.currentTimeMillis())
+
 
                                             val messaggiosalvato2 : String = getString(R.string.question_message_obj_ok)
                                             val kg : String = getString(R.string.kg)
                                             val peso : String = str
                                             val message2 : String = "$messaggiosalvato2 $peso $kg"
-
+                                            DbManager.createWeight(requireContext(), peso, System.currentTimeMillis())
 
                                             MaterialAlertDialogBuilder(requireContext())
                                                     .setTitle(R.string.question_title_weight_ok)

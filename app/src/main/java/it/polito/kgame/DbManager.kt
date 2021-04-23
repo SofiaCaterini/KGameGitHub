@@ -479,10 +479,10 @@ object DbManager {
 
     }
 
-    fun createWeight(context: Context?, weight: Long, code: Long) {
+    fun createWeight(context: Context?, weight: String, code: Long) {
         val data : MutableMap<String,Any> = mutableMapOf()
         data[WEIGHT] = weight
-        data[DATA] = code.toLong()
+        data[DATA] = code
 
         if (fbUser != null) {
             db.collection(ACCOUNTS)

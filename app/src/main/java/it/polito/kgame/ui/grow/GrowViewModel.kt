@@ -47,7 +47,7 @@ class GrowViewModel : ViewModel() {
                     return@addSnapshotListener
                 }
 
-                val pesi = ArrayList<Long>()
+                val pesi = ArrayList<String>()
                 val datee = ArrayList<Long>()
                 val sessioni = ArrayList<PesoInfo>()
 
@@ -57,7 +57,7 @@ class GrowViewModel : ViewModel() {
                     if (doc!= null && doc.exists()) {
                         println("sono dentro al doc")
 
-                        doc.getLong("peso")?.let {
+                        doc.getString("peso")?.let {
                             pesi.add(it)
                         }
 
@@ -65,8 +65,9 @@ class GrowViewModel : ViewModel() {
                             datee.add(it)
                         }
                         sessioni.clear()
+
                         for (i in 0 until pesi.size) {
-                            sessioni.add(PesoInfo(datee[i], pesi[i]))
+                            sessioni.add(PesoInfo(datee[i], pesi[i].toFloat()))
                         }
 
                     }

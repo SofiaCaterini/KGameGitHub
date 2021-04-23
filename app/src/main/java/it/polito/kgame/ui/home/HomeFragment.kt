@@ -64,8 +64,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 //            mNameTextView = header.findViewById<View>(R.id.nameTextView) as TextView
 //            mNameTextView.setText("XYZ")
 
-            val navView : NavigationView = requireActivity().findViewById(R.id.nav_view)
-            val header = navView.getHeaderView(0)
+            val header = requireActivity().findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
 
 
             header.findViewById<TextView>(R.id.navHeadNickname)?.text = homeViewModel.thisUser.value?.username

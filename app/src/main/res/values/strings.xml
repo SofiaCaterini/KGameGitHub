@@ -49,6 +49,7 @@
     <string name="email">email</string>
     <string name="password">password</string>
     <string name="conferma">conferma</string>
+    <string name="Ric">Ricordami</string>
     <string name="newUser">Nuovo utente?</string>
     <string name="register">Registrati</string>
     <string name="username">username</string>

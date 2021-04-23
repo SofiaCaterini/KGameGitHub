@@ -59,22 +59,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         homeViewModel.thisUsersFam.observe(viewLifecycleOwner, { fam ->
             familyName.text = fam.name
 
-
-//            val header: View = mNavigationView.getHeaderView(0)
-//            mNameTextView = header.findViewById<View>(R.id.nameTextView) as TextView
-//            mNameTextView.setText("XYZ")
-
+                //inserimento dati utente nell'header
             val header = requireActivity().findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
-
-
             header.findViewById<TextView>(R.id.navHeadNickname)?.text = homeViewModel.thisUser.value?.username
             header.findViewById<TextView>(R.id.navHeadFamilyName)?.text = homeViewModel.thisUsersFam.value?.name
             header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(homeViewModel.thisUser.value?.profileImg).into(it)  }
-
-
-//            getView()?.findViewById<TextView>(R.id.navHeadFamilyName)?.text = homeViewModel.thisUsersFam.value?.name
-//            getView()?.findViewById<ImageView>(R.id.navHeadProfileImg)?.let {Picasso.get().load(homeViewModel.thisUser.value?.profileImg).into(it) }
-            println("dai ma perché!!!??? "+ header)
         })
 
         homeAddWeight.setOnClickListener {

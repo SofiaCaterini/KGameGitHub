@@ -1,14 +1,18 @@
 package it.polito.kgame.ui.home
 
+import android.content.ContentValues
+import android.util.Log
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.toObject
 import it.polito.kgame.*
 import it.polito.kgame.R
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
+        private var weightListener: ListenerRegistration? = null
 
         private val _fbUser = MutableLiveData<FirebaseUser>()
 
@@ -23,6 +27,10 @@ class HomeViewModel : ViewModel() {
         private var _data: MutableLiveData<List<User>> = MutableLiveData<List<User>>()
         val data : LiveData<List<User>>
                 get() = _data
+
+        private val _We = MutableLiveData<MutableList<PesoInfo>>()
+        val We : MutableLiveData<MutableList<PesoInfo>>
+                get() = _We
 
 
         init {
@@ -42,7 +50,7 @@ class HomeViewModel : ViewModel() {
                 }
 
 
-                
+                setUserWeight()
 
         }
 
@@ -81,6 +89,47 @@ class HomeViewModel : ViewModel() {
 //                                DbManager.getFamilyComps(it)
 //                        }
 //                }.invokeOnCompletion {println("vediamo un pochetto22: " + _thisUsersFam.value?.components)
+                }
+        }
+
+        private fun setUserWeight() {
+                _fbUser.value = FirebaseAuth.getInstance().currentUser
+
+                viewModelScope.launch {
+                        weightListener = DbManager.getUserWeightColl()?.addSnapshotListener { value, error ->
+                                if (error != null) {
+                                        Log.w(ContentValues.TAG, "Listen failed.", error)
+                                        return@addSnapshotListener
+                                }
+
+                                val pesi = ArrayList<String>()
+                                val datee = ArrayList<Long>()
+                                val sessioni = ArrayList<PesoInfo>()
+
+                                println("Sono nella collection")
+                                sessioni.clear()
+                                for (doc in value!!) {
+                                        if (doc!= null && doc.exists()) {
+                                                println("sono dentro al doc")
+
+                                                doc.getString("peso")?.let {
+                                                        pesi.add(it)
+                                                }
+
+                                                doc.getLong("data")?.let {
+                                                        datee.add(it)
+                                                }
+                                                sessioni.clear()
+
+                                                for (i in 0 until pesi.size) {
+                                                        sessioni.add(PesoInfo(datee[i], pesi[i].toFloat()))
+                                                }
+
+                                        }
+                                        _We.value = sessioni
+
+                                }
+                        }
                 }
         }
 

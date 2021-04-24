@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.squareup.picasso.Picasso
+import com.google.firebase.firestore.FirebaseFirestore
+import it.polito.kgame.DbManager
 import it.polito.kgame.R
 import it.polito.kgame.ui.grow.noClicked
 import kotlinx.android.synthetic.main.activity_main.view.*
@@ -99,11 +101,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                         withContext(Dispatchers.Main) {
 
 
-                                            var messaggiosalvato2: String = getString(R.string.question_message_obj_ok)
-                                            var kg: String = getString(R.string.kg)
-                                            var peso: String = str
-                                            var message2: String = "$messaggiosalvato2 $peso $kg"
 
+                                            val messaggiosalvato2 : String = getString(R.string.question_message_obj_ok)
+                                            val kg : String = getString(R.string.kg)
+                                            val peso : String = str
+                                            val message2 : String = "$messaggiosalvato2 $peso $kg"
+                                            DbManager.createWeight(requireContext(), peso, System.currentTimeMillis())
 
                                             MaterialAlertDialogBuilder(requireContext())
                                                     .setTitle(R.string.question_title_weight_ok)
@@ -112,7 +115,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                                                     }
                                                     .show()
-
 
                                         }
                                     }

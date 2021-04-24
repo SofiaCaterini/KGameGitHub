@@ -130,10 +130,11 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
         val sim30Pesate : DoubleArray = doubleArrayOf(69.9, 70.1, 70.7, 71.0, 70.5, 68.8, 69.5, 67.9, 66.0, 67.2, 67.2, 68.5, 70.1, 70.7, 71.0, 70.5, 68.8, 69.5, 67.9, 66.0, 67.2, 67.2, 68.5, 70.1, 70.7, 71.0, 70.5, 68.8, 69.5, 67.9)
         val sim30Dates : LongArray = longArrayOf(1612300000000, 1613300000000, 1614300000000, 1615300000000, 1616300000000, 1617300000000, 1618300000000, 1619300000000, 1620300000000, 1621300000000, 1622300000000, 1623300000000, 1624300000000, 1625300000000, 1626300000000, 1627300000000, 1628300000000, 1629300000000, 1630300000000, 1631300000000, 1632300000000, 1633300000000, 1634300000000, 1635300000000, 1636300000000, 1637300000000, 1638300000000, 1639300000000, 1640300000000, 1641300000000)
 
-        var graph : GraphView = view.findViewById(R.id.graph) as GraphView
+        val graph : GraphView = view.findViewById(R.id.graph) as GraphView
 
-        graph.gridLabelRenderer.numHorizontalLabels = 5
-        graph.gridLabelRenderer.setHumanRounding(false,true)
+        graph.gridLabelRenderer.setHorizontalLabelsAngle(45)
+        //graph.gridLabelRenderer.numHorizontalLabels = 6
+        graph.gridLabelRenderer.setHumanRounding(true,true)
         graph.gridLabelRenderer.labelFormatter = object : DefaultLabelFormatter() {
             override fun formatLabel(value: Double, isValueX: Boolean): String {
                 return if (isValueX) {
@@ -359,7 +360,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
 
     private fun resizeGraph(graphWidthIndex: Int, series: LineGraphSeries<DataPoint>, today: Long) {
 
-        //println("giorno del mese: " + today)
+        println("giorno del mese: " + graphWidthIndex)
 
         graph.removeSeries(series)
 

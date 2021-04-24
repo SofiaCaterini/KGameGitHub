@@ -13,7 +13,7 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
-        android:id="@+id/gameBoard"
+        android:id="@+id/navHeadProfileImg"
         android:layout_width="72dp"
         android:layout_height="65dp"
         android:contentDescription="@string/nav_header_desc"
@@ -21,20 +21,21 @@
         app:srcCompat="@drawable/lion" />
 
     <TextView
+        android:id="@+id/navHeadNickname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="@string/nickname"
+        android:text=""
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/familyName"
+        android:id="@+id/navHeadFamilyName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/family_name"
+        android:text=""
         android:textColor="#FAFAFA"
         android:textSize="18sp"
         android:textStyle="bold" />

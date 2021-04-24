@@ -33,10 +33,10 @@ class GrowViewModel : ViewModel() {
 
 
     init {
-        setUserAppointment()
+        setUserWeight()
     }
 
-    private fun setUserAppointment() {
+    private fun setUserWeight() {
         areUpdatesBeenMade = false
         _fbUser.value = FirebaseAuth.getInstance().currentUser
 

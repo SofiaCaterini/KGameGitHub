@@ -86,7 +86,7 @@ class CalendarViewModel : ViewModel() {
                         }
 
                     }
-                    _Appointments.value = apps as MutableList<EventoInfo>
+                    _Appointments.value = apps
 
                 }
             }

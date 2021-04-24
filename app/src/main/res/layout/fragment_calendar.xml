@@ -16,117 +16,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/impegno"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:fontFamily="@font/asap"
-            android:padding="10dp"
-            android:text="@string/impegno"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@color/toolbar_calendar"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:backgroundTint="#FFFFFF"
-            app:cornerRadius="5dp"
-            app:icon="@android:drawable/ic_input_add"
-            app:iconPadding="8dp"
-            app:iconSize="40dp"
-            app:iconTint="@color/toolbar_calendar"
-            app:layout_constraintBottom_toTopOf="@+id/google"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/evento">
-
-        </com.google.android.material.button.MaterialButton>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/google"
-            android:layout_width="wrap_content"
-            android:layout_height="76dp"
-            android:layout_margin="10dp"
-            android:fontFamily="@font/asap"
-            android:padding="10dp"
-            android:text="@string/sincronizza"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@color/toolbar_calendar"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:backgroundTint="#FFFFFF"
-            app:cornerRadius="5dp"
-            app:icon="@drawable/google"
-            app:iconPadding="8dp"
-            app:iconSize="40dp"
-            app:iconTintMode="multiply"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/impegno">
-
-        </com.google.android.material.button.MaterialButton>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/evento"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_marginVertical="20dp"
-            android:fontFamily="@font/asap"
-            android:padding="10dp"
-            android:text="@string/evento"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@color/toolbar_calendar"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:backgroundTint="#FFFFFF"
-            app:cornerRadius="5dp"
-            app:icon="@android:drawable/ic_input_add"
-            app:iconPadding="8dp"
-            app:iconSize="40dp"
-            app:iconTint="@color/toolbar_calendar"
-            app:layout_constraintBottom_toTopOf="@+id/impegno"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/calendarView"
-            app:layout_constraintVertical_bias="1.0">
-
-        </com.google.android.material.button.MaterialButton>
-
-        <com.applandeo.materialcalendarview.CalendarView
-
-            android:id="@+id/calendarView"
-            android:layout_width="366dp"
-            android:layout_height="389dp"
-            android:layout_margin="10dp"
-            android:background="@android:drawable/progress_horizontal"
-            android:backgroundTint="@color/toolbar_calendar"
-            android:backgroundTintMode="add"
-            android:dateTextAppearance="@style/CalenderViewDateCustomText"
-            android:fadingEdge="horizontal|vertical"
-            android:outlineAmbientShadowColor="#F1EDED"
-            android:selectedWeekBackgroundColor="@color/blue"
-            android:theme="@style/calendar_theme"
-            android:unfocusedMonthDateColor="@color/white"
-            android:weekNumberColor="#FFFFFF"
-            android:weekSeparatorLineColor="@color/white"
-            app:datePicker="true"
-            app:eventsEnabled="true"
-            app:headerColor="#CF443A"
-            app:highlightedDaysLabelsColor="@color/toolbar_calendar"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.04000002"
-            app:pagesColor="#FAC6C6"
-            app:selectionColor="#8C1910"
-            app:selectionLabelColor="#FFFFFF"
-            app:todayLabelColor="#020202" />
-
         <include
             android:id="@+id/creareimp"
             layout="@layout/impegno_form"
@@ -138,7 +27,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.51" />
+            app:layout_constraintVertical_bias="0.65" />
 
         <include
             android:id="@+id/creareeve"
@@ -151,7 +40,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.51" />
+            app:layout_constraintVertical_bias="0.65" />
 
         <include
             android:id="@+id/ante"
@@ -162,7 +51,119 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.36" />
+            app:layout_constraintVertical_bias="0.41000003" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.applandeo.materialcalendarview.CalendarView
+
+                android:id="@+id/calendarView"
+                android:layout_width="366dp"
+                android:layout_height="389dp"
+                android:layout_margin="10dp"
+                android:background="@android:drawable/progress_horizontal"
+                android:backgroundTint="@color/toolbar_calendar"
+                android:backgroundTintMode="add"
+                android:dateTextAppearance="@style/CalenderViewDateCustomText"
+                android:fadingEdge="horizontal|vertical"
+                android:outlineAmbientShadowColor="#F1EDED"
+                android:selectedWeekBackgroundColor="@color/blue"
+                android:theme="@style/calendar_theme"
+                android:unfocusedMonthDateColor="@color/white"
+                android:weekNumberColor="#FFFFFF"
+                android:weekSeparatorLineColor="@color/white"
+                app:eventsEnabled="true"
+                app:headerColor="#CF443A"
+                app:highlightedDaysLabelsColor="@color/toolbar_calendar"
+                app:pagesColor="#FAC6C6"
+                app:selectionColor="#8C1910"
+                app:selectionLabelColor="#FFFFFF"
+                app:todayLabelColor="#020202"
+                app:type="one_day_picker">
+
+            </com.applandeo.materialcalendarview.CalendarView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvdettagli"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:foregroundGravity="center"
+                android:textAlignment="center" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/evento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_marginVertical="20dp"
+                android:fontFamily="@font/asap"
+                android:padding="10dp"
+                android:text="@string/evento"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/toolbar_calendar"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:backgroundTint="#FFFFFF"
+                app:cornerRadius="5dp"
+                app:icon="@android:drawable/ic_input_add"
+                app:iconPadding="8dp"
+                app:iconSize="40dp"
+                app:iconTint="@color/toolbar_calendar">
+
+            </com.google.android.material.button.MaterialButton>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/impegno"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:fontFamily="@font/asap"
+                android:padding="10dp"
+                android:text="@string/impegno"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/toolbar_calendar"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:backgroundTint="#FFFFFF"
+                app:cornerRadius="5dp"
+                app:icon="@android:drawable/ic_input_add"
+                app:iconPadding="8dp"
+                app:iconSize="40dp"
+                app:iconTint="@color/toolbar_calendar">
+
+            </com.google.android.material.button.MaterialButton>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/google"
+                android:layout_width="wrap_content"
+                android:layout_height="76dp"
+                android:layout_margin="10dp"
+                android:fontFamily="@font/asap"
+                android:padding="10dp"
+                android:text="@string/sincronizza"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/toolbar_calendar"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:backgroundTint="#FFFFFF"
+                app:cornerRadius="5dp"
+                app:icon="@drawable/google"
+                app:iconPadding="8dp"
+                app:iconSize="40dp"
+                app:iconTintMode="multiply">
+
+            </com.google.android.material.button.MaterialButton>
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

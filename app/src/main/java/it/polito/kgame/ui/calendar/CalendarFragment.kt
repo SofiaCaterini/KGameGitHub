@@ -2,8 +2,6 @@ package it.polito.kgame.ui.calendar
 
 import android.content.Context
 import android.content.Intent
-import android.icu.util.Calendar
-import android.icu.util.Calendar.getInstance
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.util.Log
@@ -14,29 +12,77 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.applandeo.materialcalendarview.EventDay
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import it.polito.kgame.DbManager
 import it.polito.kgame.EventoInfo
 import it.polito.kgame.R
 import kotlinx.android.synthetic.main.anteprima_evento.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.dettagli_impegno.*
 import kotlinx.android.synthetic.main.event_form.*
 import kotlinx.android.synthetic.main.fragment_calendar.*
 import kotlinx.android.synthetic.main.impegno_form.*
+import java.util.*
+import java.util.Calendar.getInstance
+import kotlin.collections.ArrayList
 
 
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
-    //val adapter = EventAdapter()
-    val calendarViewModel by activityViewModels<CalendarViewModel>()
+    //private val adapter = EventAdapter()
+    private val calendarViewModel by activityViewModels<CalendarViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //Toolbar
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_calendar)
 
-        //calendarViewModel.data.observe(viewLifecycleOwner, Observer { data-> adapter.setData(data) })
-        //rveventi.layoutManager= LinearLayoutManager(requireContext())
-        //rveventi.adapter = adapter
+        val mImpegniDays: MutableList<EventDay> = ArrayList()
+        val listaimpegni : MutableList<EventoInfo> = ArrayList()
+
+        rvdettagli.isVisible = false
+        ante.isVisible=false
+        ante.y = 0F
+
+        println("top: $ante.y")
+        calendarViewModel.Appointments.observe(viewLifecycleOwner, Observer { appointment ->
+            println("APPOINTMENTS: $appointment")
+            println("napp: ${appointment.size}")
+            mImpegniDays.clear()
+            listaimpegni.clear()
+            appointment.forEach {
+                println("itInizio: $it")
+                var x = java.util.Calendar.getInstance()
+                x.timeInMillis = it.cal?.timeInMillis!!
+                mImpegniDays.add(EventDay(x!!, R.drawable.blackicon))
+                calendarView.setEvents(mImpegniDays)
+                listaimpegni.add(it)
+                println("listaimpegni: $listaimpegni")
+                println("eventday: $mImpegniDays")
+            }
+
+            println("imp: $mImpegniDays")
+            mImpegniDays.forEach {
+                println("mimpdays: ${it.calendar.timeInMillis.toString()}")
+            }
+            println("numimp: ${mImpegniDays.size}")
+            appointment.forEach {
+                println("appore: ${it.cal?.get(java.util.Calendar.HOUR_OF_DAY)}")
+            }
+
+
+        })
+
+        val dati = listaimpegni
+        val adapter = EventAdapter(dati)
+        rvdettagli.layoutManager= LinearLayoutManager(requireContext())
+        rvdettagli.adapter = adapter
+
+
 
         fun View.hideKeyboard() {
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -79,14 +125,27 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
 
         val mEventDays: MutableList<EventDay> = ArrayList()
-        val mImpegniDays: MutableList<EventDay> = ArrayList()
         val mImpEvDays: MutableList<EventDay> = ArrayList()
 
         val listaeventi : MutableList<EventoInfo> = ArrayList()
-        val listaimpegni : MutableList<EventoInfo> = ArrayList()
+
 
         calendarView.setOnDayClickListener(object : OnDayClickListener {
             override fun onDayClick(eventDay: EventDay) {
+                rvdettagli.isVisible = false
+                ante.y = 150F
+                println("impact: $mImpegniDays")
+                println("listaime: $listaimpegni")
+                listaimpegni.forEach {
+                    Log.d("ore",it.cal?.timeInMillis.toString())
+                }
+                mImpegniDays.forEach {
+                    Log.d("oreimpdays",it.calendar?.timeInMillis.toString())
+                }
+                ante.isVisible = false
+                buttonevent.text = "Visualizza dettagli"
+
+
                 selectedDayCal.set(
                         eventDay.calendar.get(java.util.Calendar.YEAR),
                         eventDay.calendar.get(java.util.Calendar.MONTH),
@@ -116,15 +175,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     datae.error = "Inserisci data corretta"
                     dataeIsValid = false
                 }
-                /*mEventDays.forEach {
-                    Log.d("mevent", it.calendar.timeInMillis.toString())
-                }
-                mImpegniDays.forEach {
-                    Log.d("mimp", it.calendar.timeInMillis.toString())
-                }
-                mImpEvDays.forEach {
-                    Log.d("mimpeve", it.calendar.timeInMillis.toString())
-                }*/
+
                 listaeventi.forEach {
                     Log.d("listaev", it.cal?.timeInMillis.toString())
                 }
@@ -136,40 +187,90 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 }
                 if (ximp != null) {
                     Log.d("tag", "Ha impegno")
-                    ante.isVisible = true
+
                     val I : EventoInfo? = listaimpegni.find{
                         (it.cal?.get(java.util.Calendar.DAY_OF_MONTH)  == selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH)
-                                && (it.cal?.get(java.util.Calendar.MONTH)!! - 1) == selectedDayCal.get(java.util.Calendar.MONTH)
+                                && (it.cal?.get(java.util.Calendar.MONTH)!!) == selectedDayCal.get(java.util.Calendar.MONTH)
                                 && it.cal?.get(java.util.Calendar.YEAR) == selectedDayCal.get(java.util.Calendar.YEAR))
                     }
-                    Log.d("E", I?.cal?.timeInMillis.toString())
+
+                    val impegnidatacorrente : List<EventoInfo> = listaimpegni.filter{
+                        (it.cal?.get(java.util.Calendar.DAY_OF_MONTH)  == selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH)
+                                && (it.cal?.get(java.util.Calendar.MONTH)!!) == selectedDayCal.get(java.util.Calendar.MONTH)
+                                && it.cal?.get(java.util.Calendar.YEAR) == selectedDayCal.get(java.util.Calendar.YEAR))
+                    }
+
+
+                    if (impegnidatacorrente.size > 1) {
+                        buttonevent.text = getString(R.string.msganteprimanuovieventi)
+                    }
+
                     if (I != null) {
                         lista_titolo.text = I.titolo
                         lista_ora.text = refactorTime(I.cal)
                     }
+                    Log.d("seldatecal", selectedDayCal.get(java.util.Calendar.WEEK_OF_MONTH).toString())
 
-                    close.setOnClickListener {
-                        ante.isVisible = false
-                    }
                     when (selectedDayCal.get(java.util.Calendar.WEEK_OF_MONTH)) {
+
                         1 -> {
-                            Log.d ("week", "1")
+                            ante.translationY = 0F
                         }
                         2 -> {
                             ante.translationY = 150F
-                            Log.d ("week", "2")
                         }
                         3 -> {
                             ante.translationY = 300F
-                            Log.d ("week", "3")}
+                        }
                         4 -> {
                             ante.translationY = 450F
-                            Log.d ("week", "4")}
+                        }
                         5 -> {
                             ante.translationY = 600F
-                            Log.d ("week", "5")}
+                        }
+
+
 
                     }
+                    val adapter = EventAdapter(impegnidatacorrente)
+                    ante.isVisible = true
+                    close.setOnClickListener {
+                        ante.isVisible = false
+                    }
+                    delete.setOnClickListener {
+                        DbManager.deleteAppointment(I!!)
+                        adapter.deleteEvento(I!!)
+                        ante.isVisible = false
+                    }
+                    buttonevent.setOnClickListener {
+                        ante.isVisible = false
+                        println("Dovrei visualizzare rv")
+                        //val dati = listaimpegni
+                        val adapter = EventAdapter(impegnidatacorrente)
+                        rvdettagli.adapter = adapter
+                        rvdettagli.isVisible = true
+                        close.setOnClickListener {
+                            ante.isVisible = false
+                        }
+
+                    }
+                    ante.setOnClickListener {
+                        ante.isVisible = false
+                        println("Dovrei visualizzare rv")
+                        //val dati = listaimpegni
+                        val adapter = EventAdapter(impegnidatacorrente)
+                        rvdettagli.adapter = adapter
+                        rvdettagli.isVisible = true
+
+                        close.setOnClickListener {
+                            ante.isVisible = false
+                        }
+
+                    }
+                    /*deletedettagli.setOnClickListener {
+                        DbManager.deleteAppointment(impegnidatacorrente[0])
+                        adapter.deleteEvento(impegnidatacorrente[0])
+                    }*/
                 }
                 else {
                     Log.d("tag", "Non ha impegno")
@@ -184,11 +285,23 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 if (xeve != null) {
                     Log.d("tag", "Ha evento")
                     ante.isVisible = true
-                    val E : EventoInfo? = listaeventi.find{
-                        (it.cal?.get(java.util.Calendar.DAY_OF_MONTH)  == selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH)
+                    val E: EventoInfo? = listaeventi.find {
+                        (it.cal?.get(java.util.Calendar.DAY_OF_MONTH) == selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH)
                                 && (it.cal?.get(java.util.Calendar.MONTH)!! - 1) == selectedDayCal.get(java.util.Calendar.MONTH)
                                 && it.cal?.get(java.util.Calendar.YEAR) == selectedDayCal.get(java.util.Calendar.YEAR))
                     }
+                    val Ep: Map<Boolean, Int> = (listaeventi.plus(listaimpegni)).groupingBy {
+                        it.cal?.get(java.util.Calendar.DAY_OF_MONTH) == selectedDayCal.get(java.util.Calendar.DAY_OF_MONTH)
+                                && (it.cal?.get(java.util.Calendar.MONTH)!! - 1) == selectedDayCal.get(java.util.Calendar.MONTH)
+                                && it.cal?.get(java.util.Calendar.YEAR) == selectedDayCal.get(java.util.Calendar.YEAR)
+                    }
+                            .eachCount().filter { it.value > 1 }
+                    if (Ep.isNotEmpty()) {
+                        buttonevent.text = getString(R.string.msganteprimanuovieventi)
+                        buttonevent.setIconResource(R.drawable.ic_arrow_right)
+                        buttonevent.iconGravity = MaterialButton.ICON_GRAVITY_END
+                    }
+
                     Log.d("E", E?.cal?.timeInMillis.toString())
                     if (E != null) {
                         lista_titolo.text = E.titolo
@@ -197,25 +310,6 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     }
                     close.setOnClickListener {
                         ante.isVisible = false
-                    }
-                    when (selectedDayCal.get(java.util.Calendar.WEEK_OF_MONTH)) {
-                        1 -> {ante.isVisible = true
-                            Log.d ("week", "1")
-                        }
-                        2 -> {
-                            ante.translationY = 150F
-                            Log.d ("week", "2")
-                        }
-                        3 -> {
-                            ante.translationY = 300F
-                            Log.d ("week", "3")}
-                        4 -> {
-                            ante.translationY = 450F
-                            Log.d ("week", "4")}
-                        5 -> {
-                            ante.translationY = 600F
-                            Log.d ("week", "5")}
-
                     }
                 }
                 else {
@@ -229,6 +323,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
 
         impegno.setOnClickListener {
+            ante.isVisible = false
             impegno.isClickable = false
             evento.isClickable = false
             creareimp.isVisible = true
@@ -351,57 +446,77 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 if ((titoloi.text.toString().isNotEmpty() && luogoi.text.toString().isNotEmpty()
                             && descrizionei.text.toString().isNotEmpty()) && orainiziovalid && dataIsValid
                 ) {
-                    val nuovoimpegno = EventoInfo(titoloi.text.toString(), impegnoDateCal , descrizionei.text.toString(),luogoi.text.toString())
-                    listaimpegni.add(nuovoimpegno)
-                    val intent = Intent(Intent.ACTION_INSERT).apply {
-                        data = CalendarContract.Events.CONTENT_URI
-                        putExtra(CalendarContract.Events.TITLE, titoloi.text.toString())
-                        putExtra(CalendarContract.Events.EVENT_LOCATION, luogoi.text.toString())
-                        putExtra(CalendarContract.Events.DESCRIPTION, descrizionei.text.toString())
-                        putExtra(
-                                CalendarContract.EXTRA_EVENT_BEGIN_TIME,
-                                impegnoDateCal.timeInMillis
-                        )
+
+                    //listaimpegni.add(nuovoimpegno)
+                    //calendarViewModel.addEngagement(requireContext(),nuovoimpegno)
+                    val dataprova2 : java.util.Calendar = java.util.Calendar.getInstance()
+
+                    dataprova2.set(impegnoDateCal.get(java.util.Calendar.YEAR), impegnoDateCal.get(java.util.Calendar.MONTH),
+                            impegnoDateCal.get(java.util.Calendar.DAY_OF_MONTH), impegnoDateCal.get(java.util.Calendar.HOUR),
+                            impegnoDateCal.get(java.util.Calendar.MINUTE))
+
+                    if (mEventDays.find {
+                                (it.calendar.get(java.util.Calendar.DAY_OF_MONTH) == dataprova2.get(java.util.Calendar.DAY_OF_MONTH)
+                                        && it.calendar.get(java.util.Calendar.MONTH) == dataprova2.get(java.util.Calendar.MONTH)
+                                        && it.calendar.get(java.util.Calendar.YEAR) == dataprova2.get(java.util.Calendar.YEAR))
+                            }!= null) {
+                        mImpEvDays.add(EventDay(dataprova2, R.drawable.blackandgreenicon))
                     }
-                    if (intent.resolveActivity(requireActivity().packageManager) != null) {
+                    else {
+                        val nuovoimpegno = EventoInfo(titoloi.text.toString(), impegnoDateCal , descrizionei.text.toString(),luogoi.text.toString())
+                        DbManager.createAppointment(requireContext(), nuovoimpegno, System.currentTimeMillis())
 
-                        requireActivity().startActivity(intent)
-
-                        creareimp.isVisible = false
-                        calendarView.isVisible = true
-                        calendarView.isClickable = true
-                        calendarView.isEnabled = true
-
-                        val dataprova2 : java.util.Calendar = java.util.Calendar.getInstance()
-
-                        dataprova2.set(impegnoDateCal.get(java.util.Calendar.YEAR), impegnoDateCal.get(java.util.Calendar.MONTH),
-                                impegnoDateCal.get(java.util.Calendar.DAY_OF_MONTH), impegnoDateCal.get(java.util.Calendar.HOUR),
-                                impegnoDateCal.get(java.util.Calendar.MINUTE))
-
-                        if (mEventDays.find {
-                                    (it.calendar.get(java.util.Calendar.DAY_OF_MONTH) == dataprova2.get(java.util.Calendar.DAY_OF_MONTH)
-                                            && it.calendar.get(java.util.Calendar.MONTH) == dataprova2.get(java.util.Calendar.MONTH)
-                                            && it.calendar.get(java.util.Calendar.YEAR) == dataprova2.get(java.util.Calendar.YEAR))
-                        }!= null) {
-                            mImpEvDays.add(EventDay(dataprova2, R.drawable.blackandgreenicon))
-                        }
-                        else {
-                            mImpegniDays.add(EventDay(dataprova2, R.drawable.blackicon))
-
-                        }
-
-                        calendarView.setEvents(mImpEvDays.plus(mImpegniDays.plus(mEventDays)))
-
-
-
-
-
-                    } else {
-                        Toast.makeText(
-                                requireContext(), "There is no app that can support this action",
-                                Toast.LENGTH_SHORT
-                        ).show()
                     }
+
+                    //calendarView.setEvents(mImpEvDays.plus(mImpegniDays.plus(mEventDays)))
+
+                    MaterialAlertDialogBuilder(requireContext())
+                            .setTitle("Aggiungi impegno a Google Calendar")
+                            .setMessage("Vuoi aggiungere questo impegno al tuo Google Calendar?")
+                            .setPositiveButton("Si") { _, _ ->
+
+                                val intent = Intent(Intent.ACTION_INSERT).apply {
+                                    data = CalendarContract.Events.CONTENT_URI
+                                    putExtra(CalendarContract.Events.TITLE, titoloi.text.toString())
+                                    putExtra(CalendarContract.Events.EVENT_LOCATION, luogoi.text.toString())
+                                    putExtra(CalendarContract.Events.DESCRIPTION, descrizionei.text.toString())
+                                    putExtra(
+                                            CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+                                            impegnoDateCal.timeInMillis
+                                    )
+                                }
+                                if (intent.resolveActivity(requireActivity().packageManager) != null) {
+
+                                    requireActivity().startActivity(intent)
+
+                                    creareimp.isVisible = false
+                                    calendarView.isVisible = true
+                                    calendarView.isClickable = true
+                                    calendarView.isEnabled = true
+
+                                } else {
+                                    Toast.makeText(
+                                            requireContext(), "There is no app that can support this action",
+                                            Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                            .setNegativeButton("No"){  _, _ ->
+                                //creareimp.isVisible = false
+                                evento.isClickable = true
+                                impegno.isClickable = true
+                                creareimp.isVisible = false
+                                calendarView.isClickable = true
+                                calendarView.isEnabled = true
+                                calendarView.isVisible = true
+                                view.hideKeyboard()
+                                Toast.makeText(
+                                        requireContext(), "Impegno aggiunto correttamente ",
+                                        Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            .show()
+
 
                 } else {
                     Toast.makeText(
@@ -421,6 +536,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         val eventDateCal : java.util.Calendar = java.util.Calendar.getInstance()
         evento.setOnClickListener {
+            ante.isVisible = false
             creareeve.isVisible = true
             impegno.isClickable = false
             evento.isClickable = false
@@ -582,7 +698,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                         }
 
 
-                        calendarView.setEvents(mImpEvDays.plus(mImpegniDays.plus(mEventDays)))
+                        //calendarView.setEvents(mImpEvDays.plus(mImpegniDays.plus(mEventDays)))
 
 
                     } else {

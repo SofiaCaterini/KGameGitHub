@@ -5,34 +5,34 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
+import android.net.wifi.WifiManager
 import android.net.wifi.WifiNetworkSpecifier
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.squareup.picasso.Picasso
-import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.kgame.DbManager
+import it.polito.kgame.PesoInfo
 import it.polito.kgame.R
 import it.polito.kgame.ui.grow.noClicked
-import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.fragment_account.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.android.synthetic.main.nav_header_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.URL
 import java.nio.charset.Charset
+import java.util.*
 
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -43,8 +43,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-
-
+        val listapesate : MutableList<PesoInfo> = ArrayList()
+        val today : Calendar = Calendar.getInstance()
+        today.timeInMillis = System.currentTimeMillis()
+        var dataultima : Calendar = Calendar.getInstance()
+        var datacontroller = true
 
         //Toolbar
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_home)
@@ -55,84 +58,163 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         value.components?.let { adapter.setData(it) }
                 }
         )
+        homeViewModel.We.observe(viewLifecycleOwner, Observer { we ->
+            println("WEIGHTS: $we")
+            println("nWeight: ${we.size}")
+            listapesate.clear()
+
+            we.forEach {
+                listapesate.add(it)
+            }
+
+            val dataultimapesata: Calendar = Calendar.getInstance()
+            dataultimapesata.timeInMillis = listapesate[listapesate.size - 1].data!!
+            dataultima = dataultimapesata
+
+            if (dataultima.get(java.util.Calendar.DAY_OF_MONTH) == today.get(java.util.Calendar.DAY_OF_MONTH)
+                    && dataultima.get(java.util.Calendar.MONTH) == today.get(java.util.Calendar.MONTH)
+                    && dataultima.get(java.util.Calendar.YEAR) == today.get(java.util.Calendar.YEAR)) {
+                datacontroller = false
+            }
+            println("data ultima pesata: ${dataultima.timeInMillis}")
+            println("data oggi: ${today.timeInMillis}")
+            println("Se falso oggi=dataultimapesata: $datacontroller")
+
+        })
+
         rvhome.layoutManager= LinearLayoutManager(requireContext())
         rvhome.adapter = adapter
 
         homeViewModel.thisUsersFam.observe(viewLifecycleOwner, { fam ->
             familyName.text = fam.name
 
-                //inserimento dati utente nell'header
+            //inserimento dati utente nell'header
             val header = requireActivity().findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
             header.findViewById<TextView>(R.id.navHeadNickname)?.text = homeViewModel.thisUser.value?.username
             header.findViewById<TextView>(R.id.navHeadFamilyName)?.text = homeViewModel.thisUsersFam.value?.name
-            header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(homeViewModel.thisUser.value?.profileImg).into(it)  }
+            header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(homeViewModel.thisUser.value?.profileImg).into(it) }
         })
 
         homeAddWeight.setOnClickListener {
+            if (datacontroller == false) {
+                MaterialAlertDialogBuilder(requireContext())
+                        .setTitle("Ehi attento")
+                        .setMessage("Ti sei già pesato oggi, torna domani!")
+                        .setPositiveButton("OK") { _, _ ->
+                        }
+                        .show()
+            } else {
+                val messaggiosalvato: String = getString(R.string.question_message_weight)
+                val message: String = messaggiosalvato
 
-            val messaggiosalvato : String = getString(R.string.question_message_weight)
-            val message : String = messaggiosalvato
+                MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(R.string.question_title_weight)
+                        .setMessage(message)
+                        .setPositiveButton(R.string.yes) { _, _ ->
+                            //Wifi
+                            val manager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                            val wifi = requireContext().getSystemService(Context.WIFI_SERVICE) as WifiManager?
+                            var wifiacceso = false
+                            if (wifi != null) {
+                                if (wifi.isWifiEnabled){
+                                    wifiacceso = true
+                                }
+                            }
+                            val builder = NetworkRequest.Builder()
+                            builder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                            builder.removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                            builder.setNetworkSpecifier(
+                                    WifiNetworkSpecifier.Builder().apply {
+                                        //Qui inserite il nome del vostro WIFI e la password
+                                        setSsid("KGame")
+                                        setWpa2Passphrase("123123123")
+                                    }.build()
+                            )
+                            Log.d("esp", "Builder built")
+                            try {
+                                println("dentro try")
+                                var retedisponibile = false
 
-            MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.question_title_weight)
-                    .setMessage(message)
-                    .setPositiveButton(R.string.yes) { _, _ ->
-                        //Wifi
-                        val manager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                                manager.requestNetwork(builder.build(), object : ConnectivityManager.NetworkCallback() {
+                                    override fun onUnavailable() {
+                                        super.onUnavailable()
+                                        println("OnAnavailable")
+                                        MaterialAlertDialogBuilder(requireContext())
+                                                .setTitle("Non sei connesso alla bilancia")
+                                                .setMessage("Connettiti al wifi KGame e riprova!")
+                                                .setPositiveButton(R.string.ok) { _, _ ->
 
-                        val builder = NetworkRequest.Builder()
-                        builder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                        builder.removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                        builder.setNetworkSpecifier(
-                                WifiNetworkSpecifier.Builder().apply {
-                                    //Qui inserite il nome del vostro WIFI e la password
-                                    setSsid("KGame")
-                                    setWpa2Passphrase("123123123")
-                                }.build()
-                        )
-                        Log.d("esp", "Builder built")
-                        try {
-                            manager.requestNetwork(builder.build(), object : ConnectivityManager.NetworkCallback() {
-                                override fun onAvailable(network: Network) {
-                                    manager.bindProcessToNetwork(network)
-                                    Log.d("esp", "network connected")
-                                    lifecycleScope.launch(Dispatchers.IO) {
-                                        val str = URL("http://192.168.4.1/").readText(Charset.forName("UTF-8"))
-                                        withContext(Dispatchers.Main) {
+                                                }
+                                                .show()
 
+                                    }
 
+                                    override fun onAvailable(network: Network) {
+                                        println("dentro onAvailable")
+                                        manager.bindProcessToNetwork(network)
+                                        Log.d("esp", "network connected")
+                                        retedisponibile = true
+                                        lifecycleScope.launch(Dispatchers.IO) {
+                                            val str = URL("http://192.168.4.1/").readText(Charset.forName("UTF-8"))
+                                            withContext(Dispatchers.Main) {
 
-                                            val messaggiosalvato2 : String = getString(R.string.question_message_obj_ok)
-                                            val kg : String = getString(R.string.kg)
-                                            val peso : String = str
-                                            val message2 : String = "$messaggiosalvato2 $peso $kg"
-                                            DbManager.createWeight(requireContext(), peso, System.currentTimeMillis())
+                                                val messaggiosalvato2: String = getString(R.string.question_message_obj_ok)
+                                                val kg: String = getString(R.string.kg)
+                                                val peso: String = str
+                                                val message2: String = "$messaggiosalvato2 $peso $kg"
+                                                DbManager.createWeight(requireContext(), peso, System.currentTimeMillis())
 
-                                            MaterialAlertDialogBuilder(requireContext())
-                                                    .setTitle(R.string.question_title_weight_ok)
-                                                    .setMessage(message2)
-                                                    .setPositiveButton(R.string.ok) { _, _ ->
+                                                MaterialAlertDialogBuilder(requireContext())
+                                                        .setTitle(R.string.question_title_weight_ok)
+                                                        .setMessage(message2)
+                                                        .setPositiveButton(R.string.ok) { _, _ ->
 
-                                                    }
-                                                    .show()
+                                                        }
+                                                        .show()
 
+                                            }
                                         }
+
+
                                     }
 
 
+                                    override fun onLost(network: Network) {
+                                        super.onLost(network)
+                                        println("onLost")
+                                        MaterialAlertDialogBuilder(requireContext())
+                                                .setTitle("Ti sei disconnesso dalla bilancia")
+                                                .setMessage("Connettiti di nuovo al wifi KGame e riprova!")
+                                                .setPositiveButton(R.string.ok) { _, _ ->
+
+                                                }
+                                                .show()
+                                    }
+
+
+                                })
+
+                                if(wifiacceso == false){
+                                    println("non connesso")
+                                    MaterialAlertDialogBuilder(requireContext())
+                                            .setTitle("Non sei connesso alla bilancia")
+                                            .setMessage("Connettiti al wifi KGame e riprova!")
+                                            .setPositiveButton(R.string.ok) { _, _ ->
+
+                                            }
+                                            .show()
+
                                 }
-                            })
-                        } catch (e: SecurityException) {
-                            Log.e("Ciao", e.message!!)
+                            } catch (e: SecurityException) {
+                                Log.d("Non ha trovato wifi", e.message!!)
+                                println("dentro catch")
+                            }
+
 
                         }
-
-
-
-
-                    }
-                    .setNegativeButton(R.string.no) { _, _ -> noClicked() }
-                    .show()
+                        .setNegativeButton(R.string.no) { _, _ -> noClicked() }
+                        .show()
+            }
         }
 
 

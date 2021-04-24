@@ -116,9 +116,6 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
 
 
 
-
-
-
         })
 
         /*val dataultimapesata: java.util.Calendar = java.util.Calendar.getInstance()

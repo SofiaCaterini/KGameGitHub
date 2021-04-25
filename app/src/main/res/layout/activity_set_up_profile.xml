@@ -9,7 +9,7 @@
     tools:context=".SetUpProfileActivity">
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/profilePicBox"
         android:layout_width="158dp"
         android:layout_height="158dp"
         android:background="#673AB7"
@@ -17,56 +17,56 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/editProfile"
         app:layout_constraintVertical_bias="0.01999998"
         app:srcCompat="@android:drawable/gallery_thumb"
         app:tint="#AFAFAF" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/imgView_profilePic"
         android:layout_width="127dp"
         android:layout_height="115dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView6"
-        app:layout_constraintEnd_toEndOf="@+id/imageView6"
+        app:layout_constraintBottom_toBottomOf="@+id/profilePicBox"
+        app:layout_constraintEnd_toEndOf="@+id/profilePicBox"
         app:layout_constraintHorizontal_bias="0.483"
-        app:layout_constraintStart_toStartOf="@+id/imageView6"
-        app:layout_constraintTop_toTopOf="@+id/imageView6"
+        app:layout_constraintStart_toStartOf="@+id/profilePicBox"
+        app:layout_constraintTop_toTopOf="@+id/profilePicBox"
         app:layout_constraintVertical_bias="0.44"
         app:srcCompat="@drawable/user_white" />
 
     <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/profilePicCamera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView6"
-        app:layout_constraintEnd_toEndOf="@+id/imageView5"
+        app:layout_constraintBottom_toBottomOf="@+id/profilePicBox"
+        app:layout_constraintEnd_toEndOf="@+id/imgView_profilePic"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/imageView5"
-        app:layout_constraintTop_toTopOf="@+id/imageView6"
+        app:layout_constraintStart_toStartOf="@+id/imgView_profilePic"
+        app:layout_constraintTop_toTopOf="@+id/profilePicBox"
         app:layout_constraintVertical_bias="0.164"
         app:srcCompat="@drawable/ic_menu_camera"
         app:tint="#FFFFFF" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/editProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/asap"
-        android:text="Configura il tuo profilo"
+        android:text="@string/configure_profile"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12"
+        app:layout_constraintTop_toBottomOf="@+id/welcome"
         app:layout_constraintVertical_bias="0.00999999" />
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/asap"
-        android:text="Benvenuto"
+        android:text="@string/welcome"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -75,7 +75,7 @@
         app:layout_constraintVertical_bias="0.101" />
 
     <TextView
-        android:id="@+id/textView14"
+        android:id="@+id/addPicToProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -85,11 +85,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView6"
+        app:layout_constraintTop_toBottomOf="@+id/profilePicBox"
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/but_createFamily"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#673AB7"
@@ -97,6 +97,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+
         app:layout_constraintTop_toBottomOf="@+id/edit_family"
         app:layout_constraintVertical_bias="0.00999999" />
 
@@ -123,48 +124,50 @@
 
     </com.google.android.material.textfield.TextInputEditText>
 
+
     <Button
-        android:id="@+id/button6"
+        android:id="@+id/but_joinFamily"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#673AB7"
-        android:text="@string/conferma"
+        android:text="@string/confirm"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumber2"
+        app:layout_constraintTop_toBottomOf="@+id/et_familyCode"
         app:layout_constraintVertical_bias="0.06999999" />
 
     <TextView
-        android:id="@+id/textView16"
+        android:id="@+id/or"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/or"
         android:fontFamily="@font/asap"
-        android:text="oppure"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button5"
+        app:layout_constraintTop_toBottomOf="@+id/but_createFamily"
         app:layout_constraintVertical_bias="0.050000012" />
 
     <ImageView
-        android:id="@+id/imageView9"
+        android:id="@+id/familyLogo"
         android:layout_width="103dp"
         android:layout_height="82dp"
         android:contentDescription="TODO"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textView17"
+        app:layout_constraintEnd_toStartOf="@+id/joinFamily"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView16"
+        app:layout_constraintTop_toBottomOf="@+id/or"
         app:layout_constraintVertical_bias="0.117"
         app:srcCompat="@drawable/family"
         app:tint="#673AB7" />
 
     <TextView
-        android:id="@+id/textView17"
+        android:id="@+id/joinFamily"
         android:layout_width="170dp"
         android:layout_height="44dp"
+        android:capitalize="characters"
         android:fontFamily="@font/asap"
         android:text="@string/join_Fam"
         android:textAlignment="center"
@@ -174,12 +177,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView9"
-        app:layout_constraintTop_toBottomOf="@+id/textView16"
+        app:layout_constraintStart_toEndOf="@+id/familyLogo"
+        app:layout_constraintTop_toBottomOf="@+id/or"
         app:layout_constraintVertical_bias="0.15" />
 
     <TextView
-        android:id="@+id/textView18"
+        android:id="@+id/familyCodeTxt"
         android:layout_width="175dp"
         android:layout_height="25dp"
         android:fontFamily="@font/asap"
@@ -191,20 +194,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView9"
+        app:layout_constraintTop_toBottomOf="@+id/familyLogo"
         app:layout_constraintVertical_bias="0.0" />
 
     <EditText
-        android:id="@+id/editTextNumber2"
+        android:id="@+id/et_familyCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#673AB7"
         android:ems="10"
-        android:inputType="number"
+        android:inputType="text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView18"
+        app:layout_constraintTop_toBottomOf="@+id/familyCodeTxt"
         app:layout_constraintVertical_bias="0.01999998" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

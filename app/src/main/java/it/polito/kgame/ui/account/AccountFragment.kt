@@ -4,39 +4,31 @@ package it.polito.kgame.ui.account
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.ContentResolver
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import android.provider.Settings
 import android.view.KeyEvent
 import android.view.KeyEvent.*
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.webkit.MimeTypeMap
-import android.widget.NumberPicker
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.navigation.NavigationView
 
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 //import com.google.firebase.storage.StorageReference
 //import com.google.firebase.storage.StorageTask
 import com.squareup.picasso.Picasso
@@ -44,7 +36,6 @@ import it.polito.kgame.DbManager
 import it.polito.kgame.Pedina
 
 import it.polito.kgame.R
-import it.polito.kgame.User
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.app_bar_main.view.*
@@ -54,17 +45,14 @@ import kotlinx.android.synthetic.main.fragment_account.*
 class AccountFragment : Fragment(R.layout.fragment_account) {
     private val adapter = ItemAdapterFamily()
     private val viewModel by activityViewModels<AccountViewModel>()
+    //questo serve per la gallery
     private val REQUEST_CODE = 100
-    private var mImageUri: Uri? = null
 
-    private var db: FirebaseFirestore? = null
     private var pawnCode: Int = 0
     private var switch: Int? = null
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        db = viewModel.db
 
         //observe aspetta che il dato sia pronto per poi gestirlo
         viewModel.thisUser.observe(viewLifecycleOwner, Observer { user ->
@@ -81,6 +69,11 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
             //read nickname
             edit_nickname.setText(user.username)
+
+            //inserimento dati utente nell'header, nel caso venissero aggiornati
+            val header = requireActivity().findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
+            header.findViewById<TextView>(R.id.navHeadNickname)?.text = viewModel.thisUser.value?.username
+            header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(viewModel.thisUser.value?.profileImg).into(it)  }
 
         })
 
@@ -120,7 +113,9 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         //keyboard management
         fun View.hideKeyboard() {
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(windowToken, 0)
+            if (requireActivity().currentFocus!=null){
+                imm.hideSoftInputFromWindow(windowToken, 0)
+            }
         }
         view.setOnClickListener { view.hideKeyboard() }
         tView.setOnClickListener { view.hideKeyboard() }
@@ -135,13 +130,19 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         }
 
         //nickname edit text management
-        edit_nickname.setOnKeyListener { _, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+        edit_nickname.addTextChangedListener{
+            val imm = requireContext().getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+            if(imm.isAcceptingText) {
                 viewModel.changeUsername(edit_nickname.text.toString())
                 if (switch == 0) switch = 2
                 activateUpdateButton(switch ?: 1, null)
             }
-            false
+        }
+
+
+        requireActivity().discardUpdates.setOnClickListener {
+            requireActivity().recreate()
+            viewModel.discardUpdates()
         }
     }
 
@@ -236,13 +237,14 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
 
     private fun changePawnView() {
-        imageViewpedina.setImageResource(pedina(pawnCode))
+        imageViewpedina.setImageResource(Pedina.pedina(pawnCode))
         viewModel.changePawn(pawnCode)
     }
 
     var uriBuffer : Uri? = null
     private fun activateUpdateButton(case: Int, uri: Uri?) {
         requireActivity().saveUpdates.visibility = View.VISIBLE
+        requireActivity().discardUpdates.visibility = View.VISIBLE
         when (case) {
             0 -> {  //case where only profile image is getting uploaded
                 switch = 0
@@ -251,6 +253,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                     DbManager.uploadProfileImg(requireContext(), uri)
                     Toast.makeText(requireContext(), "Stai salvando la nuova immagine profilo", Toast.LENGTH_SHORT).show()
                     requireActivity().saveUpdates.visibility = View.GONE
+                    requireActivity().discardUpdates.visibility = View.GONE
                     switch=null
                 }
             }
@@ -260,6 +263,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                         viewModel.saveUpdates(requireContext())
                         Toast.makeText(requireContext(), "Stai salvando le nuove impostazioni", Toast.LENGTH_SHORT).show()
                         requireActivity().saveUpdates.visibility = View.GONE
+                        requireActivity().discardUpdates.visibility = View.GONE
                         switch=null
                     }
             }
@@ -269,6 +273,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                     viewModel.saveUpdates(requireContext())
                     Toast.makeText(requireContext(), "Stai salvando le nuove impostazioni!", Toast.LENGTH_SHORT).show()
                     requireActivity().saveUpdates.visibility = View.GONE
+                    requireActivity().discardUpdates.visibility = View.GONE
                     switch=null
                 }
             }
@@ -276,35 +281,37 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
     }
 
 
-    private fun pedina(id : Int?) : Int {
-        when (id) {
-            0 -> {
-                return R.drawable.dog //imageviewpedina.setImageResource(idpedina)
-            }
-            1 -> {
-                return R.drawable.lion
-            }
-            2 -> {
-                return R.drawable.owl
-            }
-            R.drawable.dog -> {
-                return 0
-            }
-            R.drawable.lion -> {
-                return 1
-            }
-            R.drawable.owl -> {
-                return 2
-            }
-            null -> {
-                return R.drawable.dog
-            }
-        }
-        return 0
-    }
+//    private fun pedina(id : Int?) : Int {
+//        when (id) {
+//            0 -> {
+//                return R.drawable.dog //imageviewpedina.setImageResource(idpedina)
+//            }
+//            1 -> {
+//                return R.drawable.lion
+//            }
+//            2 -> {
+//                return R.drawable.owl
+//            }
+//            R.drawable.dog -> {
+//                return 0
+//            }
+//            R.drawable.lion -> {
+//                return 1
+//            }
+//            R.drawable.owl -> {
+//                return 2
+//            }
+//            null -> {
+//                return R.drawable.dog
+//            }
+//        }
+//        return 0
+//    }
 
     override fun onDestroy() {
         super.onDestroy()
         requireActivity().saveUpdates.visibility = View.GONE
+        requireActivity().discardUpdates.visibility = View.GONE
+
     }
 }

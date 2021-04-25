@@ -12,14 +12,21 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import com.applandeo.materialcalendarview.EventDay
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
+import it.polito.kgame.EventoInfo
+import it.polito.kgame.PesoInfo
 import it.polito.kgame.R
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.fragment_calendar.*
 import kotlinx.android.synthetic.main.fragment_grow.*
+import kotlinx.android.synthetic.main.fragment_grow.obiettivo
+import kotlinx.android.synthetic.main.obj_form.*
 
 
 class GrowFragment : Fragment(R.layout.fragment_grow){
@@ -33,26 +40,101 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
         val cal = Calendar.getInstance()
         val todayMillis = cal.timeInMillis
 
+        val listapesate : MutableList<PesoInfo> = ArrayList()
+
+
         println("UNo " + todayMillis)
         println("dueee " + oneDayInMillis)
         println("dueee * 31 " + 31*oneDayInMillis)
         println("sotttea " + (todayMillis - oneDayInMillis))
         println("sotttea 30 " + (todayMillis - 31*oneDayInMillis))
 
+        growViewModel.Weights.observe(viewLifecycleOwner, Observer { weight ->
+            println("WEIGHTS: $weight")
+            println("nWeight: ${weight.size}")
+            listapesate.clear()
+            val pesate : DoubleArray = doubleArrayOf()
+            val dates : LongArray = longArrayOf()
+            weight.forEach {
+                listapesate.add(it)
+                pesate.plus(it.peso?.toDouble()!!)
+                dates.plus(it.data!!)
+            }
+            val dataultimapesata: java.util.Calendar = java.util.Calendar.getInstance()
+            dataultimapesata.timeInMillis = listapesate[listapesate.size - 1].data!!
+            materialTextView4.text = refactorDate(dataultimapesata)
+
+            var graph : GraphView = view.findViewById(R.id.graph) as GraphView
+
+            graph.gridLabelRenderer.numHorizontalLabels = 5
+            graph.gridLabelRenderer.setHumanRounding(false,true)
+            graph.gridLabelRenderer.labelFormatter = object : DefaultLabelFormatter() {
+                override fun formatLabel(value: Double, isValueX: Boolean): String {
+                    return if (isValueX) {
+                        val c : Calendar = Calendar.getInstance()
+                        c.setTimeInMillis(value.toLong())
+                        val day = c.get(Calendar.DAY_OF_MONTH).toDouble()
+                        val month = monthNumToLetter(c.get(Calendar.MONTH))
+
+                        super.formatLabel(day, isValueX) + month
+                    } else {
+                        super.formatLabel(value, isValueX) + "kg"
+                    }
+                }
+            }
+
+            var series = LineGraphSeries(arrayOf(DataPoint(0.toDouble(), 1.toDouble()), DataPoint(1.toDouble(), 5.toDouble()), DataPoint(2.toDouble(), 3.toDouble())))
+
+            if(dates.size==pesate.size){
+                var arr : MutableList<DataPoint> = mutableListOf()
+                var i = 0
+                var c : Calendar = Calendar.getInstance()
+                while (i < dates.size) {
+                    c.setTimeInMillis(dates[i])
+                    arr.add(DataPoint(
+                            c.timeInMillis
+                                    //(c.get(Calendar.YEAR).toString() + dueCifre(c.get(Calendar.MONTH).toString()) + dueCifre(c.get(Calendar.DAY_OF_MONTH).toString()))
+                                    .toDouble(),
+                            pesate[i]))
+                    i++
+                }
+                println(arr)
+                series = LineGraphSeries(arr.toTypedArray())
+
+            } else {
+                android.app.AlertDialog.Builder(requireContext())
+                        .setTitle("I dati non sono corretti")
+                        .show()
+            }
+
+//        graph.viewport.setMinY( getMin(simPesate) - 7.0)
+//        graph.viewport.setMaxY( getMax(simPesate) + 1.0)
+//        graph.viewport.isYAxisBoundsManual = true
+
+            series.color = R.color.black
+            graph.addSeries(series)
 
 
+
+        })
+
+        /*val dataultimapesata: java.util.Calendar = java.util.Calendar.getInstance()
+        dataultimapesata.timeInMillis = listapesate[listapesate.size].data!!
+        materialTextView4.text = refactorDate(dataultimapesata)*/
 
         //Toolbar
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_grow)
 
         //Graph
+
         val sim30Pesate : DoubleArray = doubleArrayOf(69.9, 70.1, 70.7, 71.0, 70.5, 68.8, 69.5, 67.9, 66.0, 67.2, 67.2, 68.5, 70.1, 70.7, 71.0, 70.5, 68.8, 69.5, 67.9, 66.0, 67.2, 67.2, 68.5, 70.1, 70.7, 71.0, 70.5, 68.8, 69.5, 67.9)
         val sim30Dates : LongArray = longArrayOf(1612300000000, 1613300000000, 1614300000000, 1615300000000, 1616300000000, 1617300000000, 1618300000000, 1619300000000, 1620300000000, 1621300000000, 1622300000000, 1623300000000, 1624300000000, 1625300000000, 1626300000000, 1627300000000, 1628300000000, 1629300000000, 1630300000000, 1631300000000, 1632300000000, 1633300000000, 1634300000000, 1635300000000, 1636300000000, 1637300000000, 1638300000000, 1639300000000, 1640300000000, 1641300000000)
 
-        var graph : GraphView = view.findViewById(R.id.graph) as GraphView
+        val graph : GraphView = view.findViewById(R.id.graph) as GraphView
 
-        graph.gridLabelRenderer.numHorizontalLabels = 5
-        graph.gridLabelRenderer.setHumanRounding(false,true)
+        graph.gridLabelRenderer.setHorizontalLabelsAngle(45)
+        //graph.gridLabelRenderer.numHorizontalLabels = 6
+        graph.gridLabelRenderer.setHumanRounding(true,true)
         graph.gridLabelRenderer.labelFormatter = object : DefaultLabelFormatter() {
             override fun formatLabel(value: Double, isValueX: Boolean): String {
                 return if (isValueX) {
@@ -114,10 +196,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
         var obj : Int = 0
         var objIsActive = false
         val np: NumberPicker = view.findViewById(R.id.numberPicker)
-        np.isVisible = false
-        cancel.isVisible = false
-        ok.isVisible = false
-        numPick_bg.isVisible = false
+        obb.isVisible = false
 
         var objLine = LineGraphSeries(
                 arrayOf(
@@ -135,6 +214,11 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
         )
 
         refreshgrow2.setOnClickListener {
+
+
+            println("listapesata: $listapesate")
+
+
             if(objIsActive) {
                 graph.removeSeries(objLine)
 
@@ -169,16 +253,12 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
         np.displayedValues = kgValues
 
         obiettivo.setOnClickListener {
-            np.isVisible = true
-            cancel.isVisible = true
-            ok.isVisible = true
-            numPick_bg.isVisible = true
+            obb.isVisible = true
+
 
             ok.setOnClickListener {
-                np.isVisible = false
-                cancel.isVisible = false
-                ok.isVisible = false
-                numPick_bg.isVisible = false
+                obb.isVisible = false
+
 
                 var messag : String = getString(R.string.question_message_obj)
                 var kg : String = getString(R.string.kgq)
@@ -197,15 +277,14 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
             }
         }
         cancel.setOnClickListener {
-            np.isVisible = false
-            cancel.isVisible = false
-            ok.isVisible = false
-            numPick_bg.isVisible = false
+            obb.isVisible = false
+
 
         }
 
         //Sveglia
         sveglia.setOnClickListener {
+
 
             val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
                 cal.set(Calendar.HOUR_OF_DAY, hour)
@@ -216,7 +295,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
                 var message : String = "$messaggiosalvato $orarioscelto?"
 
                 AlertDialog.Builder(requireContext())
-                        .setTitle(R.string.question_title)
+                        .setTitle(R.string.question_title_weight)
                         .setMessage(message)
                         .setPositiveButton(R.string.yes) { _, _ ->
                             val intent = Intent(AlarmClock.ACTION_SET_ALARM)
@@ -281,7 +360,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
 
     private fun resizeGraph(graphWidthIndex: Int, series: LineGraphSeries<DataPoint>, today: Long) {
 
-        //println("giorno del mese: " + today)
+        println("giorno del mese: " + graphWidthIndex)
 
         graph.removeSeries(series)
 
@@ -352,3 +431,12 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
         return res
     }
 
+private fun refactorDate(cal: java.util.Calendar): String {
+
+    val day : String = if(cal.get(java.util.Calendar.DAY_OF_MONTH)>=10) cal.get(java.util.Calendar.DAY_OF_MONTH).toString()
+    else  "0" + cal.get(java.util.Calendar.DAY_OF_MONTH)
+    val month : String = if (cal.get(java.util.Calendar.MONTH)>=9) (cal.get(java.util.Calendar.MONTH)+1).toString()
+    else "0"+ (cal.get(java.util.Calendar.MONTH)+1)
+
+    return day + "/" + month + "/" + cal.get(java.util.Calendar.YEAR)
+}

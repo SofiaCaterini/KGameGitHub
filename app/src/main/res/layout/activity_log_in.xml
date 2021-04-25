@@ -20,6 +20,20 @@
         app:layout_constraintTop_toBottomOf="@+id/et_login_password"
         app:layout_constraintVertical_bias="0.060000002" />
 
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Ric"
+        android:textAlignment="center"
+        android:textColor="#7842CD"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9"
+        app:layout_constraintVertical_bias="0.22000003" />
+
     <EditText
         android:id="@+id/et_login_email"
         android:layout_width="wrap_content"
@@ -30,7 +44,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6"
-        app:layout_constraintVertical_bias="0.01999998" />
+        app:layout_constraintVertical_bias="0.01999998"
+        android:importantForAutofill="no"/>
 
     <TextView
         android:id="@+id/textViewlog"
@@ -80,7 +95,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8"
-        app:layout_constraintVertical_bias="0.01999998" />
+        app:layout_constraintVertical_bias="0.01999998"
+        android:importantForAutofill="no"/>
 
     <TextView
         android:id="@+id/tv_register"

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#F1ECEC"
+    android:elevation="5dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="start"
+        android:layoutDirection="rtl"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="clip_horizontal|right"
+            android:background="#00FBFAFA"
+            android:foreground="@android:drawable/ic_menu_close_clear_cancel"
+            android:foregroundTint="#D60909"
+            android:foregroundTintMode="src_in" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layoutDirection="ltr"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/lista_titolo"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/asap"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="Titolo"
+            android:textAlignment="textStart"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/delete"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="#00FBFAFA"
+            android:foreground="@drawable/trash"
+            android:foregroundTint="#0C0C0C"
+            android:foregroundTintMode="src_in" />
+    </LinearLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/lista_ora"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Ora" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonevent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableTint="#FDFCFC"
+        android:drawableTintMode="src_in"
+        android:text="Visualizza dettagli"
+        app:icon="@drawable/ic_arrow_right"
+        app:iconGravity="end"
+        app:iconTint="#FFFFFF" />
+
+</LinearLayout>

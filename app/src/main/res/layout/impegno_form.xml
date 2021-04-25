@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/impegnoform"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#F8BBBB"
+    android:backgroundTint="#F8BBBB"
+    android:elevation="5dp">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/annullai"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/evoki"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/evoki"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="@string/ok"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/annullai"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/aggiungii"
+            android:layout_width="match_parent"
+            android:layout_height="74dp"
+            android:padding="5dp"
+            android:text="@string/aggiungi"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/titoloi"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:hint="@string/titolo"
+            android:inputType="textShortMessage" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/luogoi"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:hint="@string/luogo"
+            android:inputType="textShortMessage" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/descrizionei"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:hint="@string/descrizione"
+            android:inputType="textShortMessage" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/datai"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:ems="10"
+            android:hint="@string/data"
+            android:inputType="datetime" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/orainizioi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:ems="10"
+            android:hint="@string/orainizio"
+            android:inputType="time" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

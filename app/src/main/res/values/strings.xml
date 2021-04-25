@@ -23,8 +23,10 @@
     <string name="cambia">Cambia foto profilo</string>
     <string name="cambia_pedina">Cambia pedina</string>
     <string name="cambia_nickname">Cambia nickname</string>
+    <string name="cambia_nomeFamiglia">Cambia nome famiglia</string>
 
-      <!-- calendario -->
+
+    <!-- calendario -->
     <string name="evento">Proponi un nuovo evento</string>
     <string name="impegno">Aggiungi un tuo impegno</string>
     <string name="sincronizza">Sincronizza</string>

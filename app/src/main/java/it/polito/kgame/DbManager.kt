@@ -289,7 +289,7 @@ object DbManager {
         }
     }
 
-    
+
 
     fun updateUser(context: Context?, user: User) {
         val data : MutableMap<String, Any> = mutableMapOf()
@@ -297,6 +297,7 @@ object DbManager {
         if(user.pawnCode != null) data[PAWN_CODE] = user.pawnCode!!
         if(user.profileImg != null) data[PROF_PIC] = user.profileImg!!
         if(user.familyCode != null) data[FAM_CODE] = user.familyCode!!
+        if(user.objective != null) data[OBJ] = user.objective!!
 
 
         if (fbUser != null) {

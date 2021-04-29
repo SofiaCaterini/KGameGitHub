@@ -26,6 +26,8 @@
     <string name="cambia">Cambia foto profilo</string>
     <string name="cambia_pedina">Cambia pedina</string>
     <string name="cambia_nickname">Cambia nickname</string>
+    <string name="cambia_nomeFamiglia">Cambia nome famiglia</string>
+    <string name="componenti">Componenti famiglia</string>
 
 
     <!--setUpProfile frag-->
@@ -40,9 +42,6 @@
     <string name="impegno">AGGIUNGI UN TUO IMPEGNO</string>
     <string name="sincronizza">SINCRONIZZA CON GOOGLE</string>
     <string name="msganteprimanuovieventi">Visualizza tutti</string>
-
-
-
 
     <!-- Login/register -->
     <string name="login">Login</string>

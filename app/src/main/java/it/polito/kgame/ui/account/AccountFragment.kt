@@ -25,6 +25,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 
 
@@ -40,10 +41,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.app_bar_main.view.*
 import kotlinx.android.synthetic.main.fragment_account.*
+import kotlinx.android.synthetic.main.fragment_home.*
 
 
 class AccountFragment : Fragment(R.layout.fragment_account) {
-    private val adapter = ItemAdapterFamily()
+    private val adapter = ItemAdapterComponentsFamily()
     private val viewModel by activityViewModels<AccountViewModel>()
     //questo serve per la gallery
     private val REQUEST_CODE = 100
@@ -78,6 +80,16 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         })
 
 
+        viewModel.thisUsersFam.observe(viewLifecycleOwner, Observer
+            { value ->
+                if (!value.components.isNullOrEmpty())
+                    value.components?.let { adapter.setData(it) }
+
+                rvprofile.layoutManager= LinearLayoutManager(requireContext())
+                rvprofile.adapter = adapter
+            }
+
+        )
         //change pawn image
         sx.setOnClickListener {
             if (pawnCode <= 0) {
@@ -105,9 +117,10 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_account)
 
         //i frammenti non sono lifecycleowner
-        viewModel.data.observe(viewLifecycleOwner, Observer { data -> adapter.setData(data) })
+        //viewModel.data.observe(viewLifecycleOwner, Observer { data -> adapter.setData(data) })
         val tView: View = requireActivity().toolbar
         val nView: View = requireActivity().nav_view
+
 
 
         //keyboard management
@@ -251,6 +264,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                 uriBuffer= uri
                 requireActivity().saveUpdates.setOnClickListener {
                     DbManager.uploadProfileImg(requireContext(), uri)
+                    //viewModel.saveUpdates(requireContext())
                     Toast.makeText(requireContext(), "Stai salvando la nuova immagine profilo", Toast.LENGTH_SHORT).show()
                     requireActivity().saveUpdates.visibility = View.GONE
                     requireActivity().discardUpdates.visibility = View.GONE

@@ -2,8 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_deleteProfile"
+        android:icon="@android:drawable/ic_menu_delete"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="Elimina profilo"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_family"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:orderInCategory="100"
+        android:title="Esci dalla famiglia"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_logout"
+        android:icon="@drawable/logout"
+        android:orderInCategory="100"
+        android:title="Log out"
         app:showAsAction="never" />
 </menu>

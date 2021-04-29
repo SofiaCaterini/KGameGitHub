@@ -237,10 +237,26 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     close.setOnClickListener {
                         ante.isVisible = false
                     }
+
                     delete.setOnClickListener {
-                        DbManager.deleteAppointment(I!!)
-                        adapter.deleteEvento(I!!)
-                        ante.isVisible = false
+
+                        MaterialAlertDialogBuilder(requireContext())
+                                .setTitle("Elimina impegno")
+                                .setMessage("Sei sicuro di voler eliminare questo impegno?")
+                                .setPositiveButton("Si") { _, _ ->
+                                    DbManager.deleteAppointment(I!!)
+                                    adapter.deleteEvento(I!!)
+                                    ante.isVisible = false
+                                    Toast.makeText(
+                                            requireContext(), "Impegno eliminato correttamente ",
+                                            Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                                .setNegativeButton("No"){  _, _ ->
+
+                                }
+                                .show()
+
                     }
                     buttonevent.setOnClickListener {
                         ante.isVisible = false
@@ -267,10 +283,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                         }
 
                     }
-                    /*deletedettagli.setOnClickListener {
-                        DbManager.deleteAppointment(impegnidatacorrente[0])
-                        adapter.deleteEvento(impegnidatacorrente[0])
-                    }*/
+
                 }
                 else {
                     Log.d("tag", "Non ha impegno")

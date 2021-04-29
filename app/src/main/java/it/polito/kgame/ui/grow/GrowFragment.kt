@@ -39,82 +39,28 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
 
         val cal = Calendar.getInstance()
         val todayMillis = cal.timeInMillis
-
         val listapesate : MutableList<PesoInfo> = ArrayList()
-
-
-        println("UNo " + todayMillis)
-        println("dueee " + oneDayInMillis)
-        println("dueee * 31 " + 31*oneDayInMillis)
-        println("sotttea " + (todayMillis - oneDayInMillis))
-        println("sotttea 30 " + (todayMillis - 31*oneDayInMillis))
-
+        var ser : LineGraphSeries<DataPoint>? = null
+        val graph : GraphView = view.findViewById(R.id.graph) as GraphView
         growViewModel.Weights.observe(viewLifecycleOwner, Observer { weight ->
             println("WEIGHTS: $weight")
             println("nWeight: ${weight.size}")
             listapesate.clear()
-            val pesate : DoubleArray = doubleArrayOf()
-            val dates : LongArray = longArrayOf()
+            val dati : MutableMap<Long,Double> = mutableMapOf()
             weight.forEach {
                 listapesate.add(it)
-                pesate.plus(it.peso?.toDouble()!!)
-                dates.plus(it.data!!)
+                dati[it.data!!] = it.peso?.toDouble()!!
             }
+
+            println("DATI: $dati")
             val dataultimapesata: java.util.Calendar = java.util.Calendar.getInstance()
             dataultimapesata.timeInMillis = listapesate[listapesate.size - 1].data!!
             materialTextView4.text = refactorDate(dataultimapesata)
 
-            var graph : GraphView = view.findViewById(R.id.graph) as GraphView
 
-            graph.gridLabelRenderer.numHorizontalLabels = 5
-            graph.gridLabelRenderer.setHumanRounding(false,true)
-            graph.gridLabelRenderer.labelFormatter = object : DefaultLabelFormatter() {
-                override fun formatLabel(value: Double, isValueX: Boolean): String {
-                    return if (isValueX) {
-                        val c : Calendar = Calendar.getInstance()
-                        c.setTimeInMillis(value.toLong())
-                        val day = c.get(Calendar.DAY_OF_MONTH).toDouble()
-                        val month = monthNumToLetter(c.get(Calendar.MONTH))
-
-                        super.formatLabel(day, isValueX) + month
-                    } else {
-                        super.formatLabel(value, isValueX) + "kg"
-                    }
-                }
-            }
-
-            var series = LineGraphSeries(arrayOf(DataPoint(0.toDouble(), 1.toDouble()), DataPoint(1.toDouble(), 5.toDouble()), DataPoint(2.toDouble(), 3.toDouble())))
-
-            if(dates.size==pesate.size){
-                var arr : MutableList<DataPoint> = mutableListOf()
-                var i = 0
-                var c : Calendar = Calendar.getInstance()
-                while (i < dates.size) {
-                    c.setTimeInMillis(dates[i])
-                    arr.add(DataPoint(
-                            c.timeInMillis
-                                    //(c.get(Calendar.YEAR).toString() + dueCifre(c.get(Calendar.MONTH).toString()) + dueCifre(c.get(Calendar.DAY_OF_MONTH).toString()))
-                                    .toDouble(),
-                            pesate[i]))
-                    i++
-                }
-                println(arr)
-                series = LineGraphSeries(arr.toTypedArray())
-
-            } else {
-                android.app.AlertDialog.Builder(requireContext())
-                        .setTitle("I dati non sono corretti")
-                        .show()
-            }
-
-//        graph.viewport.setMinY( getMin(simPesate) - 7.0)
-//        graph.viewport.setMaxY( getMax(simPesate) + 1.0)
-//        graph.viewport.isYAxisBoundsManual = true
-
-            series.color = R.color.black
-            graph.addSeries(series)
-
-
+            //Graph
+            ser = updateCalendar(dati)
+            graph.addSeries(ser)
 
         })
 
@@ -126,11 +72,6 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_grow)
 
         //Graph
-
-        val sim30Pesate : DoubleArray = doubleArrayOf(69.9, 70.1, 70.7, 71.0, 70.5, 68.8, 69.5, 67.9, 66.0, 67.2, 67.2, 68.5, 70.1, 70.7, 71.0, 70.5, 68.8, 69.5, 67.9, 66.0, 67.2, 67.2, 68.5, 70.1, 70.7, 71.0, 70.5, 68.8, 69.5, 67.9)
-        val sim30Dates : LongArray = longArrayOf(1612300000000, 1613300000000, 1614300000000, 1615300000000, 1616300000000, 1617300000000, 1618300000000, 1619300000000, 1620300000000, 1621300000000, 1622300000000, 1623300000000, 1624300000000, 1625300000000, 1626300000000, 1627300000000, 1628300000000, 1629300000000, 1630300000000, 1631300000000, 1632300000000, 1633300000000, 1634300000000, 1635300000000, 1636300000000, 1637300000000, 1638300000000, 1639300000000, 1640300000000, 1641300000000)
-
-        val graph : GraphView = view.findViewById(R.id.graph) as GraphView
 
         graph.gridLabelRenderer.setHorizontalLabelsAngle(45)
         //graph.gridLabelRenderer.numHorizontalLabels = 6
@@ -150,46 +91,16 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
             }
         }
 
-        var series = LineGraphSeries(arrayOf(DataPoint(0.toDouble(), 1.toDouble()), DataPoint(1.toDouble(), 5.toDouble()), DataPoint(2.toDouble(), 3.toDouble())))
-
-        if(sim30Dates.size==sim30Pesate.size){
-            var arr : MutableList<DataPoint> = mutableListOf()
-            var i = 0
-            var c : Calendar = Calendar.getInstance()
-            while (i < sim30Dates.size) {
-                c.setTimeInMillis(sim30Dates[i])
-                arr.add(DataPoint(
-                        c.timeInMillis
-                                //(c.get(Calendar.YEAR).toString() + dueCifre(c.get(Calendar.MONTH).toString()) + dueCifre(c.get(Calendar.DAY_OF_MONTH).toString()))
-                                .toDouble(),
-                        sim30Pesate[i]))
-                i++
-            }
-            println(arr)
-            series = LineGraphSeries(arr.toTypedArray())
-
-        } else {
-            android.app.AlertDialog.Builder(requireContext())
-                    .setTitle("I dati non sono corretti")
-                    .show()
-        }
-
-//        graph.viewport.setMinY( getMin(simPesate) - 7.0)
-//        graph.viewport.setMaxY( getMax(simPesate) + 1.0)
-//        graph.viewport.isYAxisBoundsManual = true
-
-        series.color = R.color.black
-        graph.addSeries(series)
 
         var graphWidthIndex = 0;
         left_arrow.setOnClickListener {
            if(graphWidthIndex == 0)  graphWidthIndex=2 else graphWidthIndex--
-            resizeGraph(graphWidthIndex, series, todayMillis)
+            resizeGraph(graphWidthIndex, ser!!, todayMillis)
 
         }
         right_arrow.setOnClickListener {
             if(graphWidthIndex == 2)  graphWidthIndex=0 else graphWidthIndex++
-            resizeGraph(graphWidthIndex, series, todayMillis)
+            resizeGraph(graphWidthIndex, ser!!, todayMillis)
         }
 
         //set objective
@@ -213,11 +124,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
                 )
         )
 
-        refreshgrow2.setOnClickListener {
-
-
-            println("listapesata: $listapesate")
-
+        fun refresh() {
 
             if(objIsActive) {
                 graph.removeSeries(objLine)
@@ -271,6 +178,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
                         .setPositiveButton(R.string.ok) { _, _ ->
                             obj = np.value
                             objIsActive = true
+                            refresh()
                         }
                         .setNegativeButton(R.string.no, null)
                         .show()
@@ -440,3 +348,35 @@ private fun refactorDate(cal: java.util.Calendar): String {
 
     return day + "/" + month + "/" + cal.get(java.util.Calendar.YEAR)
 }
+
+private fun updateCalendar(dati: MutableMap<Long,Double>) : LineGraphSeries<DataPoint> {
+    var series = LineGraphSeries(arrayOf(DataPoint(0.toDouble(), 1.toDouble()), DataPoint(1.toDouble(), 5.toDouble()), DataPoint(2.toDouble(), 3.toDouble())))
+    println("dentro updatecalendar")
+    println("dates: ${dati.keys}")
+    println("pesate: ${dati.values}")
+
+    var arr : MutableList<DataPoint> = mutableListOf()
+    var i = 0
+    var c : Calendar = Calendar.getInstance()
+    while (i < dati.size) {
+        c.setTimeInMillis(dati.keys.elementAt(i))
+        arr.add(DataPoint(
+                c.timeInMillis
+                        //(c.get(Calendar.YEAR).toString() + dueCifre(c.get(Calendar.MONTH).toString()) + dueCifre(c.get(Calendar.DAY_OF_MONTH).toString()))
+                        .toDouble(),
+                dati.values.elementAt(i)))
+        i++
+    }
+    println(arr)
+    series = LineGraphSeries(arr.toTypedArray())
+
+
+//        graph.viewport.setMinY( getMin(simPesate) - 7.0)
+//        graph.viewport.setMaxY( getMax(simPesate) + 1.0)
+//        graph.viewport.isYAxisBoundsManual = true
+
+    series.color = R.color.black
+    return series
+
+}
+

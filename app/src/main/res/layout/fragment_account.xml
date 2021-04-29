@@ -9,83 +9,6 @@
     tools:context=".ui.account.AccountFragment">
 
 
-    <Button
-        android:id="@+id/ok"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FFAC31"
-        android:text="@string/ok"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_family" />
-
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/cambianickname"
-        android:layout_width="301dp"
-        android:layout_height="38dp"
-        android:fontFamily="@font/asap"
-        android:text="@string/cambia_nickname"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="#F8F2F2"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:backgroundTint="#00FFFFFF"
-        app:cornerRadius="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dx"
-        app:layout_constraintVertical_bias="0.110000014">
-
-    </com.google.android.material.textview.MaterialTextView>
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/edit_nickname"
-        android:layout_width="165dp"
-        android:layout_height="59dp"
-        android:backgroundTint="#FFFFFF"
-        android:drawableTint="#FFFFFF"
-        android:fontFamily="@font/asap"
-        android:foregroundTint="#FFFFFF"
-        android:inputType="textPersonName"
-        android:text="@string/nickname"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cambianickname"
-        app:layout_constraintVertical_bias="0.0">
-
-    </com.google.android.material.textfield.TextInputEditText>
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/edit_family"
-        android:layout_width="165dp"
-        android:layout_height="59dp"
-        android:backgroundTint="#FFFFFF"
-        android:drawableTint="#FFFFFF"
-        android:fontFamily="@font/asap"
-        android:foregroundTint="#FFFFFF"
-        android:inputType="textPersonName"
-        android:text="@string/family_name"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cambiaNomeFamiglia"
-        app:layout_constraintVertical_bias="0.0">
-
-    </com.google.android.material.textfield.TextInputEditText>
-
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/cambiapedina"
         android:layout_width="301dp"
@@ -111,6 +34,7 @@
         android:id="@+id/sx"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:contentDescription="TODO"
         android:rotationY="180"
         android:src="@drawable/right_arrow"
         app:layout_constraintBottom_toBottomOf="@+id/imageViewpedina"
@@ -119,7 +43,6 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageViewpedina"
-        android:contentDescription="TODO"
         app:tint="#FFFFFF" />
 
 
@@ -201,6 +124,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:backgroundTint="#FFFFFF"
+        android:contentDescription="TODO"
         android:foregroundTint="#FFFFFF"
         android:src="@drawable/right_arrow"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -209,25 +133,123 @@
         app:layout_constraintStart_toEndOf="@+id/imageViewpedina"
         app:layout_constraintTop_toBottomOf="@+id/cambiapedina"
         app:layout_constraintVertical_bias="0.01999998"
-        android:contentDescription="TODO"
         app:tint="#FFFFFF" />
 
-    <TextView
-        android:id="@+id/cambiaNomeFamiglia"
-        android:layout_width="314dp"
-        android:layout_height="38dp"
-        android:flow_horizontalAlign="center"
-        android:flow_verticalAlign="center"
-        android:text="@string/cambia_nomeFamiglia"
-        android:textAlignment="center"
-        android:textColor="#F8F2F2"
-        android:textSize="24sp"
-        android:textStyle="bold"
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="387dp"
+        android:layout_height="394dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewpedina">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="73dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/cambianickname"
+                android:layout_width="204dp"
+                android:layout_height="34dp"
+                android:fontFamily="@font/asap"
+                android:text="@string/cambia_nickname"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="#F8F2F2"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:backgroundTint="#00FFFFFF"
+                app:cornerRadius="0dp">
+
+            </com.google.android.material.textview.MaterialTextView>
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_nickname"
+                android:layout_width="181dp"
+                android:layout_height="59dp"
+                android:backgroundTint="#FFFFFF"
+                android:drawableTint="#FFFFFF"
+                android:fontFamily="@font/asap"
+                android:foregroundTint="#FFFFFF"
+                android:inputType="textPersonName"
+                android:text="@string/nickname"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold">
+
+            </com.google.android.material.textfield.TextInputEditText>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/cambiaNomeFamiglia2"
+                android:layout_width="186dp"
+                android:layout_height="75dp"
+                android:layout_weight="1"
+                android:flow_horizontalAlign="center"
+                android:flow_verticalAlign="center"
+                android:text="@string/cambia_nomeFamiglia"
+                android:textAlignment="center"
+                android:textColor="#F8F2F2"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_family"
+                android:layout_width="174dp"
+                android:layout_height="59dp"
+                android:backgroundTint="#FFFFFF"
+                android:drawableTint="#FFFFFF"
+                android:fontFamily="@font/asap"
+                android:foregroundTint="#FFFFFF"
+                android:inputType="textPersonName"
+                android:text="@string/family_name"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold">
+
+            </com.google.android.material.textfield.TextInputEditText>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/cambiaNomeFamiglia"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:flow_horizontalAlign="center"
+            android:flow_verticalAlign="center"
+            android:text="@string/componenti"
+            android:textAlignment="center"
+            android:textColor="#F8F2F2"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvprofile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="99dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:backgroundTint="#FFAC31"
+        android:text="@string/ok"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_nickname"
-        app:layout_constraintVertical_bias="0.110000014" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -118,7 +118,8 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
             if(it.objective!= null){
                 obj = it.objective!!.toInt()
                 objIsActive = true
-                resizeGraph(0, ser!!, todayMillis)
+                if ( ser!= null){
+                resizeGraph(0, ser!!, todayMillis)}
             }
             refresh()
             obb.isVisible = false

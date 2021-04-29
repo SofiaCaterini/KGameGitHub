@@ -193,8 +193,6 @@
                 android:layout_width="186dp"
                 android:layout_height="75dp"
                 android:layout_weight="1"
-                android:flow_horizontalAlign="center"
-                android:flow_verticalAlign="center"
                 android:text="@string/cambia_nomeFamiglia"
                 android:textAlignment="center"
                 android:textColor="#F8F2F2"
@@ -223,8 +221,6 @@
             android:id="@+id/cambiaNomeFamiglia"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:flow_horizontalAlign="center"
-            android:flow_verticalAlign="center"
             android:text="@string/componenti"
             android:textAlignment="center"
             android:textColor="#F8F2F2"
@@ -233,8 +229,9 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvprofile"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:textAlignment="center" />
 
     </LinearLayout>

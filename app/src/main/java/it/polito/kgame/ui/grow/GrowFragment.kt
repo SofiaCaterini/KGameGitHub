@@ -66,8 +66,9 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
 
             var graph : GraphView = view.findViewById(R.id.graph) as GraphView
 
-            graph.gridLabelRenderer.numHorizontalLabels = 5
-            graph.gridLabelRenderer.setHumanRounding(false,true)
+            graph.gridLabelRenderer.setHorizontalLabelsAngle(45)
+            //graph.gridLabelRenderer.numHorizontalLabels = 6
+            graph.gridLabelRenderer.setHumanRounding(true,true)
             graph.gridLabelRenderer.labelFormatter = object : DefaultLabelFormatter() {
                 override fun formatLabel(value: Double, isValueX: Boolean): String {
                     return if (isValueX) {
@@ -393,43 +394,43 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
 }
 
 
-    fun noClicked(){
-    //Do nothing
-    }
+fun noClicked(){
+//Do nothing
+}
 
-    fun getMin(x: DoubleArray): Double {
-        var firstIteration = true
-        var res : Double = 6.9
-        for (d in x) {
-            if(firstIteration) {
-                res = d
-                firstIteration = false
-            }
-            else {
-                if(d<res) {
-                    res=d
-                }
+fun getMin(x: DoubleArray): Double {
+    var firstIteration = true
+    var res : Double = 6.9
+    for (d in x) {
+        if(firstIteration) {
+            res = d
+            firstIteration = false
+        }
+        else {
+            if(d<res) {
+                res=d
             }
         }
-        return res
     }
+    return res
+}
 
-    fun getMax(x: DoubleArray): Double {
-        var firstIteration = true
-        var res : Double = 6.9
-        for (d in x) {
-            if(firstIteration) {
-                res = d
-                firstIteration = false
-            }
-            else {
-                if(d>res) {
-                    res=d
-                }
+fun getMax(x: DoubleArray): Double {
+    var firstIteration = true
+    var res : Double = 6.9
+    for (d in x) {
+        if(firstIteration) {
+            res = d
+            firstIteration = false
+        }
+        else {
+            if(d>res) {
+                res=d
             }
         }
-        return res
     }
+    return res
+}
 
 private fun refactorDate(cal: java.util.Calendar): String {
 

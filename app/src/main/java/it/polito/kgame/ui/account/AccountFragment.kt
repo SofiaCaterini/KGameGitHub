@@ -51,6 +51,8 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
     private var pawnCode: Int = 0
     private var switch: Int? = null
 
+    private var viewCreated = false
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -75,6 +77,8 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
             header.findViewById<TextView>(R.id.navHeadNickname)?.text = viewModel.thisUser.value?.username
             header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(viewModel.thisUser.value?.profileImg).into(it)  }
 
+            //avverti di aver caricato i dati, ora possono essere modificati
+            viewCreated = true
         })
 
 
@@ -86,7 +90,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
             changePawnView()
             if (switch == 0) switch = 2
-            activateUpdateButton(switch ?: 1, null)
+            if (viewCreated) activateUpdateButton(switch ?: 1, null)
         }
 
         dx.setOnClickListener {
@@ -96,7 +100,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
             changePawnView()
             if (switch == 0) switch = 2
-            activateUpdateButton(switch ?: 1, null)
+            if (viewCreated) activateUpdateButton(switch ?: 1, null)
 
         }
 
@@ -135,7 +139,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
             if(imm.isAcceptingText) {
                 viewModel.changeUsername(edit_nickname.text.toString())
                 if (switch == 0) switch = 2
-                activateUpdateButton(switch ?: 1, null)
+                if (viewCreated) activateUpdateButton(switch ?: 1, null)
             }
         }
 
@@ -143,8 +147,11 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         requireActivity().discardUpdates.setOnClickListener {
             requireActivity().recreate()
             viewModel.discardUpdates()
+            viewCreated = false
         }
     }
+
+
 
     // access to gallery
     private fun openGalleryForImage() {
@@ -255,6 +262,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                     requireActivity().saveUpdates.visibility = View.GONE
                     requireActivity().discardUpdates.visibility = View.GONE
                     switch=null
+                    viewCreated = false
                 }
             }
             1 -> {  //case where only pawn/nickname is getting uploaded
@@ -265,6 +273,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                         requireActivity().saveUpdates.visibility = View.GONE
                         requireActivity().discardUpdates.visibility = View.GONE
                         switch=null
+                        viewCreated = false
                     }
             }
             2 -> {  //case where both profile image and pawn/nickname are getting uploaded
@@ -275,6 +284,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                     requireActivity().saveUpdates.visibility = View.GONE
                     requireActivity().discardUpdates.visibility = View.GONE
                     switch=null
+                    viewCreated = false
                 }
             }
         }

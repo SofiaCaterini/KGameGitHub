@@ -7,12 +7,14 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.net.wifi.WifiManager
 import android.net.wifi.WifiNetworkSpecifier
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -21,12 +23,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.squareup.picasso.Picasso
-import it.polito.kgame.DbManager
-import it.polito.kgame.PesoInfo
-import it.polito.kgame.R
+import it.polito.kgame.*
 import it.polito.kgame.ui.grow.noClicked
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -40,8 +41,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     val adapter = ItemAdapterUsers()
     val homeViewModel by activityViewModels<HomeViewModel>()
 
+    var pawnWidth : Int? = null
+    private var pawnHeight : Int? = null
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        val layout = requireActivity().findViewById<ConstraintLayout>(R.id.homeLayout)
+
+        println("COPIARE: " + layout.gameBoard.width + "/"+ layout.gameBoard.height)// = ViewGroup.LayoutParams()
+
+        pawnHeight=player1.layoutParams.height
+        pawnWidth=player1.layoutParams.width
+        //println("misure della pedina: w - " + pawnWidth + "; h - " +pawnHeight)
 
         val listapesate : MutableList<PesoInfo> = ArrayList()
         val today : Calendar = Calendar.getInstance()
@@ -55,7 +67,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         homeViewModel.thisUsersFam.observe(viewLifecycleOwner,
                 { value ->
                     if (!value.components.isNullOrEmpty())
-                        value.components?.let { adapter.setData(it) }
+                        value.components?.let {
+                            adapter.setData(it)
+                            setPositions(it)
+                        }
+
+                    println("2COPIARE: " + layout.gameBoard.width + "/"+ layout.gameBoard.height)// = ViewGroup.LayoutParams()
+
                 }
         )
         homeViewModel.We.observe(viewLifecycleOwner, Observer { we ->
@@ -265,6 +283,84 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     }
 
+    private fun setPositions(list: List<User>) {
+        val layout = requireActivity().findViewById<ConstraintLayout>(R.id.homeLayout)
+        println(" layout " + layout)
+        println(" gameBoard " + layout.gameBoard)
+
+        val map = mutableMapOf<Int,Int>()
+        list.forEach { u -> val num = list.count { x -> x.position == u.position }
+            map[u.position!!] = num
+        }
+
+        list.forEach { u ->
+            val player = ImageView(requireContext()).apply {
+                setImageResource(Pedina.pedina(u.pawnCode))
+                adjustViewBounds = true
+                layoutParams = ViewGroup.LayoutParams(
+                        pawnWidth!!,
+                        pawnHeight!!)
+                println("1pos della pedina: w - " + x + "; h - " + y)
+
+            }
+            println("2pos della pedina: w - " + player.x + "; h - " + player.y)
+            layout.apply {
+                addView(player)
+            }
+            layout.gameBoard.viewTreeObserver.addOnGlobalLayoutListener {
+                if(u.position==0)  { player.visibility = View.INVISIBLE }
+
+                when (map[u.position!!]) {
+                    1 -> {
+                        player.translationX =
+                                layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                                        u.position!!
+                                ).first - pawnWidth!!.toFloat() / 2
+                        player.translationY =
+                                layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                                        u.position!!
+                                ).second - pawnHeight!!.toFloat() / 2
+                        println("SIAMO IN 1")
+                        println("31pos della pedina: w - " + player.x + "; h - " + player.y)
+                        println("megaprintone: \n" +
+                                "layout.gameBoard.left: " + layout.gameBoard.left + ";  \n" +
+                                "layout.gameBoard.width.toFloat(): " + layout.gameBoard.width.toFloat() + "; \n" +
+                                "getXYmodsFromPosition(u.position!!).first: " + getXYmodsFromPosition(u.position!!).first)
+
+                    }
+                    2 -> {
+                        player.translationX =
+                                layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                                        u.position!!
+                                ).first - pawnWidth!!.toFloat() * 3 / 4
+                        player.translationY =
+                                layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                                        u.position!!
+                                ).second - pawnHeight!!.toFloat() * 3 / 4
+
+                        map[u.position!!] = 22
+                        println("SIAMO IN 2")
+                    }
+                    22 -> {
+                        player.translationX =
+                                layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                                        u.position!!
+                                ).first - pawnWidth!!.toFloat() / 4
+                        player.translationY =
+                                layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                                        u.position!!
+                                ).second - pawnHeight!!.toFloat() / 4
+                        println("SIAMO IN 22")
+                    }
+                    3 -> {
+                        //AGGIUNGERE POP UP
+                        println("SIAMO IN 3")
+                    }
+                }
+            }
+        }
+    }
+
     //Prende in input il numero della casella e ritorna i moltiplicatori x ed y relativi a quella casella
     fun getXYmodsFromPosition(position: Int): Pair<Float, Float> {
         var (x, y) = Pair(1F, 1F)
@@ -446,7 +542,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
 
             else -> { // Note the block
-                print("position is neither 1 nor 2")
+                print("position is not in range 1 - 35")
             }
         }
         return Pair(x, y)

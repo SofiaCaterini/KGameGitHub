@@ -328,43 +328,43 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
 }
 
 
-    fun noClicked(){
-    //Do nothing
-    }
+fun noClicked(){
+//Do nothing
+}
 
-    fun getMin(x: DoubleArray): Double {
-        var firstIteration = true
-        var res : Double = 6.9
-        for (d in x) {
-            if(firstIteration) {
-                res = d
-                firstIteration = false
-            }
-            else {
-                if(d<res) {
-                    res=d
-                }
+fun getMin(x: DoubleArray): Double {
+    var firstIteration = true
+    var res : Double = 6.9
+    for (d in x) {
+        if(firstIteration) {
+            res = d
+            firstIteration = false
+        }
+        else {
+            if(d<res) {
+                res=d
             }
         }
-        return res
     }
+    return res
+}
 
-    fun getMax(x: DoubleArray): Double {
-        var firstIteration = true
-        var res : Double = 6.9
-        for (d in x) {
-            if(firstIteration) {
-                res = d
-                firstIteration = false
-            }
-            else {
-                if(d>res) {
-                    res=d
-                }
+fun getMax(x: DoubleArray): Double {
+    var firstIteration = true
+    var res : Double = 6.9
+    for (d in x) {
+        if(firstIteration) {
+            res = d
+            firstIteration = false
+        }
+        else {
+            if(d>res) {
+                res=d
             }
         }
-        return res
     }
+    return res
+}
 
 private fun refactorDate(cal: java.util.Calendar): String {
 

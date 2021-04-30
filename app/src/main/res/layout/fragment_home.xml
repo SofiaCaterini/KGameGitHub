@@ -9,6 +9,7 @@
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/homeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/resource_final"
@@ -137,17 +138,10 @@
             android:id="@+id/player1"
             android:layout_width="38dp"
             android:layout_height="38dp"
+            android:visibility="invisible"
             app:srcCompat="@drawable/dog"
             tools:layout_editor_absoluteX="282dp"
             tools:layout_editor_absoluteY="45dp" />
-
-        <ImageView
-            android:id="@+id/player2"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            app:srcCompat="@drawable/lion"
-            tools:layout_editor_absoluteX="334dp"
-            tools:layout_editor_absoluteY="53dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvhome"

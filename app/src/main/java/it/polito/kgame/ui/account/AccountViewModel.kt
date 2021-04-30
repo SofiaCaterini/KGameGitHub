@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.toObject
 import it.polito.kgame.DbManager
+import it.polito.kgame.Family
 import it.polito.kgame.R
 import it.polito.kgame.User
 import kotlinx.android.synthetic.main.fragment_account.*
@@ -23,9 +24,7 @@ import kotlinx.coroutines.launch
 
 class AccountViewModel : ViewModel() {
     private val _items= mutableListOf(
-            ItemFamily( "Rossi"),
-            ItemFamily( "Bianchi"),
-            ItemFamily( "Caterini")
+        User("22", username = "pippo"),
     )
     val db : FirebaseFirestore = FirebaseFirestore.getInstance()
     private var userListener: ListenerRegistration? = null
@@ -35,6 +34,10 @@ class AccountViewModel : ViewModel() {
     val fbUser: LiveData<FirebaseUser>
         get() = _fbUser
 
+    private val _thisUsersFam = MutableLiveData<Family>()
+    val thisUsersFam: LiveData<Family>
+        get() = _thisUsersFam
+
     private val _thisUser = MutableLiveData<User>()
     val thisUser: LiveData<User>
         get() = _thisUser
@@ -42,6 +45,19 @@ class AccountViewModel : ViewModel() {
 
     init {
         setUser()
+
+        viewModelScope.launch {
+            DbManager.getUserDoc()?.addSnapshotListener { value, error ->
+                if (error != null) {
+                    println("ERROR retrieving user's doc")
+                }
+                if (value != null && value.exists()) {
+                    _thisUser.value = value.toObject<User>()!!
+                    println("FAMMI SAPERE 1 " +_thisUser.value)
+                    fillFamily()
+                }
+            }
+        }
     }
 
     private fun setUser() {
@@ -64,18 +80,13 @@ class AccountViewModel : ViewModel() {
     }
 
     //chi conosce il viewmodel può vedere i dati
-    private val _data: MutableLiveData<List<ItemFamily>> = MutableLiveData<List<ItemFamily>>().also {
+    private val _data: MutableLiveData<List<User>> = MutableLiveData<List<User>>().also {
         it.value = _items
     }
 
 
-    val data: LiveData<List<ItemFamily>> = _data
+    val data: LiveData<List<User>> = _data
 
-    fun addItem(nome: String){
-        val item = ItemFamily(nome)
-        _items.add(item)
-        _data.value= _items
-    }
 
     fun changePawn(pawnCode: Int) {
         _thisUser.value?.pawnCode = pawnCode
@@ -104,5 +115,44 @@ class AccountViewModel : ViewModel() {
     fun discardUpdates() {
         setUser()
     }
+
+    private fun fillFamily() {
+        viewModelScope.launch {
+            _thisUser.value?.familyCode?.let {
+                DbManager.getFamilyDoc(it)?.addSnapshotListener { value, error ->
+                    if (error != null) {
+                        println("ERROR retrieving family's doc")
+                    }
+                    if (value != null && value.exists()) {
+                        _thisUsersFam.value = Family(
+                            it,
+                            value[DbManager.FAM_NAME] as String?
+                        )
+                        addComps()
+                        println("capiamoci " + value)
+                        println("FAMMI SAPERE 2 " +_thisUsersFam.value)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun addComps() {
+        viewModelScope.launch {
+            _thisUsersFam.value = Family(
+                _thisUsersFam.value?.code,
+                _thisUsersFam.value?.name,
+                _thisUsersFam.value?.code?.let { DbManager.getFamilyComps(it) }
+            )
+
+//
+//                        _thisUsersFam.value?.components = _thisUsersFam.value?.code?.let {
+//                                println("vediamo un pochetto: " + DbManager.getFamilyComps(it))
+//                                DbManager.getFamilyComps(it)
+//                        }
+//                }.invokeOnCompletion {println("vediamo un pochetto22: " + _thisUsersFam.value?.components)
+        }
+    }
+
 
 }

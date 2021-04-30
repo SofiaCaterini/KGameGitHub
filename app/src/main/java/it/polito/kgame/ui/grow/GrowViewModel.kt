@@ -10,9 +10,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.ktx.toObject
 import it.polito.kgame.DbManager
 import it.polito.kgame.EventoInfo
 import it.polito.kgame.PesoInfo
+import it.polito.kgame.User
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
@@ -21,7 +23,10 @@ class GrowViewModel : ViewModel() {
 
     val db : FirebaseFirestore = FirebaseFirestore.getInstance()
     private var weightListener: ListenerRegistration? = null
-    private var areUpdatesBeenMade : Boolean = false
+
+    private val _thisUser = MutableLiveData<User>()
+    val thisUser: LiveData<User>
+        get() = _thisUser
 
     private val _fbUser = MutableLiveData<FirebaseUser>()
     val fbUser: LiveData<FirebaseUser>
@@ -33,13 +38,26 @@ class GrowViewModel : ViewModel() {
 
 
     init {
+
+        _fbUser.value = FirebaseAuth.getInstance().currentUser
+
         setUserWeight()
+
+        viewModelScope.launch {
+            DbManager.getUserDoc()?.addSnapshotListener { value, error ->
+                if (error != null) {
+                    println("ERROR retrieving user's doc")
+                }
+                if (value != null && value.exists()) {
+                    _thisUser.value = value.toObject<User>()!!
+                    println("FAMMI SAPERE 1 " +_thisUser.value)
+                }
+            }
+        }
     }
 
     private fun setUserWeight() {
-        areUpdatesBeenMade = false
         _fbUser.value = FirebaseAuth.getInstance().currentUser
-
         viewModelScope.launch {
             weightListener = DbManager.getUserWeightColl()?.addSnapshotListener { value, error ->
                 if (error != null) {
@@ -76,6 +94,11 @@ class GrowViewModel : ViewModel() {
                 }
             }
         }
+    }
+
+    fun changeObjective( obj: Double){
+        _thisUser.value?.objective = obj
+        _thisUser.value?.let { DbManager.updateUser(null, it) }
     }
 
 }

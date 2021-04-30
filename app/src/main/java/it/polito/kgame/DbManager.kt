@@ -291,43 +291,13 @@ object DbManager {
 
 
 
-//        suspend fun getUser() : User? {                                                         //DEPRECATED
-//                                                                                                //DEPRECATED
-//            if (fbUser != null) {                                                               //DEPRECATED
-//                return withContext(Dispatchers.IO) {                                            //DEPRECATED
-//                    val user = db.collection(ACCOUNTS)                                          //DEPRECATED
-//                            .document(fbUser.email)                                             //DEPRECATED
-//                            .get()                                                              //DEPRECATED
-//                            .await()                                                            //DEPRECATED
-//                    //user.toObject<User>()                                                     //DEPRECATED
-//                    if (user[FAM_CODE]==null){                                                  //DEPRECATED
-//                                                                                                //DEPRECATED
-//                    }                                                                           //DEPRECATED
-//                    if (user.getLong(PAWN_CODE) in 0..2 &&                                      //DEPRECATED
-//                            user.getLong(PAWN_CODE)?.toInt() != null) {                         //DEPRECATED
-//                    }                                                                           //DEPRECATED
-//                    User(                                                                       //DEPRECATED
-//                            fbUser.uid,                                                         //DEPRECATED
-//                            fbUser.email,                                                       //DEPRECATED
-//                            user[NICKNAME].toString(),                                          //DEPRECATED
-//                            user[FAM_CODE]?.toString(),                                         //DEPRECATED
-//                            user[PAWN_CODE]?.toString()?.toInt(),                               //DEPRECATED
-//                            user[OBJ]?.toString()?.toDouble())                                  //DEPRECATED
-//                }                                                                               //DEPRECATED
-//            }                                                                                   //DEPRECATED
-//            else {                                                                              //DEPRECATED
-//                println("Error while retrieving user: DbManager.getuser()")                     //DEPRECATED
-//                return null                                                                     //DEPRECATED
-//            }                                                                                   //DEPRECATED
-//        }                                                                                       //DEPRECATED
-
-
     fun updateUser(context: Context?, user: User) {
         val data : MutableMap<String, Any> = mutableMapOf()
         if(user.username != null) data[NICKNAME] = user.username!!
         if(user.pawnCode != null) data[PAWN_CODE] = user.pawnCode!!
         if(user.profileImg != null) data[PROF_PIC] = user.profileImg!!
         if(user.familyCode != null) data[FAM_CODE] = user.familyCode!!
+        if(user.objective != null) data[OBJ] = user.objective!!
 
 
         if (fbUser != null) {
@@ -384,7 +354,15 @@ object DbManager {
                             data[DbManager.PROF_PIC] = url.toString()
                             fbUser.let {
                                 if (it != null) {
-                                    db.collection(DbManager.ACCOUNTS)
+                                    GlobalScope.launch {
+                                        if (it != null) {
+                                            getUser(it.email)?.let { user ->
+                                                user.profileImg = url.toString()
+                                                updateUser(context, user) }
+                                        }
+                                    }
+                                }
+                                    /*db.collection(DbManager.ACCOUNTS)
                                             .document(it.email)
                                             .update(data as Map<String, Any>)
                                             .addOnSuccessListener {
@@ -394,7 +372,8 @@ object DbManager {
                                                                             Toast.LENGTH_SHORT
                                                                     ).show()
                                             }
-                                }
+
+                                }*/
                             }
 
                         }

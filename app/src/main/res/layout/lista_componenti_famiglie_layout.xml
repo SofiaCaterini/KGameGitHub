@@ -6,8 +6,8 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="275dp"
+        android:layout_height="71dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -16,24 +16,24 @@
 
         <TextView
             android:id="@+id/nickname2"
-            android:layout_width="200dp"
+            android:layout_width="201dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/asap"
             android:gravity="center_vertical"
             android:paddingLeft="20dp"
-            android:paddingTop="5dp"
+            android:paddingTop="2dp"
             android:paddingRight="20dp"
-            android:paddingBottom="5dp"
+            android:paddingBottom="2dp"
             android:text="@string/family_name"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#FFFDFD"
+            android:textColor="#FDFBFB"
             android:textSize="30sp" />
 
         <ImageView
             android:id="@+id/img"
-            android:layout_width="84dp"
-            android:layout_height="104dp"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
             tools:srcCompat="@drawable/google" />
     </LinearLayout>
 

@@ -19,6 +19,7 @@ import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
+import it.polito.kgame.DbManager
 import it.polito.kgame.EventoInfo
 import it.polito.kgame.PesoInfo
 import it.polito.kgame.R
@@ -42,6 +43,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
         val listapesate : MutableList<PesoInfo> = ArrayList()
         var ser : LineGraphSeries<DataPoint>? = null
         val graph : GraphView = view.findViewById(R.id.graph) as GraphView
+
         growViewModel.Weights.observe(viewLifecycleOwner, Observer { weight ->
             println("WEIGHTS: $weight")
             println("nWeight: ${weight.size}")
@@ -57,11 +59,71 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
             dataultimapesata.timeInMillis = listapesate[listapesate.size - 1].data!!
             materialTextView4.text = refactorDate(dataultimapesata)
 
-
-
             //Graph
-            ser = updateCalendar(dati)
+            ser = updateGraph(dati)
             graph.addSeries(ser)
+            resizeGraph(0, ser!!, todayMillis)
+
+
+        })
+        var obj : Int = 0
+        var objIsActive = false
+        val np: NumberPicker = view.findViewById(R.id.numberPicker)
+        var objLine = LineGraphSeries(
+            arrayOf(
+                DataPoint(
+                    (todayMillis - 31*oneDayInMillis)
+                        .toDouble(),
+                    obj.toDouble()
+                ),
+                DataPoint(
+                    todayMillis
+                        .toDouble(),
+                    obj.toDouble()
+                )
+            )
+        )
+
+        fun refresh() {
+            if(objIsActive) {
+
+                if (graph.series.contains(objLine)){
+                graph.removeSeries(objLine)
+                }
+
+                objLine = LineGraphSeries(
+                    arrayOf(
+                        DataPoint(
+                            (todayMillis - 31*oneDayInMillis)
+                                .toDouble(),
+                            obj.toDouble()
+                        ),
+                        DataPoint(
+                            todayMillis
+                                .toDouble(),
+                            obj.toDouble()
+                        )
+                    )
+                )
+                objLine.color = R.color.white
+
+                graph.addSeries(objLine)
+            }
+        }
+
+
+        growViewModel.thisUser.observe(viewLifecycleOwner, Observer {
+            println("OBJ: ${it.objective}")
+            //set objective
+            if(it.objective!= null){
+                obj = it.objective!!.toInt()
+                objIsActive = true
+                if ( ser!= null){
+                resizeGraph(0, ser!!, todayMillis)}
+            }
+            refresh()
+            obb.isVisible = false
+
 
         })
 
@@ -93,61 +155,23 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
         }
 
 
-        var graphWidthIndex = 0;
+
+        var graphWidthIndex = 0
         left_arrow.setOnClickListener {
            if(graphWidthIndex == 0)  graphWidthIndex=2 else graphWidthIndex--
-            resizeGraph(graphWidthIndex, ser!!, todayMillis)
+            if(ser!= null) {
+                resizeGraph(graphWidthIndex, ser!!, todayMillis)
+            }
 
         }
         right_arrow.setOnClickListener {
             if(graphWidthIndex == 2)  graphWidthIndex=0 else graphWidthIndex++
-            resizeGraph(graphWidthIndex, ser!!, todayMillis)
-        }
-
-        //set objective
-        var obj : Int = 0
-        var objIsActive = false
-        val np: NumberPicker = view.findViewById(R.id.numberPicker)
-        obb.isVisible = false
-
-        var objLine = LineGraphSeries(
-                arrayOf(
-                    DataPoint(
-                        (todayMillis - 31*oneDayInMillis)
-                            .toDouble(),
-                        obj.toDouble()
-                    ),
-                    DataPoint(
-                        todayMillis
-                            .toDouble(),
-                        obj.toDouble()
-                    )
-                )
-        )
-
-        fun refresh() {
-
-            if(objIsActive) {
-                graph.removeSeries(objLine)
-
-                objLine = LineGraphSeries(
-                        arrayOf(
-                            DataPoint(
-                                (todayMillis - 31*oneDayInMillis)
-                                .toDouble(),
-                                obj.toDouble()
-                            ),
-                            DataPoint(
-                                todayMillis
-                                    .toDouble(),
-                                obj.toDouble()
-                            )
-                        )
-                )
-                objLine.color = R.color.white
-                graph.addSeries(objLine)
+            if(ser!= null) {
+                resizeGraph(graphWidthIndex, ser!!, todayMillis)
             }
         }
+
+
 
 
         val kgValues = arrayOfNulls<String>(200)
@@ -173,6 +197,8 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
                 var peso : String = np.value.toString()
                 var message2 : String = "$messag $peso $kg"
 
+
+
                 MaterialAlertDialogBuilder(requireContext())
                         .setTitle(R.string.question_title_obj_ok)
                         .setMessage(message2)
@@ -180,6 +206,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
                             obj = np.value
                             objIsActive = true
                             refresh()
+                            growViewModel.changeObjective(obj.toDouble())
                         }
                         .setNegativeButton(R.string.no, null)
                         .show()
@@ -193,7 +220,6 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
 
         //Sveglia
         sveglia.setOnClickListener {
-
 
             val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
                 cal.set(Calendar.HOUR_OF_DAY, hour)
@@ -350,8 +376,8 @@ private fun refactorDate(cal: java.util.Calendar): String {
     return day + "/" + month + "/" + cal.get(java.util.Calendar.YEAR)
 }
 
-private fun updateCalendar(dati: MutableMap<Long,Double>) : LineGraphSeries<DataPoint> {
-    var series = LineGraphSeries(arrayOf(DataPoint(0.toDouble(), 1.toDouble()), DataPoint(1.toDouble(), 5.toDouble()), DataPoint(2.toDouble(), 3.toDouble())))
+private fun updateGraph(dati: MutableMap<Long,Double>) : LineGraphSeries<DataPoint> {
+    var series: LineGraphSeries<DataPoint>
     println("dentro updatecalendar")
     println("dates: ${dati.keys}")
     println("pesate: ${dati.values}")
@@ -370,12 +396,9 @@ private fun updateCalendar(dati: MutableMap<Long,Double>) : LineGraphSeries<Data
     }
     println(arr)
     series = LineGraphSeries(arr.toTypedArray())
-
-
 //        graph.viewport.setMinY( getMin(simPesate) - 7.0)
 //        graph.viewport.setMaxY( getMax(simPesate) + 1.0)
 //        graph.viewport.isYAxisBoundsManual = true
-
     series.color = R.color.black
     return series
 

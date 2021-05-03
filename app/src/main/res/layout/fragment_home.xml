@@ -69,14 +69,14 @@
             app:layout_constraintGuide_begin="116dp" />
 
         <ImageView
-            android:id="@+id/refresh"
+            android:id="@+id/regolamento"
             android:layout_width="28dp"
             android:layout_height="29dp"
-            android:background="#00FF0000"
-            android:foreground="@drawable/exchange"
-            android:foregroundTint="#FFFFFF"
-            android:foregroundTintMode="src_in"
+            android:foreground="@drawable/information_button"
+            android:foregroundTint="#F6F6F6"
+            android:foregroundTintMode="src_atop"
             android:src="@drawable/exchange"
+            android:tint="#FFC107"
             app:layout_constraintBottom_toTopOf="@+id/guideline4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.16"

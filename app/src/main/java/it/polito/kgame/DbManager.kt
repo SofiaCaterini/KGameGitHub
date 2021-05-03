@@ -44,6 +44,7 @@ object DbManager {
     const val PROF_PIC = "profileImg"
     const val PAWN_CODE = "pawnCode"
     const val OBJ = "objective"
+    const val POSITION = "position"
         //family
     const val FAM_NAME = "familyName"
         //match
@@ -72,8 +73,9 @@ object DbManager {
 
     fun registerUser(nickname : String, mail : String) {
 
-        val data : MutableMap<String,String> = mutableMapOf()
+        val data : MutableMap<String,Any> = mutableMapOf()
         data[NICKNAME] = nickname
+        data[POSITION] = 0
 
         db.collection(ACCOUNTS)
                 .document(mail)

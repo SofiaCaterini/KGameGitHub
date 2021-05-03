@@ -10,6 +10,7 @@ import com.google.firebase.firestore.ktx.toObject
 import it.polito.kgame.*
 import it.polito.kgame.R
 import kotlinx.coroutines.launch
+import kotlin.math.absoluteValue
 
 class HomeViewModel : ViewModel() {
         private var weightListener: ListenerRegistration? = null
@@ -28,9 +29,9 @@ class HomeViewModel : ViewModel() {
         val data : LiveData<List<User>>
                 get() = _data
 
-        private val _We = MutableLiveData<MutableList<PesoInfo>>()
-        val We : MutableLiveData<MutableList<PesoInfo>>
-                get() = _We
+        private val _weights = MutableLiveData<MutableList<PesoInfo>>()
+        val weights : MutableLiveData<MutableList<PesoInfo>>
+                get() = _weights
 
 
         init {
@@ -126,13 +127,22 @@ class HomeViewModel : ViewModel() {
                                                 }
 
                                         }
-                                        _We.value = sessioni
+                                        _weights.value = sessioni
 
                                 }
                         }
                 }
         }
 
+        fun changePosition(actualWeight: Float) {
+                var x = 0
+                if((_thisUser.value?.objective!! - actualWeight).absoluteValue < (_thisUser.value?.objective!! - _weights.value?.get(_weights.value?.size!! - 2)?.peso!!).absoluteValue) x++
+                else x--
+                println("valore -1 " + _weights.value?.get(_weights.value?.size!! - 1) + ";  valore -2 " + _weights.value?.get(_weights.value?.size!! - 2) + "; x" + x)
+                _thisUser.value?.position = _thisUser.value?.position!! + x
+                println("this user" +_thisUser.value?.position + " fattarelli " +_thisUser.value?.position!! +" / "+ x)
+                DbManager.updateUser(null,_thisUser.value!!)
+        }
 
         private val _items= mutableListOf(
                 ItemUsers( 1, "Raff", R.drawable.dog),

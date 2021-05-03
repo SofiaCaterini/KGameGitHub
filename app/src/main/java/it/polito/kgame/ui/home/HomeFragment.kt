@@ -7,7 +7,6 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.net.wifi.WifiManager
 import android.net.wifi.WifiNetworkSpecifier
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -76,12 +75,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                 }
         )
-        homeViewModel.We.observe(viewLifecycleOwner, Observer { we ->
-            println("WEIGHTS: $we")
-            println("nWeight: ${we.size}")
+        homeViewModel.weights.observe(viewLifecycleOwner, Observer { weights ->
+            println("WEIGHTS: $weights")
+            println("nWeight: ${weights.size}")
             listapesate.clear()
 
-            we.forEach {
+
+            weights.forEach {
                 listapesate.add(it)
             }
 
@@ -180,6 +180,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                                 val kg: String = getString(R.string.kg)
                                                 val peso: String = str
                                                 val message2: String = "$messaggiosalvato2 $peso $kg"
+                                                if(homeViewModel.thisUser.value?.objective != null  && homeViewModel.weights.value?.size!! > 1) {
+                                                    homeViewModel.changePosition(peso.toFloat())
+                                                }
                                                 DbManager.createWeight(requireContext(), peso, System.currentTimeMillis())
 
                                                 MaterialAlertDialogBuilder(requireContext())

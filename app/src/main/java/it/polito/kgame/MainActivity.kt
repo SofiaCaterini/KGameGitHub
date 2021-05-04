@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
                 .setMessage("Sei sicuro di voler cancellare il tuo account?")
                 .setPositiveButton("Sì") { _, _ ->
                     //db operations
-                    //DbManager.deleteUser()
+                    DbManager.deleteUser(this)
                     val intent= Intent(this, LogInActivity::class.java)
                     startActivity(intent)
                     finish()
@@ -122,7 +122,7 @@ class MainActivity : AppCompatActivity() {
                 .setPositiveButton("Sì") { _, _ ->
                     //db operations
 
-                    //DbManager.deleteProfileinFamily()
+                    DbManager.deleteProfileInFamily(this)
 
                     val intent = Intent(this, SetUpProfileActivity::class.java)
                     startActivity(intent)

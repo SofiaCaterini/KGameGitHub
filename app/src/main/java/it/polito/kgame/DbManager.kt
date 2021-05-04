@@ -45,6 +45,7 @@ object DbManager {
     const val PAWN_CODE = "pawnCode"
     const val OBJ = "objective"
     const val POSITION = "position"
+    const val STREAK = "goodWeightStreak"
         //family
     const val FAM_NAME = "familyName"
         //match
@@ -301,6 +302,8 @@ object DbManager {
         if(user.familyCode != null) data[FAM_CODE] = user.familyCode!!
         if(user.objective != null) data[OBJ] = user.objective!!
         if(user.position != null) data[POSITION] = user.position!!
+        if(user.goodWeightStreak != null) data[STREAK] = user.goodWeightStreak!!
+
 
 
         if (fbUser != null) {
@@ -335,48 +338,79 @@ object DbManager {
         }
     }
 
-    fun deleteProfileinFamily(context: Context?, user: User){
+    fun deleteProfileInFamily(context: Context?){
         if (fbUser != null) {
-            user.familyCode?.let { famCode ->
-                db.collection(FAMILIES)
-                        .document(famCode)
-                        .collection(FAM_COMPS)
-                        .document(fbUser.email)
-                        .delete()
+            var user = User()
+            GlobalScope.launch {
+                user = getUser(fbUser.email)!!
+            }.invokeOnCompletion {
+                    val data : MutableMap<String, Any?> = mutableMapOf()
+                    data[FAM_CODE] = null
+
+                    db.collection(ACCOUNTS)         //update in accounts
+                            .document(fbUser.email)
+                            .update(data)
+
+                    user.familyCode?.let { famCode ->          //update in families
+                        db.collection(FAMILIES)
+                                .document(famCode)
+                                .collection(FAM_COMPS)
+                                .document(fbUser.email)
+                                .delete()
+                                .addOnSuccessListener {
+                                    if(context != null) Toast.makeText(
+                                            context,
+                                            R.string.succ_delete,
+                                            Toast.LENGTH_SHORT
+                                    ).show()
+                                    println("update success")
+                                }
+                                .addOnFailureListener {
+                                    if(context != null) Toast.makeText(
+                                            context,
+                                            R.string.fail_delete,
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                    println("update epic fail")
+                                }
+                    }
             }
         }
     }
 
-    fun deleteUser(context: Context?, user: User){
+    fun deleteUser(context: Context?){
         if (fbUser != null) {
-            db.collection(ACCOUNTS)         //update in accounts
+            var user = User()
+            GlobalScope.launch { user = getUser(fbUser.email)!! }
+                .invokeOnCompletion {
+                    //update in families
+                db.collection(FAMILIES)
+                    .document(user.familyCode!!)
+                    .collection(FAM_COMPS)
+                    .document(user.mail!!)
+                    .delete()
+
+                db.collection(ACCOUNTS)         //update in accounts
                     .document(fbUser.email)
                     .delete()
-                    .addOnSuccessListener {
-                        if(context != null) Toast.makeText(
-                                context,
-                                R.string.succ_update,
-                                Toast.LENGTH_SHORT
-                        ).show()
-                        println("update success")
-                    }
-                    .addOnFailureListener {
-                        if(context != null) Toast.makeText(
-                                context,
-                                R.string.fail_update,
-                                Toast.LENGTH_SHORT
-                        ).show();
-                        println("update epic fail")
-                    }
-
-            user.familyCode?.let { famCode ->          //update in families
-                db.collection(FAMILIES)
-                        .document(famCode)
-                        .collection(FAM_COMPS)
-                        .document(fbUser.email)
-                        .delete()
+//                    .addOnSuccessListener {
+//                        if(context != null) Toast.makeText(
+//                                context,
+//                                R.string.succ_delete,
+//                                Toast.LENGTH_SHORT
+//                        ).show()
+//                        println("update success")
+//                    }
+//                    .addOnFailureListener {
+//                        if(context != null) Toast.makeText(
+//                                context,
+//                                R.string.fail_delete,
+//                                Toast.LENGTH_SHORT
+//                        ).show();
+//                        println("update epic fail")
+//                    }
+                fbUser.delete()
             }
-
         }
     }
 

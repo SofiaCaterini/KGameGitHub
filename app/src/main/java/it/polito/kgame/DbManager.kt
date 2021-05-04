@@ -44,6 +44,7 @@ object DbManager {
     const val PROF_PIC = "profileImg"
     const val PAWN_CODE = "pawnCode"
     const val OBJ = "objective"
+    const val POSITION = "position"
         //family
     const val FAM_NAME = "familyName"
         //match
@@ -72,8 +73,9 @@ object DbManager {
 
     fun registerUser(nickname : String, mail : String) {
 
-        val data : MutableMap<String,String> = mutableMapOf()
+        val data : MutableMap<String,Any> = mutableMapOf()
         data[NICKNAME] = nickname
+        data[POSITION] = 0
 
         db.collection(ACCOUNTS)
                 .document(mail)
@@ -298,6 +300,7 @@ object DbManager {
         if(user.profileImg != null) data[PROF_PIC] = user.profileImg!!
         if(user.familyCode != null) data[FAM_CODE] = user.familyCode!!
         if(user.objective != null) data[OBJ] = user.objective!!
+        if(user.position != null) data[POSITION] = user.position!!
 
 
         if (fbUser != null) {
@@ -327,6 +330,51 @@ object DbManager {
                     .collection(FAM_COMPS)
                     .document(fbUser.email)
                     .update(data as Map<String, Any>)
+            }
+
+        }
+    }
+
+    fun deleteProfileinFamily(context: Context?, user: User){
+        if (fbUser != null) {
+            user.familyCode?.let { famCode ->
+                db.collection(FAMILIES)
+                        .document(famCode)
+                        .collection(FAM_COMPS)
+                        .document(fbUser.email)
+                        .delete()
+            }
+        }
+    }
+
+    fun deleteUser(context: Context?, user: User){
+        if (fbUser != null) {
+            db.collection(ACCOUNTS)         //update in accounts
+                    .document(fbUser.email)
+                    .delete()
+                    .addOnSuccessListener {
+                        if(context != null) Toast.makeText(
+                                context,
+                                R.string.succ_update,
+                                Toast.LENGTH_SHORT
+                        ).show()
+                        println("update success")
+                    }
+                    .addOnFailureListener {
+                        if(context != null) Toast.makeText(
+                                context,
+                                R.string.fail_update,
+                                Toast.LENGTH_SHORT
+                        ).show();
+                        println("update epic fail")
+                    }
+
+            user.familyCode?.let { famCode ->          //update in families
+                db.collection(FAMILIES)
+                        .document(famCode)
+                        .collection(FAM_COMPS)
+                        .document(fbUser.email)
+                        .delete()
             }
 
         }

@@ -7,7 +7,6 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.net.wifi.WifiManager
 import android.net.wifi.WifiNetworkSpecifier
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -76,12 +75,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                 }
         )
-        homeViewModel.We.observe(viewLifecycleOwner, Observer { we ->
-            println("WEIGHTS: $we")
-            println("nWeight: ${we.size}")
+        homeViewModel.weights.observe(viewLifecycleOwner, Observer { weights ->
+            println("WEIGHTS: $weights")
+            println("nWeight: ${weights.size}")
             listapesate.clear()
 
-            we.forEach {
+
+            weights.forEach {
                 listapesate.add(it)
             }
 
@@ -92,7 +92,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             if (dataultima.get(java.util.Calendar.DAY_OF_MONTH) == today.get(java.util.Calendar.DAY_OF_MONTH)
                     && dataultima.get(java.util.Calendar.MONTH) == today.get(java.util.Calendar.MONTH)
                     && dataultima.get(java.util.Calendar.YEAR) == today.get(java.util.Calendar.YEAR)) {
-                datacontroller = false
+                //datacontroller = false
             }
             println("data ultima pesata: ${dataultima.timeInMillis}")
             println("data oggi: ${today.timeInMillis}")
@@ -180,6 +180,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                                 val kg: String = getString(R.string.kg)
                                                 val peso: String = str
                                                 val message2: String = "$messaggiosalvato2 $peso $kg"
+
+                                                if(homeViewModel.thisUser.value?.objective != null  && homeViewModel.weights.value?.size!! > 0) {
+                                                    homeViewModel.changePosition(requireContext(), peso.toFloat())
+                                                }
+
                                                 DbManager.createWeight(requireContext(), peso, System.currentTimeMillis())
 
                                                 MaterialAlertDialogBuilder(requireContext())

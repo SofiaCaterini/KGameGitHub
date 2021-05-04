@@ -1,7 +1,9 @@
 package it.polito.kgame
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
@@ -18,9 +20,21 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 
 
 class LogInActivity : AppCompatActivity() {
+    lateinit var sharedPreferences: SharedPreferences
+    var isRemembered = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
+
+        sharedPreferences = getSharedPreferences("SHARED_PREF", Context.MODE_PRIVATE)
+
+        isRemembered = sharedPreferences.getBoolean("CHECKBOX", false)
+
+        if(isRemembered){
+            val intent= Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         val view: View = findViewById(R.id.sfondologin)
         view.setOnClickListener { hideKeyboard(this@LogInActivity) }
@@ -46,12 +60,17 @@ class LogInActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                     ).show()
 
-
-
                 }
                 else -> {
                     val email: String = et_login_email.text.toString().trim { it <= ' ' }
                     val password: String = et_login_password.text.toString().trim { it <= ' ' }
+                    val checked: Boolean = checkBox.isChecked
+
+                    val editor: SharedPreferences.Editor = sharedPreferences.edit()
+                    editor.putString("EMAIL", email)
+                    editor.putString("PASSWORD", password)
+                    editor.putBoolean("CHECKBOX",checked)
+                    editor.apply()
 
                     FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener { task ->

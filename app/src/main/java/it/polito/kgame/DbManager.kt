@@ -300,6 +300,7 @@ object DbManager {
         if(user.profileImg != null) data[PROF_PIC] = user.profileImg!!
         if(user.familyCode != null) data[FAM_CODE] = user.familyCode!!
         if(user.objective != null) data[OBJ] = user.objective!!
+        if(user.position != null) data[POSITION] = user.position!!
 
 
         if (fbUser != null) {

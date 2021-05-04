@@ -1,6 +1,7 @@
 package it.polito.kgame.ui.home
 
 import android.content.ContentValues
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
@@ -134,14 +135,18 @@ class HomeViewModel : ViewModel() {
                 }
         }
 
-        fun changePosition(actualWeight: Float) {
+        fun changePosition(context:Context, actualWeight: Float) {
+                println("cazzata qualsiasi1")
                 var x = 0
                 if((_thisUser.value?.objective!! - actualWeight).absoluteValue < (_thisUser.value?.objective!! - _weights.value?.get(_weights.value?.size!! - 2)?.peso!!).absoluteValue) x++
                 else x--
-                println("valore -1 " + _weights.value?.get(_weights.value?.size!! - 1) + ";  valore -2 " + _weights.value?.get(_weights.value?.size!! - 2) + "; x" + x)
+                println("cazzata qualsiasi2")
+                println("valore -2 " + _weights.value?.get(_weights.value?.size!! - 2))
+                println("valore -1 " + _weights.value?.get(_weights.value?.size!! - 1))
+
                 _thisUser.value?.position = _thisUser.value?.position!! + x
-                println("this user" +_thisUser.value?.position + " fattarelli " +_thisUser.value?.position!! +" / "+ x)
-                DbManager.updateUser(null,_thisUser.value!!)
+                println("this user " +_thisUser.value + " fattarelli " +_thisUser.value?.position!! +" / "+ x)
+                DbManager.updateUser(context,_thisUser.value!!)
         }
 
         private val _items= mutableListOf(

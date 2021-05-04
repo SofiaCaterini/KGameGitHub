@@ -4,19 +4,21 @@
     <item
         android:id="@+id/action_deleteProfile"
         android:icon="@android:drawable/ic_menu_delete"
+        android:onClick="DeleteAccount"
         android:orderInCategory="100"
         android:title="Elimina profilo"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_family"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:onClick="FamilyOut"
         android:orderInCategory="100"
         android:title="Esci dalla famiglia"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_logout"
         android:icon="@drawable/logout"
-        android:onClick="doThis"
+        android:onClick="LogOut"
         android:orderInCategory="100"
         android:title="Log out"
         app:showAsAction="never" />

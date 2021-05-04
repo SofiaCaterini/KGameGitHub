@@ -12,14 +12,19 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
+import it.polito.kgame.ui.home.HomeViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_calendar.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -66,21 +71,69 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main_activity, menu)
-        /*menu.findItem(R.id.action_logout).setOnMenuItemClickListener {
 
-        }*/
         return true
     }
 
-    fun doThis(item: MenuItem?) {
+    fun LogOut(item: MenuItem?) {
         println("Hai cliccato")
-        val editor: SharedPreferences.Editor = preferences.edit()
-        editor.clear()
-        editor.apply()
+        MaterialAlertDialogBuilder(this)
+                .setTitle("Logout")
+                .setMessage("Sei sicuro di voler effettuare il logout?")
+                .setPositiveButton("Sì") { _, _ ->
+                    val editor: SharedPreferences.Editor = preferences.edit()
+                    editor.clear()
+                    editor.apply()
 
-        val intent= Intent(this, LogInActivity::class.java)
-        startActivity(intent)
-        finish()
+                    val intent = Intent(this, LogInActivity::class.java)
+                    startActivity(intent)
+                    finish()
+
+                }
+                .setNegativeButton("No"){  _, _ ->
+
+                }
+                .show()
+
+    }
+
+    fun DeleteAccount(item: MenuItem?){
+        MaterialAlertDialogBuilder(this)
+                .setTitle("Cancella account")
+                .setMessage("Sei sicuro di voler cancellare il tuo account?")
+                .setPositiveButton("Sì") { _, _ ->
+                    //db operations
+                    //DbManager.deleteUser()
+                    val intent= Intent(this, LogInActivity::class.java)
+                    startActivity(intent)
+                    finish()
+
+                }
+                .setNegativeButton("No"){  _, _ ->
+
+                }
+                .show()
+    }
+
+    fun FamilyOut(item: MenuItem?){
+        MaterialAlertDialogBuilder(this)
+                .setTitle("Esci dalla famiglia")
+                .setMessage("Sei sicuro di voler uscire dalla tua famiglia?")
+                .setPositiveButton("Sì") { _, _ ->
+                    //db operations
+
+                    //DbManager.deleteProfileinFamily()
+
+                    val intent = Intent(this, SetUpProfileActivity::class.java)
+                    startActivity(intent)
+                    finish()
+
+                }
+                .setNegativeButton("No"){  _, _ ->
+
+                }
+                .show()
+
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -335,6 +335,51 @@ object DbManager {
         }
     }
 
+    fun deleteProfileinFamily(context: Context?, user: User){
+        if (fbUser != null) {
+            user.familyCode?.let { famCode ->
+                db.collection(FAMILIES)
+                        .document(famCode)
+                        .collection(FAM_COMPS)
+                        .document(fbUser.email)
+                        .delete()
+            }
+        }
+    }
+
+    fun deleteUser(context: Context?, user: User){
+        if (fbUser != null) {
+            db.collection(ACCOUNTS)         //update in accounts
+                    .document(fbUser.email)
+                    .delete()
+                    .addOnSuccessListener {
+                        if(context != null) Toast.makeText(
+                                context,
+                                R.string.succ_update,
+                                Toast.LENGTH_SHORT
+                        ).show()
+                        println("update success")
+                    }
+                    .addOnFailureListener {
+                        if(context != null) Toast.makeText(
+                                context,
+                                R.string.fail_update,
+                                Toast.LENGTH_SHORT
+                        ).show();
+                        println("update epic fail")
+                    }
+
+            user.familyCode?.let { famCode ->          //update in families
+                db.collection(FAMILIES)
+                        .document(famCode)
+                        .collection(FAM_COMPS)
+                        .document(fbUser.email)
+                        .delete()
+            }
+
+        }
+    }
+
     fun uploadProfileImg(context: Context, imageUri : Uri?) {
         fun getFileExtension(uri: Uri): String? {
             val cR: ContentResolver = context.contentResolver

@@ -104,6 +104,11 @@ class MainActivity : AppCompatActivity() {
                 .setPositiveButton("Sì") { _, _ ->
                     //db operations
                     DbManager.deleteUser(this)
+
+                    val editor: SharedPreferences.Editor = preferences.edit()
+                    editor.clear()
+                    editor.apply()
+
                     val intent= Intent(this, LogInActivity::class.java)
                     startActivity(intent)
                     finish()

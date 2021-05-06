@@ -39,6 +39,7 @@ object DbManager {
 
     //database KEYS
         //account
+    const val MAIL = "mail"
     const val NICKNAME = "username"
     const val FAM_CODE = "familyCode"
     const val PROF_PIC = "profileImg"
@@ -75,6 +76,7 @@ object DbManager {
     fun registerUser(nickname : String, mail : String) {
 
         val data : MutableMap<String,Any> = mutableMapOf()
+        data[MAIL] = mail
         data[NICKNAME] = nickname
         data[POSITION] = 0
 

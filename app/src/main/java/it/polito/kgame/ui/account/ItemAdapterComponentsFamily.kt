@@ -21,7 +21,7 @@ class ItemAdapterComponentsFamily() : RecyclerView.Adapter<ItemAdapterComponents
 
         fun bind(item: User) {
             nome.text = item.username
-            Picasso.get().load(item.profileImg).into(imgprofilo)
+            Picasso.get().load(item.profileImg).fit().into(imgprofilo)
             //imgprofilo.setImageResource(R.drawable.lion)
         }
         fun unbind(){

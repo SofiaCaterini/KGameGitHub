@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/profilePicBox"
-        android:layout_width="149dp"
-        android:layout_height="134dp"
+        android:layout_width="131dp"
+        android:layout_height="131dp"
         android:background="#673AB7"
         android:contentDescription="TODO"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -24,7 +24,7 @@
 
     <ImageView
         android:id="@+id/imgView_profilePic"
-        android:layout_width="127dp"
+        android:layout_width="115dp"
         android:layout_height="115dp"
         app:layout_constraintBottom_toBottomOf="@+id/profilePicBox"
         app:layout_constraintEnd_toEndOf="@+id/profilePicBox"

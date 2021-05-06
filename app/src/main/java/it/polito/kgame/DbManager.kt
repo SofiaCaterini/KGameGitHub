@@ -315,6 +315,18 @@ object DbManager {
         }
     }
 
+    fun updateFamily(context: Context?, family: Family) {
+        val data : MutableMap<String, Any> = mutableMapOf()
+        if(family.name != null) data[FAM_NAME] = family.name!!
+
+        family.code?.let { famCode ->          //update in families
+            db.collection(FAMILIES)
+                    .document(famCode)
+                    .update(data as Map<String, Any>)
+        }
+
+    }
+
     fun deleteProfileInFamily(context: Context?){
         if (fbUser != null) {
             var user = User()

@@ -73,7 +73,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                     println("2COPIARE: " + layout.gameBoard.width + "/"+ layout.gameBoard.height)// = ViewGroup.LayoutParams()
 
-                    rvhome.layoutManager= LinearLayoutManager(requireContext())
+                    rvhome.layoutManager = LinearLayoutManager(requireContext())
                     rvhome.adapter = adapter
 
 
@@ -83,7 +83,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     val header = requireActivity().findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
                     header.findViewById<TextView>(R.id.navHeadNickname)?.text = homeViewModel.thisUser.value?.username
                     header.findViewById<TextView>(R.id.navHeadFamilyName)?.text = homeViewModel.thisUsersFam.value?.name
-                    header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(homeViewModel.thisUser.value?.profileImg).into(it)}
+                    header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(homeViewModel.thisUser.value?.profileImg).fit().into(it)}
                 }
 
 

@@ -57,11 +57,21 @@ class RegisterActivity : AppCompatActivity() {
                 }
 
                 TextUtils.isEmpty(et_register_password2.text.toString().trim { it <= ' ' }) -> {
+
                     Toast.makeText(
                             this@RegisterActivity,
                             R.string.req_pw2,
                             Toast.LENGTH_SHORT
                     ).show()
+                }
+
+                !(et_register_password.text.toString().equals(et_register_password2.text.toString())) -> {
+                    Toast.makeText(
+                            this@RegisterActivity,
+                            "Inserisci password uguali",
+                            Toast.LENGTH_SHORT
+                    ).show()
+
                 }
 
                 //dati ok

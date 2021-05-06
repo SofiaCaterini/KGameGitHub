@@ -105,12 +105,31 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
+            <View
+                android:id="@+id/divider5"
+                android:layout_width="330dp"
+                android:layout_height="7dp"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:backgroundTint="#FDFCFC"
+                android:foregroundTint="#FFFEFE" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvprofile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textAlignment="center" />
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                android:textAlignment="center">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <View
+                android:id="@+id/divider6"
+                android:layout_width="330dp"
+                android:layout_height="7dp"
+                android:background="@color/white" />
 
         </LinearLayout>
 

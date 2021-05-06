@@ -12,6 +12,7 @@ import it.polito.kgame.*
 import it.polito.kgame.R
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
+import kotlin.math.ceil
 
 class HomeViewModel : ViewModel() {
         private var weightListener: ListenerRegistration? = null
@@ -137,9 +138,19 @@ class HomeViewModel : ViewModel() {
 
         fun changePosition(context:Context, actualWeight: Float) {
                 println("cazzata qualsiasi1")
+                val bonusStreaks = arrayListOf(5,10,15,20,30) //if you do a streak of these length you will a bonus step  //5.1 10.1 15.2 20.2 30.3
                 var x = 0
-                if((_thisUser.value?.objective!! - actualWeight).absoluteValue < (_thisUser.value?.objective!! - _weights.value?.get(_weights.value?.size!! - 2)?.peso!!).absoluteValue) x++
-                else x--
+                if((_thisUser.value?.objective!! - actualWeight).absoluteValue <= (_thisUser.value?.objective!! - _weights.value?.get(_weights.value?.size!! - 2)?.peso!!).absoluteValue) {
+                        x++
+                        _thisUser.value?.goodWeightStreak = _thisUser.value?.goodWeightStreak!! + 1
+                }
+                else {
+                        x--
+                        _thisUser.value?.goodWeightStreak = 0
+                }
+                if(bonusStreaks.contains(_thisUser.value?.goodWeightStreak)) {
+                        x += (_thisUser.value?.goodWeightStreak!!-1/ 10) + 1 //the value is rounded by excess (5.1 10.1 15.2 20.2 30.3)
+                }
                 println("cazzata qualsiasi2")
                 println("valore -2 " + _weights.value?.get(_weights.value?.size!! - 2))
                 println("valore -1 " + _weights.value?.get(_weights.value?.size!! - 1))

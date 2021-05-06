@@ -153,6 +153,9 @@
         <string name="succ_update">Dati aggiornati correttamente</string>
         <string name="fail_update">I dati non sono stati aggiornati correttamente</string>
 
+        <string name="succ_delete">Operazione svolta correttamente</string>
+        <string name="fail_delete">L\'operazione non è svolta correttamente</string>
+
         <string name="req_doc">Errore: il documento non esiste.</string>
         <string name="succ_newPawn">Pedina aggiornata</string>
         <string name="fail_newPawn">La pedina non è stata aggiornata</string>

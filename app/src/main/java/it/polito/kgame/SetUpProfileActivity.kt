@@ -12,10 +12,14 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_set_up_profile.*
 import kotlinx.android.synthetic.main.fragment_account.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class SetUpProfileActivity : AppCompatActivity() {
@@ -30,23 +34,57 @@ class SetUpProfileActivity : AppCompatActivity() {
 
         val view: View = findViewById(R.id.sfondoset)
 
-
         view.setOnClickListener { hideKeyboard(this@SetUpProfileActivity) }
 
+        edit_family_setup.hint = "Nome famiglia"
+        et_familyCode.hint = "Inserisci codice"
         profilePicBox.setOnClickListener {
             openGalleryForImage()
         }
 
         but_createFamily.setOnClickListener {
-            DbManager.setUpUserProfile(profilePic, null, "AGGIUNGERE CAMPO NOME FAMIGLIA", this@SetUpProfileActivity)
+            if (edit_family_setup.text.isNullOrBlank()){
+                edit_family_setup.error = "Inserisci nome famiglia!"
+            } else{
+                DbManager.setUpUserProfile(profilePic, null, edit_family_setup.text.toString(), this@SetUpProfileActivity)
+                Toast.makeText(
+                        this, "Codice famiglia creato con successo",
+                        Toast.LENGTH_SHORT
+                ).show()
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags =
+                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
+            }
         }
 
         but_joinFamily.setOnClickListener {
+
             if(!et_familyCode.text.isNullOrBlank()) {
-                DbManager.setUpUserProfile(profilePic, et_familyCode.text.toString(),"AGGIUNGERE CAMPO NOME FAMIGLIA",this@SetUpProfileActivity)
+                GlobalScope.launch {
+                    if (DbManager.getFamilyComps(et_familyCode.text.toString()).isNullOrEmpty()){
+                        //et_familyCode.error = "Inserisci un codice valido!"
+                        println("Aggiungi un codice valido")
+                    }else{
+                        DbManager.setUpUserProfile(profilePic, et_familyCode.text.toString(),null,this@SetUpProfileActivity)
+                        /*Toast.makeText(
+                                this@SetUpProfileActivity, "Ti sei unito correttamente alla famiglia",
+                                Toast.LENGTH_SHORT
+                        ).show()*/
+                        val intent = Intent(this@SetUpProfileActivity, MainActivity::class.java)
+                        intent.flags =
+                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+
+
             } else {
                 //ADD ERROR NOTE!!!
-                println("aggiungi un codice valido")
+                et_familyCode.error = "Inserisci un codice valido!"
+                println("Aggiungi un codice valido")
             }
         }
 

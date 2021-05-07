@@ -48,6 +48,8 @@ class CalendarViewModel : ViewModel() {
 
         viewModelScope.launch {
             appointmentListener = DbManager.getUserAppointmentColl()?.addSnapshotListener { value, error ->
+
+
                 if (error != null) {
                     Log.w(TAG, "Listen failed.", error)
                     return@addSnapshotListener
@@ -60,8 +62,13 @@ class CalendarViewModel : ViewModel() {
                 val apps = ArrayList<EventoInfo>()
                 val cals = ArrayList<Calendar>()
                 apps.clear()
+                cals.clear()
+                println("appointments prima: $apps")
+
                 for (doc in value!!) {
+                    println("doc in value appointments db")
                     if (doc!= null && doc.exists()) {
+                        println("Sì doc in appointments db")
                         doc.getString("titolo")?.let {
                             titoli.add(it)
                         }
@@ -85,10 +92,15 @@ class CalendarViewModel : ViewModel() {
                             apps.add(EventoInfo(titoli[i], cals[i], descrizioni[i], luoghi[i]))
                         }
 
-                    }
-                    _Appointments.value = apps
+                    }else{println("No doc in appointments db")}
 
-                }
+
+
+
+
+            }
+                println("appointments dopo: $apps")
+                _Appointments.value = apps
             }
         }
     }

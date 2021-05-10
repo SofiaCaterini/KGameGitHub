@@ -43,17 +43,19 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         val mImpegniDays: MutableList<EventDay> = ArrayList()
         val listaimpegni : MutableList<EventoInfo> = ArrayList()
-
+        mImpegniDays.clear()
+        listaimpegni.clear()
         rvdettagli.isVisible = false
         ante.isVisible=false
         ante.y = 0F
-
+        calendarView.setEvents(mImpegniDays)
         println("top: $ante.y")
         calendarViewModel.Appointments.observe(viewLifecycleOwner, Observer { appointment ->
             println("APPOINTMENTS: $appointment")
             println("napp: ${appointment.size}")
             mImpegniDays.clear()
             listaimpegni.clear()
+            calendarView.setEvents(mImpegniDays)
             appointment.forEach {
                 println("itInizio: $it")
                 var x = java.util.Calendar.getInstance()
@@ -244,13 +246,18 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                                 .setTitle("Elimina impegno")
                                 .setMessage("Sei sicuro di voler eliminare questo impegno?")
                                 .setPositiveButton("Si") { _, _ ->
+                                    ante.isVisible = false
                                     DbManager.deleteAppointment(I!!)
                                     adapter.deleteEvento(I!!)
-                                    ante.isVisible = false
+
+
                                     Toast.makeText(
                                             requireContext(), "Impegno eliminato correttamente ",
                                             Toast.LENGTH_SHORT
                                     ).show()
+
+
+
                                 }
                                 .setNegativeButton("No"){  _, _ ->
 

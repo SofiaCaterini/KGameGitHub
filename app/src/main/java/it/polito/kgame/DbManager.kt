@@ -27,8 +27,6 @@ object DbManager {
     /*
     This object Class contains FUNCTIONS to use with FireStore Database (db)
      */
-
-
     //database Collections
     const val ACCOUNTS = "Accounts"
     const val FAMILIES = "Families"
@@ -65,13 +63,11 @@ object DbManager {
 
 
 
-
-
     @SuppressLint("StaticFieldLeak")
     val db : FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private val fbAuth : FirebaseAuth = FirebaseAuth.getInstance()
-    private val fbUser : FirebaseUser? = fbAuth.currentUser
+    val fbUser : FirebaseUser? = fbAuth.currentUser
 
     fun registerUser(nickname : String, mail : String) {
 
@@ -116,10 +112,13 @@ object DbManager {
     private fun joinFamily(familyCode: String) {
         val data : MutableMap<String, Any> = mutableMapOf()
         data[FAM_CODE] = familyCode
-
+        var comps = mutableListOf<User>()
+        var user = User()
         GlobalScope.launch {
-            val comps = getFamilyComps(familyCode)
-            val user = getUser(fbUser?.email)
+            comps = getFamilyComps(familyCode)!!
+            user = getUser(fbUser?.email)!!
+
+        }.invokeOnCompletion {
             if (user != null && comps != null) {
                 user.pawnCode = comps.size
                 user.id = fbUser?.uid
@@ -132,33 +131,9 @@ object DbManager {
                         .document(fbUser.email)
                         .set(user)
             }
-
-
-//            getUserDoc()?.addSnapshotListener { usDoc, error ->
-//                if (error != null) {
-//                    println("ERRORREEEEEE")
-//                }
-//                if (usDoc != null && usDoc.exists()) {
-//                    if (fbUser != null) {
-//                        //mette l'utente in families/family components
-//                        usDoc.data?.let {
-//                            db.collection(FAMILIES)
-//                                .document(familyCode)
-//                                .collection(FAM_COMPS)
-//                                .document(fbUser.email)
-//                                .set(it)
-//                        }
-//                    }
-//                }
-//            }
         }
 
         if (fbUser != null) {
-//            db.collection(FAMILIES)
-//                .document(familyCode)
-//                .collection(FAM_COMPS)
-//                .document(fbUser.email)
-//                .set(empty)
 
             db.collection(ACCOUNTS)
                 .document(fbUser.email)
@@ -174,6 +149,7 @@ object DbManager {
 
         if (familyCode == null) {   //create family       
             createFamily(familyName)
+
         } else {              //join family
             joinFamily(familyCode)
         }
@@ -243,7 +219,6 @@ object DbManager {
     suspend fun getFamilyDoc(code: String) : DocumentReference? {
         return if (fbUser != null && fbUser.email != null) {
             withContext(Dispatchers.IO) {
-
                 db.collection(FAMILIES)
                     .document(code)
             }
@@ -338,6 +313,18 @@ object DbManager {
             }
 
         }
+    }
+
+    fun updateFamily(context: Context?, family: Family) {
+        val data : MutableMap<String, Any> = mutableMapOf()
+        if(family.name != null) data[FAM_NAME] = family.name!!
+
+        family.code?.let { famCode ->          //update in families
+            db.collection(FAMILIES)
+                    .document(famCode)
+                    .update(data as Map<String, Any>)
+        }
+
     }
 
     fun deleteProfileInFamily(context: Context?){

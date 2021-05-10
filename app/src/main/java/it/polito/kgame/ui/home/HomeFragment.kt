@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -22,9 +23,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.squareup.picasso.Picasso
+import com.synnapps.carouselview.CarouselView
+import com.synnapps.carouselview.ImageListener
 import it.polito.kgame.*
 import it.polito.kgame.ui.grow.noClicked
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.carousel_layout.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.coroutines.Dispatchers
@@ -42,13 +46,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     var pawnWidth : Int? = null
     private var pawnHeight : Int? = null
-
-
+    val sampleImages = arrayListOf<Int>(R.drawable.dog, R.drawable.lion)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val layout = requireActivity().findViewById<ConstraintLayout>(R.id.homeLayout)
 
-        println("COPIARE: " + layout.gameBoard.width + "/"+ layout.gameBoard.height)// = ViewGroup.LayoutParams()
+        println("COPIARE: " + layout.gameBoard.width + "/" + layout.gameBoard.height)// = ViewGroup.LayoutParams()
 
         pawnHeight=player1.layoutParams.height
         pawnWidth=player1.layoutParams.width
@@ -71,9 +74,22 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             setPositions(it)
                         }
 
-                    println("2COPIARE: " + layout.gameBoard.width + "/"+ layout.gameBoard.height)// = ViewGroup.LayoutParams()
+                    println("2COPIARE: " + layout.gameBoard.width + "/" + layout.gameBoard.height)// = ViewGroup.LayoutParams()
 
+                    rvhome.layoutManager = LinearLayoutManager(requireContext())
+                    rvhome.adapter = adapter
+
+
+                    familyName.text = value.name
+
+                    //inserimento dati utente nell'header
+                    val header = requireActivity().findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
+                    header.findViewById<TextView>(R.id.navHeadNickname)?.text = homeViewModel.thisUser.value?.username
+                    header.findViewById<TextView>(R.id.navHeadFamilyName)?.text = homeViewModel.thisUsersFam.value?.name
+                    header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(homeViewModel.thisUser.value?.profileImg).fit().into(it) }
                 }
+
+
         )
         homeViewModel.weights.observe(viewLifecycleOwner, Observer { weights ->
             println("WEIGHTS: $weights")
@@ -100,10 +116,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         })
 
-        rvhome.layoutManager= LinearLayoutManager(requireContext())
-        rvhome.adapter = adapter
 
-        homeViewModel.thisUsersFam.observe(viewLifecycleOwner, { fam ->
+
+        /*homeViewModel.thisUsersFam.observe(viewLifecycleOwner, { fam ->
             familyName.text = fam.name
 
             //inserimento dati utente nell'header
@@ -111,7 +126,27 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             header.findViewById<TextView>(R.id.navHeadNickname)?.text = homeViewModel.thisUser.value?.username
             header.findViewById<TextView>(R.id.navHeadFamilyName)?.text = homeViewModel.thisUsersFam.value?.name
             header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(homeViewModel.thisUser.value?.profileImg).into(it) }
-        })
+        })*/
+
+        //Carousel
+
+
+        var carouselView: CarouselView? = null
+        carouselView = requireActivity().findViewById(R.id.carouselView)
+        carouselView.setPageCount(sampleImages.size)
+        carouselView.setImageListener(imageListener)
+
+
+        regolamento.setOnClickListener {
+            carousel.isVisible = true
+            button.setOnClickListener {
+                carousel.isVisible = false
+            }
+        }
+
+
+
+        //Add weight
 
         homeAddWeight.setOnClickListener {
             if (datacontroller == false) {
@@ -181,7 +216,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                                 val peso: String = str
                                                 val message2: String = "$messaggiosalvato2 $peso $kg"
 
-                                                if(homeViewModel.thisUser.value?.objective != null  && homeViewModel.weights.value?.size!! > 0) {
+                                                if (homeViewModel.thisUser.value?.objective != null && homeViewModel.weights.value?.size!! > 0) {
                                                     homeViewModel.changePosition(requireContext(), peso.toFloat())
                                                 }
 
@@ -293,7 +328,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         println(" layout " + layout)
         println(" gameBoard " + layout.gameBoard)
 
-        val map = mutableMapOf<Int,Int>()
+        val map = mutableMapOf<Int, Int>()
         list.forEach { u -> val num = list.count { x -> x.position == u.position }
             map[u.position!!] = num
         }
@@ -552,4 +587,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         return Pair(x, y)
     }
+
+    var imageListener = ImageListener { position, imageView -> imageView.setImageResource(sampleImages.get(position)) }
+
 }

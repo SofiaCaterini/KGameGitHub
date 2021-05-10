@@ -21,6 +21,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -38,6 +39,7 @@ import it.polito.kgame.Pedina
 
 import it.polito.kgame.R
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_set_up_profile.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.app_bar_main.view.*
 import kotlinx.android.synthetic.main.fragment_account.*
@@ -63,7 +65,8 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
             println("QUIIII: $user")
 
             //read profile pic
-            Picasso.get().load(user.profileImg).into(imageView)
+            Picasso.get().load(user.profileImg).fit().into(imageView)
+            if ( user.profileImg != null) {imageView8.isVisible = false}
 
             //read pawnCode if exists or 0 and set pawn image
             if (user.pawnCode != null) {
@@ -77,7 +80,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
             //inserimento dati utente nell'header, nel caso venissero aggiornati
             val header = requireActivity().findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
             header.findViewById<TextView>(R.id.navHeadNickname)?.text = viewModel.thisUser.value?.username
-            header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(viewModel.thisUser.value?.profileImg).into(it)  }
+            header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(viewModel.thisUser.value?.profileImg).fit().into(it)  }
 
             //avverti di aver caricato i dati, ora possono essere modificati
             viewCreated = true
@@ -89,8 +92,13 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                 if (!value.components.isNullOrEmpty())
                     value.components?.let { adapter.setData(it) }
 
+                edit_family.setText(value.name!!)
+                cod.text = value.code
                 rvprofile.layoutManager= LinearLayoutManager(requireContext())
                 rvprofile.adapter = adapter
+
+                val header = requireActivity().findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
+                header.findViewById<TextView>(R.id.navHeadFamilyName)?.text = viewModel.thisUsersFam.value?.name
             }
 
         )
@@ -156,6 +164,16 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
             }
         }
 
+        //family name management
+        edit_family.addTextChangedListener{
+            val imm = requireContext().getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+            if(imm.isAcceptingText) {
+                viewModel.changeFamilyName(edit_family.text.toString())
+                if (switch == 0) switch = 2
+                if (viewCreated) activateUpdateButton(switch ?: 1, null)
+            }
+        }
+
 
         requireActivity().discardUpdates.setOnClickListener {
             requireActivity().recreate()
@@ -178,7 +196,9 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         super.onActivityResult(requestCode, resultCode, data)
         val uri: Uri? = data?.data
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
-            imageView.setImageURI(uri) // handle chosen image
+            // handle chosen image
+            Picasso.get().load(uri).fit().into(imageView)
+            imageView8.isVisible = false
             //send acquired image to saveUpdates method
             viewModel.changeImg(uri.toString())
             if (switch == 1) switch = 2
@@ -230,6 +250,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                         arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                         REQUEST_CODE
                 )
+
             }
             return false
         }

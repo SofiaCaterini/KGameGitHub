@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,25 +23,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/familyName"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.01999998" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/homeAddWeight"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:backgroundTint="#0C0C0C"
-            android:clickable="true"
-            android:foregroundGravity="fill_horizontal|center_vertical|clip_horizontal|center|center_horizontal|fill"
-            android:foregroundTint="#F1EEEE"
-            android:scaleType="center"
-            android:src="@drawable/plus"
-            app:backgroundTint="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <include
+            android:id="@+id/carousel"
+            layout="@layout/carousel_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="#F8F5F5"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gameBoard"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="@+id/gameBoard" />
 
         <TextView
             android:id="@+id/familyName"
@@ -84,55 +76,67 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.120000005" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/asap"
-            android:text="@string/leaderboard"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <LinearLayout
+            android:id="@+id/linearLayout4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/homeAddWeight"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/gameBoard">
 
-        <View
-            android:id="@+id/divider"
-            android:layout_width="330dp"
-            android:layout_height="7dp"
-            android:background="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3"
-            app:layout_constraintVertical_bias="1.0" />
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/homeAddWeight"
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:background="#000000"
+                android:backgroundTint="#FAF8F8"
+                android:backgroundTintMode="multiply"
+                android:clickable="true"
+                android:foregroundGravity="fill_horizontal|center_vertical|clip_horizontal|center|center_horizontal|fill"
+                android:foregroundTint="#F1EEEE"
+                android:scaleType="center"
+                android:src="@drawable/plus"
+                android:tint="#000000"
+                app:backgroundTint="@color/black"
+                app:fabSize="auto"
+                app:maxImageSize="56dp" />
 
-        <View
-            android:id="@+id/divider2"
-            android:layout_width="330dp"
-            android:layout_height="7dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.511"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView3"
-            app:layout_constraintVertical_bias="0.13999999" />
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/asap"
+                android:text="@string/leaderboard"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/provawifi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#F6F1F1"
-            android:textColor="#070707"
-            app:layout_constraintBottom_toBottomOf="@+id/homeAddWeight"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/gameBoard" />
+            <View
+                android:id="@+id/divider"
+                android:layout_width="330dp"
+                android:layout_height="7dp"
+                android:background="@color/white" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvhome"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="330dp"
+                android:layout_height="7dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/white" />
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/player1"
@@ -142,19 +146,6 @@
             app:srcCompat="@drawable/dog"
             tools:layout_editor_absoluteX="282dp"
             tools:layout_editor_absoluteY="45dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvhome"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingTop="50dp"
-            android:paddingBottom="50dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3"
-            app:layout_constraintVertical_bias="1.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

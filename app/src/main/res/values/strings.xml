@@ -140,7 +140,7 @@
         <string name="succ_login">Hai effettuato il login!</string>
 
         <!--Sign in-->
-        <string name="succ_signin">Ti sei registrato con successo!</string>
+        <string name="succ_signin">Conferma il tuo account! Ti abbiamo mandato una mail.</string>
         <string name="fail_signin">Non hai effettuato il login!</string>
 
         <!--Nickname update-->

@@ -129,6 +129,9 @@ class MainActivity : AppCompatActivity() {
 
                     DbManager.deleteProfileInFamily(this)
 
+                    val editor: SharedPreferences.Editor = preferences.edit()
+                    editor.clear()
+                    editor.apply()
                     val intent = Intent(this, SetUpProfileActivity::class.java)
                     startActivity(intent)
                     finish()

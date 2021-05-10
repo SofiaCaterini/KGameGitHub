@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_set_up_profile.*
 import kotlinx.android.synthetic.main.fragment_account.*
 import kotlinx.coroutines.GlobalScope
@@ -103,8 +104,7 @@ class SetUpProfileActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         val uri: Uri? = data?.data
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
-            imgView_profilePic.setImageURI(uri) // handle chosen image
-
+            Picasso.get().load(uri).fit().into(imgView_profilePic)
             //store acquired image
             profilePic = uri
         }

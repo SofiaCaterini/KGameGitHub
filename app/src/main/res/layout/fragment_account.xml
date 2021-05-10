@@ -24,13 +24,15 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="73dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/cambianickname"
                     android:layout_width="204dp"
-                    android:layout_height="34dp"
+                    android:layout_height="wrap_content"
                     android:fontFamily="@font/asap"
                     android:text="@string/cambia_nickname"
                     android:textAlignment="center"
@@ -46,7 +48,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_nickname"
                     android:layout_width="181dp"
-                    android:layout_height="59dp"
+                    android:layout_height="wrap_content"
                     android:backgroundTint="#FFFFFF"
                     android:drawableTint="#FFFFFF"
                     android:fontFamily="@font/asap"
@@ -63,13 +65,15 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/cambiaNomeFamiglia2"
                     android:layout_width="186dp"
-                    android:layout_height="75dp"
+                    android:layout_height="71dp"
                     android:layout_weight="1"
                     android:text="@string/cambia_nomeFamiglia"
                     android:textAlignment="center"
@@ -80,7 +84,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_family"
                     android:layout_width="174dp"
-                    android:layout_height="59dp"
+                    android:layout_height="wrap_content"
                     android:backgroundTint="#FFFFFF"
                     android:drawableTint="#FFFFFF"
                     android:fontFamily="@font/asap"
@@ -95,10 +99,57 @@
                 </com.google.android.material.textfield.TextInputEditText>
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/codice"
+                    android:layout_width="186dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Codice Famiglia"
+                    android:textAlignment="center"
+                    android:textColor="#F8F2F2"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/cod"
+                    android:layout_width="174dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="#FFFFFF"
+                    android:drawableTint="#FFFFFF"
+                    android:editable="false"
+                    android:fontFamily="@font/asap"
+                    android:foregroundTint="#FFFFFF"
+                    android:text="@string/family_name"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textIsSelectable="true"
+                    android:textSize="24sp"
+                    android:textStyle="bold">
+
+                </TextView>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tocca due volte per condividere"
+                android:textAlignment="textEnd"
+                android:textColor="#DCDAD7"
+                android:textStyle="bold|italic" />
+
             <TextView
                 android:id="@+id/cambiaNomeFamiglia"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:layout_marginTop="30dp"
                 android:text="@string/componenti"
                 android:textAlignment="center"
                 android:textColor="#F8F2F2"
@@ -129,6 +180,7 @@
                 android:id="@+id/divider6"
                 android:layout_width="330dp"
                 android:layout_height="7dp"
+                android:layout_gravity="center"
                 android:background="@color/white" />
 
         </LinearLayout>
@@ -170,9 +222,19 @@
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.027"
+            app:layout_constraintVertical_bias="0.02"
             app:srcCompat="@android:drawable/gallery_thumb"
             app:tint="#AFAFAF" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="144dp"
+            android:layout_height="144dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+            app:layout_constraintEnd_toEndOf="@+id/imageView3"
+            app:layout_constraintStart_toStartOf="@+id/imageView3"
+            app:layout_constraintTop_toTopOf="@+id/imageView3"
+            app:srcCompat="@drawable/user_white" />
 
         <ImageView
             android:id="@+id/sx"
@@ -214,20 +276,10 @@
         </com.google.android.material.button.MaterialButton>
 
         <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="127dp"
-            android:layout_height="115dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-            app:layout_constraintEnd_toEndOf="@+id/imageView3"
-            app:layout_constraintStart_toStartOf="@+id/imageView3"
-            app:layout_constraintTop_toTopOf="@+id/imageView3"
-            app:srcCompat="@drawable/user_white" />
-
-        <ImageView
             android:id="@+id/imageView8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="100dp"
+            android:layout_marginStart="120dp"
             android:backgroundTint="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="@+id/imageView"
             app:layout_constraintStart_toStartOf="@+id/imageView"

@@ -27,8 +27,6 @@ object DbManager {
     /*
     This object Class contains FUNCTIONS to use with FireStore Database (db)
      */
-
-
     //database Collections
     const val ACCOUNTS = "Accounts"
     const val FAMILIES = "Families"
@@ -39,11 +37,14 @@ object DbManager {
 
     //database KEYS
         //account
+    const val MAIL = "mail"
     const val NICKNAME = "username"
     const val FAM_CODE = "familyCode"
     const val PROF_PIC = "profileImg"
     const val PAWN_CODE = "pawnCode"
     const val OBJ = "objective"
+    const val POSITION = "position"
+    const val STREAK = "goodWeightStreak"
         //family
     const val FAM_NAME = "familyName"
         //match
@@ -62,18 +63,18 @@ object DbManager {
 
 
 
-
-
     @SuppressLint("StaticFieldLeak")
     val db : FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private val fbAuth : FirebaseAuth = FirebaseAuth.getInstance()
-    private val fbUser : FirebaseUser? = fbAuth.currentUser
+    val fbUser : FirebaseUser? = fbAuth.currentUser
 
     fun registerUser(nickname : String, mail : String) {
 
-        val data : MutableMap<String,String> = mutableMapOf()
+        val data : MutableMap<String,Any> = mutableMapOf()
+        data[MAIL] = mail
         data[NICKNAME] = nickname
+        data[POSITION] = 0
 
         db.collection(ACCOUNTS)
                 .document(mail)
@@ -111,10 +112,13 @@ object DbManager {
     private fun joinFamily(familyCode: String) {
         val data : MutableMap<String, Any> = mutableMapOf()
         data[FAM_CODE] = familyCode
-
+        var comps = mutableListOf<User>()
+        var user = User()
         GlobalScope.launch {
-            val comps = getFamilyComps(familyCode)
-            val user = getUser(fbUser?.email)
+            comps = getFamilyComps(familyCode)!!
+            user = getUser(fbUser?.email)!!
+
+        }.invokeOnCompletion {
             if (user != null && comps != null) {
                 user.pawnCode = comps.size
                 user.id = fbUser?.uid
@@ -127,33 +131,9 @@ object DbManager {
                         .document(fbUser.email)
                         .set(user)
             }
-
-
-//            getUserDoc()?.addSnapshotListener { usDoc, error ->
-//                if (error != null) {
-//                    println("ERRORREEEEEE")
-//                }
-//                if (usDoc != null && usDoc.exists()) {
-//                    if (fbUser != null) {
-//                        //mette l'utente in families/family components
-//                        usDoc.data?.let {
-//                            db.collection(FAMILIES)
-//                                .document(familyCode)
-//                                .collection(FAM_COMPS)
-//                                .document(fbUser.email)
-//                                .set(it)
-//                        }
-//                    }
-//                }
-//            }
         }
 
         if (fbUser != null) {
-//            db.collection(FAMILIES)
-//                .document(familyCode)
-//                .collection(FAM_COMPS)
-//                .document(fbUser.email)
-//                .set(empty)
 
             db.collection(ACCOUNTS)
                 .document(fbUser.email)
@@ -169,6 +149,7 @@ object DbManager {
 
         if (familyCode == null) {   //create family       
             createFamily(familyName)
+
         } else {              //join family
             joinFamily(familyCode)
         }
@@ -238,7 +219,6 @@ object DbManager {
     suspend fun getFamilyDoc(code: String) : DocumentReference? {
         return if (fbUser != null && fbUser.email != null) {
             withContext(Dispatchers.IO) {
-
                 db.collection(FAMILIES)
                     .document(code)
             }
@@ -291,43 +271,16 @@ object DbManager {
 
 
 
-//        suspend fun getUser() : User? {                                                         //DEPRECATED
-//                                                                                                //DEPRECATED
-//            if (fbUser != null) {                                                               //DEPRECATED
-//                return withContext(Dispatchers.IO) {                                            //DEPRECATED
-//                    val user = db.collection(ACCOUNTS)                                          //DEPRECATED
-//                            .document(fbUser.email)                                             //DEPRECATED
-//                            .get()                                                              //DEPRECATED
-//                            .await()                                                            //DEPRECATED
-//                    //user.toObject<User>()                                                     //DEPRECATED
-//                    if (user[FAM_CODE]==null){                                                  //DEPRECATED
-//                                                                                                //DEPRECATED
-//                    }                                                                           //DEPRECATED
-//                    if (user.getLong(PAWN_CODE) in 0..2 &&                                      //DEPRECATED
-//                            user.getLong(PAWN_CODE)?.toInt() != null) {                         //DEPRECATED
-//                    }                                                                           //DEPRECATED
-//                    User(                                                                       //DEPRECATED
-//                            fbUser.uid,                                                         //DEPRECATED
-//                            fbUser.email,                                                       //DEPRECATED
-//                            user[NICKNAME].toString(),                                          //DEPRECATED
-//                            user[FAM_CODE]?.toString(),                                         //DEPRECATED
-//                            user[PAWN_CODE]?.toString()?.toInt(),                               //DEPRECATED
-//                            user[OBJ]?.toString()?.toDouble())                                  //DEPRECATED
-//                }                                                                               //DEPRECATED
-//            }                                                                                   //DEPRECATED
-//            else {                                                                              //DEPRECATED
-//                println("Error while retrieving user: DbManager.getuser()")                     //DEPRECATED
-//                return null                                                                     //DEPRECATED
-//            }                                                                                   //DEPRECATED
-//        }                                                                                       //DEPRECATED
-
-
     fun updateUser(context: Context?, user: User) {
         val data : MutableMap<String, Any> = mutableMapOf()
         if(user.username != null) data[NICKNAME] = user.username!!
         if(user.pawnCode != null) data[PAWN_CODE] = user.pawnCode!!
         if(user.profileImg != null) data[PROF_PIC] = user.profileImg!!
         if(user.familyCode != null) data[FAM_CODE] = user.familyCode!!
+        if(user.objective != null) data[OBJ] = user.objective!!
+        if(user.position != null) data[POSITION] = user.position!!
+        if(user.goodWeightStreak != null) data[STREAK] = user.goodWeightStreak!!
+
 
 
         if (fbUser != null) {
@@ -362,6 +315,94 @@ object DbManager {
         }
     }
 
+    fun updateFamily(context: Context?, family: Family) {
+        val data : MutableMap<String, Any> = mutableMapOf()
+        if(family.name != null) data[FAM_NAME] = family.name!!
+
+        family.code?.let { famCode ->          //update in families
+            db.collection(FAMILIES)
+                    .document(famCode)
+                    .update(data as Map<String, Any>)
+        }
+
+    }
+
+    fun deleteProfileInFamily(context: Context?){
+        if (fbUser != null) {
+            var user = User()
+            GlobalScope.launch {
+                user = getUser(fbUser.email)!!
+            }.invokeOnCompletion {
+                    val data : MutableMap<String, Any?> = mutableMapOf()
+                    data[FAM_CODE] = null
+
+                    db.collection(ACCOUNTS)         //update in accounts
+                            .document(fbUser.email)
+                            .update(data)
+
+                    user.familyCode?.let { famCode ->          //update in families
+                        db.collection(FAMILIES)
+                                .document(famCode)
+                                .collection(FAM_COMPS)
+                                .document(fbUser.email)
+                                .delete()
+                                .addOnSuccessListener {
+                                    if(context != null) Toast.makeText(
+                                            context,
+                                            R.string.succ_delete,
+                                            Toast.LENGTH_SHORT
+                                    ).show()
+                                    println("update success")
+                                }
+                                .addOnFailureListener {
+                                    if(context != null) Toast.makeText(
+                                            context,
+                                            R.string.fail_delete,
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                    println("update epic fail")
+                                }
+                    }
+            }
+        }
+    }
+
+    fun deleteUser(context: Context?){
+        if (fbUser != null) {
+            var user = User()
+            GlobalScope.launch { user = getUser(fbUser.email)!! }
+                .invokeOnCompletion {
+                    //update in families
+                db.collection(FAMILIES)
+                    .document(user.familyCode!!)
+                    .collection(FAM_COMPS)
+                    .document(user.mail!!)
+                    .delete()
+
+                db.collection(ACCOUNTS)         //update in accounts
+                    .document(fbUser.email)
+                    .delete()
+//                    .addOnSuccessListener {
+//                        if(context != null) Toast.makeText(
+//                                context,
+//                                R.string.succ_delete,
+//                                Toast.LENGTH_SHORT
+//                        ).show()
+//                        println("update success")
+//                    }
+//                    .addOnFailureListener {
+//                        if(context != null) Toast.makeText(
+//                                context,
+//                                R.string.fail_delete,
+//                                Toast.LENGTH_SHORT
+//                        ).show();
+//                        println("update epic fail")
+//                    }
+                fbUser.delete()
+            }
+        }
+    }
+
     fun uploadProfileImg(context: Context, imageUri : Uri?) {
         fun getFileExtension(uri: Uri): String? {
             val cR: ContentResolver = context.contentResolver
@@ -384,7 +425,15 @@ object DbManager {
                             data[DbManager.PROF_PIC] = url.toString()
                             fbUser.let {
                                 if (it != null) {
-                                    db.collection(DbManager.ACCOUNTS)
+                                    GlobalScope.launch {
+                                        if (it != null) {
+                                            getUser(it.email)?.let { user ->
+                                                user.profileImg = url.toString()
+                                                updateUser(context, user) }
+                                        }
+                                    }
+                                }
+                                    /*db.collection(DbManager.ACCOUNTS)
                                             .document(it.email)
                                             .update(data as Map<String, Any>)
                                             .addOnSuccessListener {
@@ -394,7 +443,8 @@ object DbManager {
                                                                             Toast.LENGTH_SHORT
                                                                     ).show()
                                             }
-                                }
+
+                                }*/
                             }
 
                         }

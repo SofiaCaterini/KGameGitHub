@@ -1,6 +1,7 @@
 package it.polito.kgame.ui.home
 
 import android.content.ContentValues
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
@@ -10,6 +11,8 @@ import com.google.firebase.firestore.ktx.toObject
 import it.polito.kgame.*
 import it.polito.kgame.R
 import kotlinx.coroutines.launch
+import kotlin.math.absoluteValue
+import kotlin.math.ceil
 
 class HomeViewModel : ViewModel() {
         private var weightListener: ListenerRegistration? = null
@@ -28,9 +31,9 @@ class HomeViewModel : ViewModel() {
         val data : LiveData<List<User>>
                 get() = _data
 
-        private val _We = MutableLiveData<MutableList<PesoInfo>>()
-        val We : MutableLiveData<MutableList<PesoInfo>>
-                get() = _We
+        private val _weights = MutableLiveData<MutableList<PesoInfo>>()
+        val weights : MutableLiveData<MutableList<PesoInfo>>
+                get() = _weights
 
 
         init {
@@ -126,13 +129,36 @@ class HomeViewModel : ViewModel() {
                                                 }
 
                                         }
-                                        _We.value = sessioni
+                                        _weights.value = sessioni
 
                                 }
                         }
                 }
         }
 
+        fun changePosition(context:Context, actualWeight: Float) {
+                println("cazzata qualsiasi1")
+                val bonusStreaks = arrayListOf(5,10,15,20,30) //if you do a streak of these length you will a bonus step  //5.1 10.1 15.2 20.2 30.3
+                var x = 0
+                if((_thisUser.value?.objective!! - actualWeight).absoluteValue <= (_thisUser.value?.objective!! - _weights.value?.get(_weights.value?.size!! - 2)?.peso!!).absoluteValue) {
+                        x++
+                        _thisUser.value?.goodWeightStreak = _thisUser.value?.goodWeightStreak!! + 1
+                }
+                else {
+                        x--
+                        _thisUser.value?.goodWeightStreak = 0
+                }
+                if(bonusStreaks.contains(_thisUser.value?.goodWeightStreak)) {
+                        x += (_thisUser.value?.goodWeightStreak!!-1/ 10) + 1 //the value is rounded by excess (5.1 10.1 15.2 20.2 30.3)
+                }
+                println("cazzata qualsiasi2")
+                println("valore -2 " + _weights.value?.get(_weights.value?.size!! - 2))
+                println("valore -1 " + _weights.value?.get(_weights.value?.size!! - 1))
+
+                _thisUser.value?.position = _thisUser.value?.position!! + x
+                println("this user " +_thisUser.value + " fattarelli " +_thisUser.value?.position!! +" / "+ x)
+                DbManager.updateUser(context,_thisUser.value!!)
+        }
 
         private val _items= mutableListOf(
                 ItemUsers( 1, "Raff", R.drawable.dog),

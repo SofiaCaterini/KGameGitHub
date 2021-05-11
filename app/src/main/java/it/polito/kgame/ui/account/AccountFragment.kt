@@ -21,10 +21,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 
 
@@ -37,19 +39,23 @@ import it.polito.kgame.Pedina
 
 import it.polito.kgame.R
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_set_up_profile.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.app_bar_main.view.*
 import kotlinx.android.synthetic.main.fragment_account.*
+import kotlinx.android.synthetic.main.fragment_home.*
 
 
 class AccountFragment : Fragment(R.layout.fragment_account) {
-    private val adapter = ItemAdapterFamily()
+    private val adapter = ItemAdapterComponentsFamily()
     private val viewModel by activityViewModels<AccountViewModel>()
     //questo serve per la gallery
     private val REQUEST_CODE = 100
 
     private var pawnCode: Int = 0
     private var switch: Int? = null
+
+    private var viewCreated = false
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,7 +65,8 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
             println("QUIIII: $user")
 
             //read profile pic
-            Picasso.get().load(user.profileImg).into(imageView)
+            Picasso.get().load(user.profileImg).fit().into(imageView)
+            if ( user.profileImg != null) {imageView8.isVisible = false}
 
             //read pawnCode if exists or 0 and set pawn image
             if (user.pawnCode != null) {
@@ -73,11 +80,28 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
             //inserimento dati utente nell'header, nel caso venissero aggiornati
             val header = requireActivity().findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
             header.findViewById<TextView>(R.id.navHeadNickname)?.text = viewModel.thisUser.value?.username
-            header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(viewModel.thisUser.value?.profileImg).into(it)  }
+            header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(viewModel.thisUser.value?.profileImg).fit().into(it)  }
 
+            //avverti di aver caricato i dati, ora possono essere modificati
+            viewCreated = true
         })
 
 
+        viewModel.thisUsersFam.observe(viewLifecycleOwner, Observer
+            { value ->
+                if (!value.components.isNullOrEmpty())
+                    value.components?.let { adapter.setData(it) }
+
+                edit_family.setText(value.name!!)
+                cod.text = value.code
+                rvprofile.layoutManager= LinearLayoutManager(requireContext())
+                rvprofile.adapter = adapter
+
+                val header = requireActivity().findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
+                header.findViewById<TextView>(R.id.navHeadFamilyName)?.text = viewModel.thisUsersFam.value?.name
+            }
+
+        )
         //change pawn image
         sx.setOnClickListener {
             if (pawnCode <= 0) {
@@ -86,7 +110,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
             changePawnView()
             if (switch == 0) switch = 2
-            activateUpdateButton(switch ?: 1, null)
+            if (viewCreated) activateUpdateButton(switch ?: 1, null)
         }
 
         dx.setOnClickListener {
@@ -96,7 +120,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
             changePawnView()
             if (switch == 0) switch = 2
-            activateUpdateButton(switch ?: 1, null)
+            if (viewCreated) activateUpdateButton(switch ?: 1, null)
 
         }
 
@@ -105,9 +129,10 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_account)
 
         //i frammenti non sono lifecycleowner
-        viewModel.data.observe(viewLifecycleOwner, Observer { data -> adapter.setData(data) })
+        //viewModel.data.observe(viewLifecycleOwner, Observer { data -> adapter.setData(data) })
         val tView: View = requireActivity().toolbar
         val nView: View = requireActivity().nav_view
+
 
 
         //keyboard management
@@ -135,7 +160,17 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
             if(imm.isAcceptingText) {
                 viewModel.changeUsername(edit_nickname.text.toString())
                 if (switch == 0) switch = 2
-                activateUpdateButton(switch ?: 1, null)
+                if (viewCreated) activateUpdateButton(switch ?: 1, null)
+            }
+        }
+
+        //family name management
+        edit_family.addTextChangedListener{
+            val imm = requireContext().getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+            if(imm.isAcceptingText) {
+                viewModel.changeFamilyName(edit_family.text.toString())
+                if (switch == 0) switch = 2
+                if (viewCreated) activateUpdateButton(switch ?: 1, null)
             }
         }
 
@@ -143,8 +178,11 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         requireActivity().discardUpdates.setOnClickListener {
             requireActivity().recreate()
             viewModel.discardUpdates()
+            viewCreated = false
         }
     }
+
+
 
     // access to gallery
     private fun openGalleryForImage() {
@@ -158,7 +196,9 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         super.onActivityResult(requestCode, resultCode, data)
         val uri: Uri? = data?.data
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
-            imageView.setImageURI(uri) // handle chosen image
+            // handle chosen image
+            Picasso.get().load(uri).fit().into(imageView)
+            imageView8.isVisible = false
             //send acquired image to saveUpdates method
             viewModel.changeImg(uri.toString())
             if (switch == 1) switch = 2
@@ -210,6 +250,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                         arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                         REQUEST_CODE
                 )
+
             }
             return false
         }
@@ -251,10 +292,12 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                 uriBuffer= uri
                 requireActivity().saveUpdates.setOnClickListener {
                     DbManager.uploadProfileImg(requireContext(), uri)
+                    //viewModel.saveUpdates(requireContext())
                     Toast.makeText(requireContext(), "Stai salvando la nuova immagine profilo", Toast.LENGTH_SHORT).show()
                     requireActivity().saveUpdates.visibility = View.GONE
                     requireActivity().discardUpdates.visibility = View.GONE
                     switch=null
+                    viewCreated = false
                 }
             }
             1 -> {  //case where only pawn/nickname is getting uploaded
@@ -265,6 +308,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                         requireActivity().saveUpdates.visibility = View.GONE
                         requireActivity().discardUpdates.visibility = View.GONE
                         switch=null
+                        viewCreated = false
                     }
             }
             2 -> {  //case where both profile image and pawn/nickname are getting uploaded
@@ -275,6 +319,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                     requireActivity().saveUpdates.visibility = View.GONE
                     requireActivity().discardUpdates.visibility = View.GONE
                     switch=null
+                    viewCreated = false
                 }
             }
         }

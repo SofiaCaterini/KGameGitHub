@@ -20,13 +20,12 @@ import kotlinx.android.synthetic.main.fragment_account.*
 
 class RegisterActivity : AppCompatActivity() {
 
-    private lateinit var  auth: FirebaseAuth
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_register)
-        auth = FirebaseAuth.getInstance()
+
         val view: View = findViewById(R.id.sfondoreg)
 
         view.setOnClickListener { hideKeyboard(this@RegisterActivity) }
@@ -42,36 +41,26 @@ class RegisterActivity : AppCompatActivity() {
                 //errori vari  !!!AGGIUNGERE CONTROLLO CONFERMA PASSWORD UGUALE ALLA PW
                 TextUtils.isEmpty(et_register_email.text.toString().trim { it <= ' ' }) -> {
                     Toast.makeText(
-                            this@RegisterActivity,
-                            R.string.req_mail,
-                            Toast.LENGTH_SHORT
+                        this@RegisterActivity,
+                        R.string.req_mail,
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
 
                 TextUtils.isEmpty(et_register_password.text.toString().trim { it <= ' ' }) -> {
                     Toast.makeText(
-                            this@RegisterActivity,
-                            R.string.req_pw,
-                            Toast.LENGTH_SHORT
+                        this@RegisterActivity,
+                        R.string.req_pw,
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
 
                 TextUtils.isEmpty(et_register_password2.text.toString().trim { it <= ' ' }) -> {
-
                     Toast.makeText(
                             this@RegisterActivity,
                             R.string.req_pw2,
                             Toast.LENGTH_SHORT
                     ).show()
-                }
-
-                !(et_register_password.text.toString().equals(et_register_password2.text.toString())) -> {
-                    Toast.makeText(
-                            this@RegisterActivity,
-                            "Inserisci password uguali",
-                            Toast.LENGTH_SHORT
-                    ).show()
-
                 }
 
                 //dati ok
@@ -80,41 +69,37 @@ class RegisterActivity : AppCompatActivity() {
                     val password: String = et_register_password.text.toString().trim { it <= ' ' }
 
                     //crei utente
-                    auth.createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener { task ->
+                    FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener { task ->
 
-                                if (task.isSuccessful) {
-                                    //logIn
+                            if (task.isSuccessful) {
+                                //logIn
+                                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                                //registra utente in db: FirebaseFirestore
+                                DbManager.registerUser(et_nickame.text.toString(), et_register_email.text.toString() )
 
-                                    auth.signInWithEmailAndPassword(email, password)
-                                    //registra utente in db: FirebaseFirestore
-                                    DbManager.registerUser(et_nickame.text.toString(), et_register_email.text.toString() )
+                                Toast.makeText(
+                                        this@RegisterActivity,
+                                        R.string.succ_signin,
+                                        Toast.LENGTH_SHORT
+                                ).show()
 
-                                    Toast.makeText(
-                                            this@RegisterActivity,
-                                            R.string.succ_signin,
-                                            Toast.LENGTH_SHORT
-                                    ).show()
-
-                                    val user = auth.currentUser
-
-                                    user?.sendEmailVerification()
-                                            ?.addOnCompleteListener { task->
-
-                                                if(task.isSuccessful) {
-                                                    startActivity(Intent(this, LogInActivity::class.java))
-                                                    finish()
-                                                }
-                                            }
-
-                                } else {
-                                    Toast.makeText(
-                                            this@RegisterActivity,
-                                            task.exception!!.message.toString(),
-                                            Toast.LENGTH_SHORT
-                                    ).show()
-                                }
+                                val intent =
+                                        Intent(this@RegisterActivity, SetUpProfileActivity::class.java)
+                                intent.flags =
+                                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                /* intent.putExtra("user_id", firebaseUser.uid)
+                                 intent.putExtra("email_id", email)*/
+                                startActivity(intent)
+                                finish()
+                            } else {
+                                Toast.makeText(
+                                        this@RegisterActivity,
+                                        task.exception!!.message.toString(),
+                                        Toast.LENGTH_SHORT
+                                ).show()
                             }
+                        }
                 }
             }
         }
@@ -123,12 +108,9 @@ class RegisterActivity : AppCompatActivity() {
 
     fun hideKeyboard(context: Activity) {
         val inputMethodManager =
-                context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         if(context.currentFocus != null) {
             inputMethodManager.hideSoftInputFromWindow(context.currentFocus!!.windowToken, 0)
         }
     }
-
-
-
 }

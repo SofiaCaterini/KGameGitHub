@@ -102,7 +102,4 @@ dependencies {
     //Calendar
     implementation 'com.applandeo:material-calendar-view:1.9.0-rc03'
 
-    //Carousel
-    implementation 'com.synnapps:carouselview:0.1.4'
-
 }

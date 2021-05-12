@@ -31,7 +31,6 @@ object DbManager {
     const val ACCOUNTS = "Accounts"
     const val FAMILIES = "Families"
     const val FAM_COMPS = "Family Components"
-    const val MATCHES = "Matches"
     const val APPOINTMENTS = "Appointments"
     const val WEIGHTSESSIONS = "WeightSessions"
 
@@ -45,11 +44,15 @@ object DbManager {
     const val OBJ = "objective"
     const val POSITION = "position"
     const val STREAK = "goodWeightStreak"
+    const val INGAME = "inGame"
         //family
     const val FAM_NAME = "familyName"
         //match
-    const val MATCH_START = "matchStartDate"
-        //appointment
+    const val MATCH_START_DATE = "lastMatchMillis"
+    const val MATCH_STATE = "matchState"
+    const val PLAYERS_IN_GAME = "playersInGame"
+    const val LAST_WINNER = "lastWinner"
+    //appointment
     const val TITLE = "titolo"
     const val DESCRIPTION = "descrizione"
     const val CALENDAR = "calendar"
@@ -75,6 +78,7 @@ object DbManager {
         data[MAIL] = mail
         data[NICKNAME] = nickname
         data[POSITION] = 0
+        data[INGAME] = false
 
         db.collection(ACCOUNTS)
                 .document(mail)
@@ -86,8 +90,10 @@ object DbManager {
 
     private fun createFamily(familyName: String?) {
 
-        val data : MutableMap<String,String> = mutableMapOf()
+        val data : MutableMap<String,Any> = mutableMapOf()
         if(familyName != null) data[FAM_NAME] = familyName
+        data[MATCH_STATE] = "NONE"
+        data[PLAYERS_IN_GAME] = 0
 
         val code = randomCode()
         var codeIsGood = false
@@ -278,8 +284,9 @@ object DbManager {
         if(user.profileImg != null) data[PROF_PIC] = user.profileImg!!
         if(user.familyCode != null) data[FAM_CODE] = user.familyCode!!
         if(user.objective != null) data[OBJ] = user.objective!!
-        if(user.position != null) data[POSITION] = user.position!!
-        if(user.goodWeightStreak != null) data[STREAK] = user.goodWeightStreak!!
+        data[POSITION] = user.position
+        data[STREAK] = user.goodWeightStreak
+        data[INGAME] = user.inGame!!
 
 
 
@@ -318,6 +325,10 @@ object DbManager {
     fun updateFamily(context: Context?, family: Family) {
         val data : MutableMap<String, Any> = mutableMapOf()
         if(family.name != null) data[FAM_NAME] = family.name!!
+        if(family.lastMatchMillis != null) data[MATCH_START_DATE] = family.lastMatchMillis!!
+        data[MATCH_STATE] = family.matchState
+        data[PLAYERS_IN_GAME] = family.playersInGame
+        if(family.lastWinnerMail != null) data[LAST_WINNER] = family.lastWinnerMail!!
 
         family.code?.let { famCode ->          //update in families
             db.collection(FAMILIES)

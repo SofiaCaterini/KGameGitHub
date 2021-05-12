@@ -46,7 +46,8 @@ class HomeViewModel : ViewModel() {
                                 }
                                 if (value != null && value.exists()) {
                                         _thisUser.value = value.toObject<User>()!!
-                                        println("FAMMI SAPERE 1 " +_thisUser.value)
+                                        //_thisUser.value!!.inGame = value[DbManager.INGAME] as Boolean
+                                        println("FAMMI SAPERE 5 " +_thisUser.value + " / " + value[DbManager.INGAME])
                                         fillFamily()
                                 }
                         }
@@ -70,6 +71,11 @@ class HomeViewModel : ViewModel() {
                                                         value[DbManager.FAM_NAME] as String?
                                                 )
                                                 addComps()
+                                                _thisUsersFam.value?.lastMatchMillis = value[DbManager.MATCH_START_DATE] as Long?
+                                                if(value[DbManager.MATCH_STATE]!=null) _thisUsersFam.value?.matchState = value[DbManager.MATCH_STATE] as String
+                                                if(value[DbManager.PLAYERS_IN_GAME]!=null) _thisUsersFam.value?.playersInGame = value[DbManager.PLAYERS_IN_GAME].toString().toInt()
+                                                println("mocc a mammt: " + value[DbManager.PLAYERS_IN_GAME])
+                                                _thisUsersFam.value?.lastWinnerMail = value[DbManager.LAST_WINNER] as String?
                                                 println("capiamoci " + value)
                                                 println("FAMMI SAPERE 2 " +_thisUsersFam.value)
                                         }
@@ -83,8 +89,14 @@ class HomeViewModel : ViewModel() {
                         _thisUsersFam.value = Family(
                                 _thisUsersFam.value?.code,
                                 _thisUsersFam.value?.name,
-                                _thisUsersFam.value?.code?.let { DbManager.getFamilyComps(it) }
+                                _thisUsersFam.value?.code?.let { DbManager.getFamilyComps(it)},
+                                _thisUsersFam.value?.lastMatchMillis,
+                                _thisUsersFam.value?.matchState!!,
+                                _thisUsersFam.value?.playersInGame!!,
+                                _thisUsersFam.value?.lastWinnerMail
                         )
+
+                       // _thisUsersFam.value?.code?.let {_thisUsersFam.value?.components = DbManager.getFamilyComps(it)}
 
 //
 //                        _thisUsersFam.value?.components = _thisUsersFam.value?.code?.let {
@@ -158,6 +170,13 @@ class HomeViewModel : ViewModel() {
                 _thisUser.value?.position = _thisUser.value?.position!! + x
                 println("this user " +_thisUser.value + " fattarelli " +_thisUser.value?.position!! +" / "+ x)
                 DbManager.updateUser(context,_thisUser.value!!)
+        }
+
+        fun updateMatchState(context: Context) {
+                _thisUsersFam.value?.let { DbManager.updateFamily(context, it) }
+        }
+        fun updatePlayerState(context: Context) {
+                _thisUser.value?.let { DbManager.updateUser(context, it) }
         }
 
         private val _items= mutableListOf(

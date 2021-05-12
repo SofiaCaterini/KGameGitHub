@@ -1,11 +1,6 @@
 package it.polito.kgame.ui.account
 
-import android.app.Application
 import android.content.Context
-import android.graphics.drawable.Drawable
-import android.net.Uri
-import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,9 +13,7 @@ import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.firestore.ktx.toObject
 import it.polito.kgame.DbManager
 import it.polito.kgame.Family
-import it.polito.kgame.R
 import it.polito.kgame.User
-import kotlinx.android.synthetic.main.fragment_account.*
 import kotlinx.coroutines.launch
 
 class AccountViewModel : ViewModel() {
@@ -55,6 +48,7 @@ class AccountViewModel : ViewModel() {
                 }
                 if (value != null && value.exists()) {
                     _thisUser.value = value.toObject<User>()!!
+                    _thisUser.value!!.inGame = value[DbManager.INGAME] as Boolean
                     println("FAMMI SAPERE 1 " +_thisUser.value)
                     fillFamily()
                 }

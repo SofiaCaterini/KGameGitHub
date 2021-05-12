@@ -10,6 +10,7 @@ data class User(
     var pawnCode: Int? = null,
     var objective: Double? = null,
     var profileImg: String? = null,
-    var position: Int? = 0,
-    var goodWeightStreak: Int? = 0
+    var position: Int = 0,
+    var goodWeightStreak: Int = 0,
+    var inGame: Boolean = false
     )

@@ -126,7 +126,6 @@ class MainActivity : AppCompatActivity() {
                 .setMessage("Sei sicuro di voler uscire dalla tua famiglia?")
                 .setPositiveButton("Sì") { _, _ ->
                     //db operations
-
                     DbManager.deleteProfileInFamily(this)
 
                     val editor: SharedPreferences.Editor = preferences.edit()

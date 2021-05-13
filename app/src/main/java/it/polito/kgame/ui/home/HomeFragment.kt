@@ -66,7 +66,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val today : Calendar = Calendar.getInstance()
         //today.timeInMillis = System.currentTimeMillis()
         var dataultima : Calendar = Calendar.getInstance()
-        var datacontroller : Boolean? = null
+        var datacontroller : Boolean = true
 
         //Toolbar
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_home)
@@ -202,7 +202,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         }
                         .setNegativeButton(R.string.cancel) { _,_ -> }
                         .show()
-                weighting()
             }
             else {
                 joinMatch()
@@ -218,7 +217,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         }
                         .setNegativeButton(R.string.cancel) { _,_ -> }
                         .show()
-                weighting()
             }
             else {
                 startMatch()

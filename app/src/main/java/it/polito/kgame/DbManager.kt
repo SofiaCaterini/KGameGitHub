@@ -341,38 +341,47 @@ object DbManager {
     fun deleteProfileInFamily(context: Context?){
         if (fbUser != null) {
             var user = User()
-            GlobalScope.launch {
-                user = getUser(fbUser.email)!!
-            }.invokeOnCompletion {
+            GlobalScope.launch { user = getUser(fbUser.email)!! }
+                .invokeOnCompletion {
                     val data : MutableMap<String, Any?> = mutableMapOf()
                     data[FAM_CODE] = null
 
                     db.collection(ACCOUNTS)         //update in accounts
-                            .document(fbUser.email)
-                            .update(data)
+                        .document(fbUser.email)
+                        .update(data)
 
                     user.familyCode?.let { famCode ->          //update in families
                         db.collection(FAMILIES)
-                                .document(famCode)
-                                .collection(FAM_COMPS)
-                                .document(fbUser.email)
-                                .delete()
-                                .addOnSuccessListener {
-                                    if(context != null) Toast.makeText(
-                                            context,
-                                            R.string.succ_delete,
-                                            Toast.LENGTH_SHORT
-                                    ).show()
-                                    println("update success")
+                            .document(famCode)
+                            .collection(FAM_COMPS)
+                            .document(fbUser.email)
+                            .delete()
+                            .addOnSuccessListener {
+                                if(user.isInGame){
+                                    db.collection(FAMILIES)
+                                            .document(famCode)
+                                            .addSnapshotListener { value, _ ->
+                                                db.collection(FAMILIES)
+                                                        .document(famCode)
+                                                        .update(PLAYERS_IN_GAME, value?.get(PLAYERS_IN_GAME).toString().toInt() -1)
+                                            }
                                 }
-                                .addOnFailureListener {
-                                    if(context != null) Toast.makeText(
-                                            context,
-                                            R.string.fail_delete,
-                                            Toast.LENGTH_SHORT
-                                    ).show();
-                                    println("update epic fail")
-                                }
+
+                                if(context != null) Toast.makeText(
+                                        context,
+                                        R.string.succ_delete,
+                                        Toast.LENGTH_SHORT
+                                ).show()
+                                println("update success")
+                            }
+                            .addOnFailureListener {
+                                if(context != null) Toast.makeText(
+                                        context,
+                                        R.string.fail_delete,
+                                        Toast.LENGTH_SHORT
+                                ).show();
+                                println("update epic fail")
+                            }
                     }
             }
         }
@@ -384,11 +393,24 @@ object DbManager {
             GlobalScope.launch { user = getUser(fbUser.email)!! }
                 .invokeOnCompletion {
                     //update in families
-                db.collection(FAMILIES)
-                    .document(user.familyCode!!)
-                    .collection(FAM_COMPS)
-                    .document(user.mail!!)
-                    .delete()
+                    user.familyCode?.let { famCode ->
+                        db.collection(FAMILIES)
+                            .document(famCode)
+                            .collection(FAM_COMPS)
+                            .document(user.mail!!)
+                            .delete()
+                            .addOnSuccessListener {
+                                if (user.isInGame) {
+                                    db.collection(FAMILIES)
+                                        .document(famCode)
+                                        .addSnapshotListener { value, _ ->
+                                            db.collection(FAMILIES)
+                                                .document(famCode)
+                                                .update(PLAYERS_IN_GAME, value?.get(PLAYERS_IN_GAME).toString().toInt() - 1)
+                                        }
+                                }
+                            }
+                    }
 
                 db.collection(ACCOUNTS)         //update in accounts
                     .document(fbUser.email)
@@ -427,46 +449,46 @@ object DbManager {
                             .toString() + "." + getFileExtension(imageUri)
             )
             mUploadTask = fileReference.putFile(imageUri)
-                    .addOnSuccessListener { _ ->
-                        val data : MutableMap<String,String> = mutableMapOf()
+                .addOnSuccessListener { _ ->
+                    val data : MutableMap<String,String> = mutableMapOf()
 
-                        fileReference.downloadUrl.addOnCompleteListener () { taskSnapshot ->
-                            val url = taskSnapshot.result
-                            println ("url =" + url.toString())
-                            data[DbManager.PROF_PIC] = url.toString()
-                            fbUser.let {
-                                if (it != null) {
-                                    GlobalScope.launch {
-                                        if (it != null) {
-                                            getUser(it.email)?.let { user ->
-                                                user.profileImg = url.toString()
-                                                updateUser(context, user) }
-                                        }
+                    fileReference.downloadUrl.addOnCompleteListener () { taskSnapshot ->
+                        val url = taskSnapshot.result
+                        println ("url =" + url.toString())
+                        data[DbManager.PROF_PIC] = url.toString()
+                        fbUser.let {
+                            if (it != null) {
+                                GlobalScope.launch {
+                                    if (it != null) {
+                                        getUser(it.email)?.let { user ->
+                                            user.profileImg = url.toString()
+                                            updateUser(context, user) }
                                     }
                                 }
-                                    /*db.collection(DbManager.ACCOUNTS)
-                                            .document(it.email)
-                                            .update(data as Map<String, Any>)
-                                            .addOnSuccessListener {
-                                                                    Toast.makeText(
-                                                                            context,
-                                                                            R.string.prof_pic_updated,
-                                                                            Toast.LENGTH_SHORT
-                                                                    ).show()
-                                            }
-
-                                }*/
                             }
+                                /*db.collection(DbManager.ACCOUNTS)
+                                        .document(it.email)
+                                        .update(data as Map<String, Any>)
+                                        .addOnSuccessListener {
+                                                                Toast.makeText(
+                                                                        context,
+                                                                        R.string.prof_pic_updated,
+                                                                        Toast.LENGTH_SHORT
+                                                                ).show()
+                                        }
 
+                            }*/
                         }
+
                     }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(
-                                context,
-                                e.message,
-                                Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(
+                            context,
+                            e.message,
+                            Toast.LENGTH_SHORT
+                    ).show()
+                }
 
         } else {
             Toast.makeText(
@@ -512,32 +534,25 @@ object DbManager {
         if (fbUser != null) {
             var chiave : String = ""
             db.collection(ACCOUNTS)
-                    .document(fbUser.email)
-                    .collection(APPOINTMENTS)
-                    .whereEqualTo("calendar", app.cal?.timeInMillis?.toLong())//update in impegni
-                    .get()
-                    .addOnSuccessListener {
-                        for (doc in it) {
-                            chiave = doc.id
-                            println("trovato: ${doc.id}")
-                            println("tr: ${doc.reference}")
-                            println("doc: $doc")
-                            //doc.getDocumentReference(doc.reference.toString())?.delete()
+                .document(fbUser.email)
+                .collection(APPOINTMENTS)
+                .whereEqualTo("calendar", app.cal?.timeInMillis?.toLong())//update in impegni
+                .get()
+                .addOnSuccessListener {
+                    for (doc in it) {
+                        chiave = doc.id
+                        println("trovato: ${doc.id}")
+                        println("tr: ${doc.reference}")
+                        println("doc: $doc")
+                        //doc.getDocumentReference(doc.reference.toString())?.delete()
 
-                            db.collection(ACCOUNTS)
-                                    .document(fbUser.email)
-                                    .collection(APPOINTMENTS)
-                                    .document(doc.id).delete()
-                        }
-
+                        db.collection(ACCOUNTS)
+                                .document(fbUser.email)
+                                .collection(APPOINTMENTS)
+                                .document(doc.id).delete()
                     }
-
-
-
-
+                }
         }
-
-
     }
 
     fun createWeight(context: Context?, weight: String, code: Long) {

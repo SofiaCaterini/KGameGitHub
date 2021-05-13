@@ -49,7 +49,8 @@ class SetUpProfileActivity : AppCompatActivity() {
             } else{
                 DbManager.setUpUserProfile(profilePic, null, edit_family_setup.text.toString(), this@SetUpProfileActivity)
                 Toast.makeText(
-                        this, "Codice famiglia creato con successo",
+                        this,
+                        "Codice famiglia creato con successo",
                         Toast.LENGTH_SHORT
                 ).show()
                 val intent = Intent(this, MainActivity::class.java)
@@ -64,15 +65,22 @@ class SetUpProfileActivity : AppCompatActivity() {
 
             if(!et_familyCode.text.isNullOrBlank()) {
                 GlobalScope.launch {
-                    if (DbManager.getFamilyComps(et_familyCode.text.toString()).isNullOrEmpty()){
+                    if (DbManager.getFamilyComps(et_familyCode.text.toString().toUpperCase()).isNullOrEmpty()){
                         //et_familyCode.error = "Inserisci un codice valido!"
-                        println("Aggiungi un codice valido")
+                        runOnUiThread {
+                            Toast.makeText(
+                                    this@SetUpProfileActivity,
+                                    "Aggiungi un codice valido",
+                                    Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }else{
-                        DbManager.setUpUserProfile(profilePic, et_familyCode.text.toString(),null,this@SetUpProfileActivity)
-                        /*Toast.makeText(
-                                this@SetUpProfileActivity, "Ti sei unito correttamente alla famiglia",
+                        DbManager.setUpUserProfile(profilePic, et_familyCode.text.toString().toUpperCase(),null,this@SetUpProfileActivity)
+                        Toast.makeText(
+                                this@SetUpProfileActivity,
+                                "Ti sei unito correttamente alla famiglia",
                                 Toast.LENGTH_SHORT
-                        ).show()*/
+                        ).show()
                         val intent = Intent(this@SetUpProfileActivity, MainActivity::class.java)
                         intent.flags =
                                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

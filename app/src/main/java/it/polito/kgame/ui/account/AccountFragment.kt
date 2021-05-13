@@ -56,14 +56,29 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
     private var switch: Int? = null
 
     private var viewCreated = false
+    private var keyboard = false
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        //Toolbar
+        requireActivity().toolbar.setBackgroundResource(R.color.toolbar_account)
+
+        //i frammenti non sono lifecycleowner
+        //viewModel.data.observe(viewLifecycleOwner, Observer { data -> adapter.setData(data) })
+        val view: View = requireView().findViewById(R.id.AccountLayout)
+        val tView: View = requireActivity().toolbar
+        val nView: View = requireActivity().nav_view
+
+        view.requestFocus()
+
+        edit_nickname.setOnFocusChangeListener { _, _ ->  keyboard = true }
+        edit_nickname.setOnClickListener { keyboard = true }
+        edit_family.setOnFocusChangeListener { _, _ ->  keyboard = true }
+        edit_family.setOnClickListener { keyboard = true }
+
         //observe aspetta che il dato sia pronto per poi gestirlo
         viewModel.thisUser.observe(viewLifecycleOwner, Observer { user ->
-            println("QUIIII: $user")
-
             //read profile pic
             Picasso.get().load(user.profileImg).fit().into(imageView)
             if ( user.profileImg != null) {imageView8.isVisible = false}
@@ -86,9 +101,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
             viewCreated = true
         })
 
-
-        viewModel.thisUsersFam.observe(viewLifecycleOwner, Observer
-            { value ->
+        viewModel.thisUsersFam.observe(viewLifecycleOwner, Observer { value ->
                 if (!value.components.isNullOrEmpty())
                     value.components?.let { adapter.setData(it) }
 
@@ -99,9 +112,8 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
                 val header = requireActivity().findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
                 header.findViewById<TextView>(R.id.navHeadFamilyName)?.text = viewModel.thisUsersFam.value?.name
-            }
+        })
 
-        )
         //change pawn image
         sx.setOnClickListener {
             if (pawnCode <= 0) {
@@ -124,27 +136,11 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
         }
 
-
-        //Toolbar
-        requireActivity().toolbar.setBackgroundResource(R.color.toolbar_account)
-
-        //i frammenti non sono lifecycleowner
-        //viewModel.data.observe(viewLifecycleOwner, Observer { data -> adapter.setData(data) })
-        val tView: View = requireActivity().toolbar
-        val nView: View = requireActivity().nav_view
-
-
-
         //keyboard management
-        fun View.hideKeyboard() {
-            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            if (requireActivity().currentFocus!=null){
-                imm.hideSoftInputFromWindow(windowToken, 0)
-            }
-        }
-        view.setOnClickListener { view.hideKeyboard() }
-        tView.setOnClickListener { view.hideKeyboard() }
-        nView.setOnClickListener { view.hideKeyboard() }
+
+        view.setOnClickListener { hideKeyboard() }
+        tView.setOnClickListener { hideKeyboard() }
+        nView.setOnClickListener { hideKeyboard() }
 
         //profile picture management
         but_cambiaFoto.setOnClickListener {
@@ -156,29 +152,32 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
         //nickname edit text management
         edit_nickname.addTextChangedListener{
-            val imm = requireContext().getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
-            if(imm.isAcceptingText) {
+            if(keyboard) {
                 viewModel.changeUsername(edit_nickname.text.toString())
                 if (switch == 0) switch = 2
-                if (viewCreated) activateUpdateButton(switch ?: 1, null)
+                if (viewCreated) {
+                    activateUpdateButton(switch ?: 1, null)
+                }
             }
         }
 
         //family name management
         edit_family.addTextChangedListener{
-            val imm = requireContext().getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
-            if(imm.isAcceptingText) {
+            if(keyboard) {
                 viewModel.changeFamilyName(edit_family.text.toString())
                 if (switch == 0) switch = 2
-                if (viewCreated) activateUpdateButton(switch ?: 1, null)
+                if (viewCreated) {
+                    activateUpdateButton(switch ?: 1, null)
+                }
             }
         }
 
 
         requireActivity().discardUpdates.setOnClickListener {
-            requireActivity().recreate()
             viewModel.discardUpdates()
             viewCreated = false
+            keyboard = false
+            requireActivity().recreate()
         }
     }
 
@@ -298,6 +297,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                     requireActivity().discardUpdates.visibility = View.GONE
                     switch=null
                     viewCreated = false
+                    hideKeyboard()
                 }
             }
             1 -> {  //case where only pawn/nickname is getting uploaded
@@ -309,6 +309,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                         requireActivity().discardUpdates.visibility = View.GONE
                         switch=null
                         viewCreated = false
+                        hideKeyboard()
                     }
             }
             2 -> {  //case where both profile image and pawn/nickname are getting uploaded
@@ -320,43 +321,25 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                     requireActivity().discardUpdates.visibility = View.GONE
                     switch=null
                     viewCreated = false
+                    hideKeyboard()
                 }
             }
         }
     }
 
-
-//    private fun pedina(id : Int?) : Int {
-//        when (id) {
-//            0 -> {
-//                return R.drawable.dog //imageviewpedina.setImageResource(idpedina)
-//            }
-//            1 -> {
-//                return R.drawable.lion
-//            }
-//            2 -> {
-//                return R.drawable.owl
-//            }
-//            R.drawable.dog -> {
-//                return 0
-//            }
-//            R.drawable.lion -> {
-//                return 1
-//            }
-//            R.drawable.owl -> {
-//                return 2
-//            }
-//            null -> {
-//                return R.drawable.dog
-//            }
-//        }
-//        return 0
-//    }
+    fun hideKeyboard() {
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        if (requireActivity().currentFocus!=null){
+            imm.hideSoftInputFromWindow(requireActivity().currentFocus!!.windowToken, 0)
+        }
+        keyboard =false
+    }
 
     override fun onDestroy() {
         super.onDestroy()
         requireActivity().saveUpdates.visibility = View.GONE
         requireActivity().discardUpdates.visibility = View.GONE
+        hideKeyboard()
 
     }
 }

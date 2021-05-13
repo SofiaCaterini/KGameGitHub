@@ -140,23 +140,13 @@ class LogInActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                 ).show()
 
-                var controllo = false
-
                 GlobalScope.launch {
-
                     val user = DbManager.getUser(email)
                     println("userfamcode: $user")
                     print(user?.familyCode)
 
-                    if (user?.familyCode != null) {
-                        controllo = true
-                    } else {
-                        controllo = false
-                    }
-
-                    println("controllo: $controllo")
                     //se hai già codfam     thisUser.value?.familiyCode != null
-                    if (controllo == true) {
+                    if (user?.familyCode != null) {
 
                         println("ha cod")
                         val intent =
@@ -175,7 +165,7 @@ class LogInActivity : AppCompatActivity() {
 
 
                     //se non ce l'hai
-                    if (controllo == false) {
+                    if (user?.familyCode == null) {
                         /*if (isRemembered) {
                             println("Intent isRemembered")
                             val intent = Intent(this@LogInActivity, MainActivity::class.java)

@@ -480,7 +480,7 @@ object DbManager {
     }
 
     private fun randomCode(): String {
-        val allowedChars = "0123456789qwertyuiopasdfghjklzxcvbnm"
+        val allowedChars = "0123456789QWERTYUIOPASDFGHJKLZXCVBNM"
         val sizeOfRandomString = 6
         val random = Random()
         val sb = StringBuilder(sizeOfRandomString)

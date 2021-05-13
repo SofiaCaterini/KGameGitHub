@@ -88,8 +88,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 //                    homeViewModel.thisUsersFam.userValue?.playersInGame = homeViewModel.thisUsersFam.userValue?.playersInGame!! - 1
 //                }
 
-                println("dovrebbe " + (userValue.inGame))
-                if(userValue.inGame) {    //then match must be "STARTED" or "ACTIVE"
+                println("dovrebbe " + (userValue.isInGame))
+                if(userValue.isInGame) {    //then match must be "STARTED" or "ACTIVE"
                     homeViewModel.thisUsersFam.observe(viewLifecycleOwner,
                             { famValue ->
                                 println("tizios fatti  " + famValue)
@@ -248,13 +248,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                                                                                             //at least 1 time by all players and then 10 times more
                 }
 
-                if(value.matchState == "ENDED") { println("ma manco qua? " + homeViewModel.thisUser.value?.inGame)
-                    if(homeViewModel.thisUser.value?.inGame == true || value.playersInGame<=0) {
+                if(value.matchState == "ENDED") { println("ma manco qua? " + homeViewModel.thisUser.value?.isInGame)
+                    if(homeViewModel.thisUser.value?.isInGame == true || value.playersInGame<=0) {
                         value.playersInGame = value.playersInGame - 1
                         homeViewModel.updateMatchState(requireContext())
                     }
-                    homeViewModel.thisUser.value?.inGame= false
-                    println("ohmachee: " + homeViewModel.thisUser.value?.inGame)
+                    homeViewModel.thisUser.value?.isInGame= false
+                    println("ohmachee: " + homeViewModel.thisUser.value?.isInGame)
                     homeViewModel.updatePlayerState(requireContext())
                 }
 
@@ -470,7 +470,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun joinMatch() {
-        homeViewModel.thisUser.value?.inGame = true
+        homeViewModel.thisUser.value?.isInGame = true
         homeViewModel.updatePlayerState(requireContext())
         homeViewModel.thisUsersFam.value?.playersInGame = homeViewModel.thisUsersFam.value?.playersInGame!! + 1
         if (homeViewModel.thisUsersFam.value?.playersInGame == homeViewModel.thisUsersFam.value?.components?.size) {
@@ -482,7 +482,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun startMatch() {
-        homeViewModel.thisUser.value?.inGame= true
+        homeViewModel.thisUser.value?.isInGame= true
         homeViewModel.updatePlayerState(requireContext())
         homeViewModel.thisUsersFam.value?.playersInGame = homeViewModel.thisUsersFam.value?.playersInGame!! + 1
         homeViewModel.thisUsersFam.value?.matchState = "ACTIVE"

@@ -12,5 +12,5 @@ data class User(
     var profileImg: String? = null,
     var position: Int = 0,
     var goodWeightStreak: Int = 0,
-    var inGame: Boolean = false
+    @field:JvmField var isInGame: Boolean = false
     )

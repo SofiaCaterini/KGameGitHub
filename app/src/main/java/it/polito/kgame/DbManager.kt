@@ -44,7 +44,7 @@ object DbManager {
     const val OBJ = "objective"
     const val POSITION = "position"
     const val STREAK = "goodWeightStreak"
-    const val INGAME = "inGame"
+    const val INGAME = "isInGame"
         //family
     const val FAM_NAME = "familyName"
         //match
@@ -286,7 +286,7 @@ object DbManager {
         if(user.objective != null) data[OBJ] = user.objective!!
         data[POSITION] = user.position
         data[STREAK] = user.goodWeightStreak
-        data[INGAME] = user.inGame!!
+        data[INGAME] = user.isInGame!!
 
 
 

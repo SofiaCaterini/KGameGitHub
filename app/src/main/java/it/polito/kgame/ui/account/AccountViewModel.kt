@@ -48,7 +48,7 @@ class AccountViewModel : ViewModel() {
                 }
                 if (value != null && value.exists()) {
                     _thisUser.value = value.toObject<User>()!!
-                    _thisUser.value!!.inGame = value[DbManager.INGAME] as Boolean
+                    _thisUser.value!!.isInGame = value[DbManager.INGAME] as Boolean
                     println("FAMMI SAPERE 1 " +_thisUser.value)
                     fillFamily()
                 }

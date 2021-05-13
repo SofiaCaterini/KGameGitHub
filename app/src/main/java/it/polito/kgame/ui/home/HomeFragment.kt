@@ -1,5 +1,6 @@
 package it.polito.kgame.ui.home
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -20,8 +21,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.android.volley.AuthFailureError
+import com.android.volley.RequestQueue
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.messaging.FirebaseMessaging
 import com.squareup.picasso.Picasso
 import com.synnapps.carouselview.CarouselView
 import com.synnapps.carouselview.ImageListener
@@ -37,6 +44,8 @@ import kotlinx.android.synthetic.main.wait_for_player.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONException
+import org.json.JSONObject
 import java.net.URL
 import java.nio.charset.Charset
 import java.util.*
@@ -50,6 +59,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     var pawnWidth : Int? = null
     private var pawnHeight : Int? = null
     val sampleImages = arrayListOf<Int>(R.drawable.dog, R.drawable.lion)
+    private var mRequestQue: RequestQueue? = null
+    private val URL = "https://fcm.googleapis.com/fcm/send"
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -208,6 +220,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
 
+
+
         but_start.setOnClickListener {
             if(datacontroller==true) {      //non ti sei pesato oggi
                 MaterialAlertDialogBuilder(requireContext())
@@ -220,9 +234,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
             else {
                 startMatch()
+                sendNotification()
             }
         }
-
 
 
         homeViewModel.thisUsersFam.observe(viewLifecycleOwner,
@@ -270,6 +284,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
 
                 familyName.text = value.name
+
+
+                //Notification
+                mRequestQue = Volley.newRequestQueue(requireContext())
+                FirebaseMessaging.getInstance().subscribeToTopic(value.code.toString())
+                println("observe: ${value.code.toString()}")
 
                 //inserimento dati utente nell'header
                 val header = requireActivity().findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
@@ -487,6 +507,36 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         homeViewModel.updateMatchState(requireContext())
     }
 
+    private fun sendNotification() {
+        println("In sendNotification")
+        val mainObj = JSONObject()
+        try {
+            //println("Invio Notification")
+            mainObj.put("to", "/topics/" + homeViewModel.thisUsersFam.value?.code.toString())
+            println("topic: ${homeViewModel.thisUsersFam.value?.code.toString()}")
+            val notificationObj = JSONObject()
+            notificationObj.put("title", "Nuova partita")
+            notificationObj.put("body", "${homeViewModel.thisUser.value?.username} ha avviato una nuova partita!")
+            mainObj.put("notification", notificationObj)
+            val request: JsonObjectRequest = object : JsonObjectRequest(
+                    Method.POST, URL,
+                    mainObj,
+                    Response.Listener { }, Response.ErrorListener { }
+            ) {
+                @Throws(AuthFailureError::class)
+                override fun getHeaders(): Map<String, String> {
+                    val header: MutableMap<String, String> = HashMap()
+                    header["content-type"] = "application/json"
+                    header["authorization"] = "key=AAAA-tDLU44:APA91bEgMQVM6yu2JOqXjtlZyHwmy3wEGF7e3odUWRiKX1S053Nczmq4gezEkPDsNsBnVZVPN22AlOqs3en9CWYc49XZQ05CX-ncMH2g7VFY489z7Knd67pBAF8RiqxC6nQ1gFf9UO5I"
+                    return header
+                }
+            }
+            mRequestQue!!.add(request)
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+    }
+
     private fun setPositions(list: List<User>) {
         val layout = requireActivity().findViewById<ConstraintLayout>(R.id.homeLayout)
         println(" layout " + layout)
@@ -516,7 +566,23 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                 when (map[u.position!!]) {
                     1 -> {
-                        player.translationX =
+                        ObjectAnimator.ofFloat(player, "translationX",
+                                layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                                        u.position!!
+                                ).first - pawnWidth!!.toFloat() / 2).apply {
+                            duration =2000
+                            start()
+                        }
+                        ObjectAnimator.ofFloat(player, "translationY",
+                                layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                                        u.position!!
+                                ).second - pawnHeight!!.toFloat() / 2).apply {
+                            duration =2000
+                            start()
+                        }
+
+
+                        /*player.translationX =
                                 layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
                                         u.position!!
                                 ).first - pawnWidth!!.toFloat() / 2
@@ -524,6 +590,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                 layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
                                         u.position!!
                                 ).second - pawnHeight!!.toFloat() / 2
+
+                         */
                         println("SIAMO IN 1")
                         println("31pos della pedina: w - " + player.x + "; h - " + player.y)
                         println("megaprintone: \n" +
@@ -533,6 +601,22 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                     }
                     2 -> {
+
+                        ObjectAnimator.ofFloat(player, "translationX",
+                                layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                                        u.position!!
+                                ).first - pawnWidth!!.toFloat() * 3 / 4).apply {
+                            duration =2000
+                            start()
+                        }
+                        ObjectAnimator.ofFloat(player, "translationY",
+                                layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                                        u.position!!
+                                ).second - pawnHeight!!.toFloat() * 3 / 4).apply {
+                            duration =2000
+                            start()
+                        }
+                        /*
                         player.translationX =
                                 layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
                                         u.position!!
@@ -542,11 +626,28 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                         u.position!!
                                 ).second - pawnHeight!!.toFloat() * 3 / 4
 
+                         */
+
                         map[u.position!!] = 22
                         println("SIAMO IN 2")
                     }
                     22 -> {
-                        player.translationX =
+
+                        ObjectAnimator.ofFloat(player, "translationX",
+                                layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                                        u.position!!
+                                ).first - pawnWidth!!.toFloat() / 4).apply {
+                            duration =2000
+                            start()
+                        }
+                        ObjectAnimator.ofFloat(player, "translationY",
+                                layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                                        u.position!!
+                                ).second - pawnHeight!!.toFloat() / 4).apply {
+                            duration =2000
+                            start()
+                        }
+                        /*player.translationX =
                                 layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
                                         u.position!!
                                 ).first - pawnWidth!!.toFloat() / 4
@@ -554,6 +655,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                 layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
                                         u.position!!
                                 ).second - pawnHeight!!.toFloat() / 4
+
+                         */
                         println("SIAMO IN 22")
                     }
                     3 -> {

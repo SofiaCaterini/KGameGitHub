@@ -1,5 +1,6 @@
 package it.polito.kgame.ui.home
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -516,7 +517,23 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                 when (map[u.position!!]) {
                     1 -> {
-                        player.translationX =
+                        ObjectAnimator.ofFloat(player, "translationX",
+                                layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                                        u.position!!
+                                ).first - pawnWidth!!.toFloat() / 2).apply {
+                            duration =2000
+                            start()
+                        }
+                        ObjectAnimator.ofFloat(player, "translationY",
+                                layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                                        u.position!!
+                                ).second - pawnHeight!!.toFloat() / 2).apply {
+                            duration =2000
+                            start()
+                        }
+
+
+                        /*player.translationX =
                                 layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
                                         u.position!!
                                 ).first - pawnWidth!!.toFloat() / 2
@@ -524,6 +541,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                 layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
                                         u.position!!
                                 ).second - pawnHeight!!.toFloat() / 2
+
+                         */
                         println("SIAMO IN 1")
                         println("31pos della pedina: w - " + player.x + "; h - " + player.y)
                         println("megaprintone: \n" +
@@ -533,6 +552,22 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                     }
                     2 -> {
+
+                        ObjectAnimator.ofFloat(player, "translationX",
+                                layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                                        u.position!!
+                                ).first - pawnWidth!!.toFloat() * 3 / 4).apply {
+                            duration =2000
+                            start()
+                        }
+                        ObjectAnimator.ofFloat(player, "translationY",
+                                layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                                        u.position!!
+                                ).second - pawnHeight!!.toFloat() * 3 / 4).apply {
+                            duration =2000
+                            start()
+                        }
+                        /*
                         player.translationX =
                                 layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
                                         u.position!!
@@ -542,11 +577,28 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                         u.position!!
                                 ).second - pawnHeight!!.toFloat() * 3 / 4
 
+                         */
+
                         map[u.position!!] = 22
                         println("SIAMO IN 2")
                     }
                     22 -> {
-                        player.translationX =
+
+                        ObjectAnimator.ofFloat(player, "translationX",
+                                layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                                        u.position!!
+                                ).first - pawnWidth!!.toFloat() / 4).apply {
+                            duration =2000
+                            start()
+                        }
+                        ObjectAnimator.ofFloat(player, "translationY",
+                                layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                                        u.position!!
+                                ).second - pawnHeight!!.toFloat() / 4).apply {
+                            duration =2000
+                            start()
+                        }
+                        /*player.translationX =
                                 layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
                                         u.position!!
                                 ).first - pawnWidth!!.toFloat() / 4
@@ -554,6 +606,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                 layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
                                         u.position!!
                                 ).second - pawnHeight!!.toFloat() / 4
+
+                         */
                         println("SIAMO IN 22")
                     }
                     3 -> {

@@ -76,11 +76,13 @@ class SetUpProfileActivity : AppCompatActivity() {
                         }
                     }else{
                         DbManager.setUpUserProfile(profilePic, et_familyCode.text.toString().toUpperCase(),null,this@SetUpProfileActivity)
-                        Toast.makeText(
-                                this@SetUpProfileActivity,
-                                "Ti sei unito correttamente alla famiglia",
-                                Toast.LENGTH_SHORT
-                        ).show()
+                        runOnUiThread {
+                            Toast.makeText(
+                                    this@SetUpProfileActivity,
+                                    "Ti sei unito correttamente alla famiglia",
+                                    Toast.LENGTH_SHORT
+                            ).show()
+                        }
                         val intent = Intent(this@SetUpProfileActivity, MainActivity::class.java)
                         intent.flags =
                                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

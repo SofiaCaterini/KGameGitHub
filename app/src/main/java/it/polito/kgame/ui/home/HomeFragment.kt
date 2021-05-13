@@ -31,6 +31,9 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.carousel_layout.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
+import kotlinx.android.synthetic.main.join_match.*
+import kotlinx.android.synthetic.main.join_match.txt_title
+import kotlinx.android.synthetic.main.wait_for_player.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -47,7 +50,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     var pawnWidth : Int? = null
     private var pawnHeight : Int? = null
     val sampleImages = arrayListOf<Int>(R.drawable.dog, R.drawable.lion)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
 
         val layout = requireActivity().findViewById<ConstraintLayout>(R.id.homeLayout)
 
@@ -59,38 +64,224 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         val listapesate : MutableList<PesoInfo> = ArrayList()
         val today : Calendar = Calendar.getInstance()
-        today.timeInMillis = System.currentTimeMillis()
+        //today.timeInMillis = System.currentTimeMillis()
         var dataultima : Calendar = Calendar.getInstance()
-        var datacontroller = true
+        var datacontroller : Boolean? = null
 
         //Toolbar
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_home)
 
-        homeViewModel.thisUsersFam.observe(viewLifecycleOwner,
-                { value ->
-                    if (!value.components.isNullOrEmpty())
-                        value.components?.let {
-                            adapter.setData(it)
-                            setPositions(it)
+        homeViewModel.thisUser.observe(viewLifecycleOwner,
+            { userValue ->
+                println("tizio: " + userValue)
+//                val endTimeCal = Calendar.getInstance()
+//                if (homeViewModel.thisUsersFam.userValue?.lastMatchMillis != null) {
+//                    endTimeCal.timeInMillis = homeViewModel.thisUsersFam.userValue?.lastMatchMillis!!
+//                    endTimeCal.add(Calendar.DAY_OF_MONTH,30)
+//                    if (today.after(endTimeCal)) homeViewModel.thisUsersFam.userValue?.matchState = "ENDED"
+//                    endTimeCal.add(Calendar.DAY_OF_MONTH, 1)
+//                    if(today.after(endTimeCal) && homeViewModel.thisUsersFam.userValue?.playersInGame == 0) homeViewModel.thisUsersFam.userValue?.matchState = "NONE"
+//                }
+//
+//                if(homeViewModel.thisUsersFam.userValue?.matchState == "ENDED") {
+//                    userValue.isInGame= false
+//                    homeViewModel.thisUsersFam.userValue?.playersInGame = homeViewModel.thisUsersFam.userValue?.playersInGame!! - 1
+//                }
+
+                println("dovrebbe " + (userValue.isInGame))
+                if(userValue.isInGame) {    //then match must be "STARTED" or "ACTIVE"
+                    homeViewModel.thisUsersFam.observe(viewLifecycleOwner,
+                            { famValue ->
+                                println("tizios fatti  " + famValue)
+                                when (famValue.matchState) {
+                                    "STARTED" -> {
+                                        gameBoard.alpha= 1F
+                                        joinMatch.visibility= View.GONE
+                                        waitForPlayers.visibility= View.GONE
+                                    }
+                                    "ACTIVE" -> {
+                                        gameBoard.alpha= 0.5F
+                                        joinMatch.visibility= View.GONE
+                                        waitForPlayers.visibility= View.VISIBLE
+                                        txt_waitForPlayers.text= "Aspetta che gli altri giocatori della famiglia si uniscano, la partita inizierà quando ci sarete tutti. \n" +
+                                                        "Se sei solo invita altri ad unirsi alla tua famiglia facedoli accedere con questo codice: " + famValue.code + "\n" +
+                                                        "Se credi che tutti si siano già uniti prova a resettare l'app."
+                                    }
+                                }
+                            }
+                    )
+                }
+                else {  //player is not in game
+                    //activate dialog box
+                    gameBoard.alpha= 0.5F
+                    joinMatch.visibility= View.VISIBLE
+                    waitForPlayers.visibility= View.GONE
+
+                    homeViewModel.thisUsersFam.observe(viewLifecycleOwner,
+                        { famValue ->
+                            println("tizios fatti  " + famValue)
+                            when(famValue.matchState) {
+                                "NONE" -> { //player can create first match
+                                    txt_title.text= "Avvia una nuova partita"   //title
+
+                                    but_obj.visibility = View.VISIBLE           //onj button
+
+                                    if (userValue.objective == null) {              //obj text; end button
+                                        txt_obj.text =
+                                                "Devi impostare un obiettivo prima di poter iniziare la partita. Dopo averla avviata non potrai più modificarlo prima di 30 giorni"
+                                        setStartButtonDisabled()
+                                    } else {
+                                        txt_obj.text =
+                                                "Adesso il tuo obiettivo di peso è di ${userValue.objective} kg. Una volta che avvierai la partita non potrai più modificarlo fino alla fine del mese. Vuoi cambiarlo ora?"
+                                        setStartButtonEnabled()
+                                    }
+
+                                }
+                                "ACTIVE" -> {   //player can join
+                                    txt_title.text= "Unisciti alla partita!"    //title
+
+                                    but_obj.visibility = View.VISIBLE           //obj button
+
+                                    if (userValue.objective == null) {              //obj text; end button
+                                        txt_obj.text =
+                                                "Devi impostare un obiettivo prima di poterti unire alla partita. Ricorda che dopo esserti unito non potrai più modificarlo prima di 30 giorni"
+                                        setJoinButtonDisabled()
+                                    } else {
+                                        txt_obj.text =
+                                                "Adesso il tuo obiettivo di peso è di ${userValue.objective} kg. Una volta che sarai in partita non potrai più modificarlo prima di 30 giorni. Vuoi cambiarlo ora?"
+                                        setJoinButtonEnabled()
+                                    }
+                                }
+                                "STARTED" -> {  //player can't join
+                                    txt_title.text = "La partita è gia iniziata."   //title
+
+                                    val matchEndCal = Calendar.getInstance()        //obj text
+                                    matchEndCal.timeInMillis = famValue.lastMatchMillis!!
+                                    matchEndCal.add(Calendar.DAY_OF_MONTH, 30)
+                                    txt_obj.text = "Aspetta che finisca per unirti alla prossima. " +
+                                            "\n Finirà il ${matchEndCal.get(Calendar.DAY_OF_MONTH)}/${matchEndCal.get(Calendar.MONTH)+1}"
+
+                                    but_obj.visibility = View.GONE                  //obj button
+
+                                    setJoinButtonDisabled()                         //end button
+
+                                }
+                                "ENDED" -> {    //player can restart match only if every player has seen victory screen -> homeViewModel.thisUsersFam.userValue?.playersInGame == 0
+                                    var winner : String? = famValue.components?.find { user -> user.mail == famValue.lastWinnerMail }?.username
+                                    txt_title.text = "Congratulazioni ${winner}!!!"     //title
+
+                                    txt_obj.text = "La partita si è conclusa. Complimenti al vincitore ma anche a tutti voi! \n "   //obj text part1
+
+                                    if(famValue.playersInGame == 0) {      //obj text part2; obj button; end button
+                                        txt_obj.text = txt_obj.text.toString()  + "Sei già pronto a rigiocare? Se vuoi cambia ora il tuo obiettivo e poi avvia la partita"
+                                        but_obj.visibility = View.VISIBLE
+                                        setStartButtonEnabled()
+                                    } else {
+                                        txt_obj.text = txt_obj.text.toString()  + "Gli altri giocatori non sono ancora pronti. Digli di aprire l'app così che tutti vedano chi ha vinto"
+                                        but_obj.visibility = View.GONE
+                                        setStartButtonDisabled()
+                                    }
+                                }
+                            }
                         }
+                    )
+                }
+            }
+        )
 
-                    println("2COPIARE: " + layout.gameBoard.width + "/" + layout.gameBoard.height)// = ViewGroup.LayoutParams()
+        but_obj.setOnClickListener {
 
-                    rvhome.layoutManager = LinearLayoutManager(requireContext())
-                    rvhome.adapter = adapter
+        }
+
+        but_join.setOnClickListener {
+            if(datacontroller==true) {      //non ti sei pesato oggi
+                MaterialAlertDialogBuilder(requireContext())
+                        .setTitle("Pesati per unirti alla partita")
+                        .setPositiveButton("OK") { _, _ ->
+                            weighting("JOIN")
+                        }
+                        .setNegativeButton(R.string.cancel) { _,_ -> }
+                        .show()
+                weighting()
+            }
+            else {
+                joinMatch()
+            }
+        }
+
+        but_start.setOnClickListener {
+            if(datacontroller==true) {      //non ti sei pesato oggi
+                MaterialAlertDialogBuilder(requireContext())
+                        .setTitle("Pesati per avviare la partita")
+                        .setPositiveButton("OK") { _, _ ->
+                            weighting("START")
+                        }
+                        .setNegativeButton(R.string.cancel) { _,_ -> }
+                        .show()
+                weighting()
+            }
+            else {
+                startMatch()
+            }
+        }
 
 
-                    familyName.text = value.name
 
-                    //inserimento dati utente nell'header
-                    val header = requireActivity().findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
-                    header.findViewById<TextView>(R.id.navHeadNickname)?.text = homeViewModel.thisUser.value?.username
-                    header.findViewById<TextView>(R.id.navHeadFamilyName)?.text = homeViewModel.thisUsersFam.value?.name
-                    header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(homeViewModel.thisUser.value?.profileImg).fit().into(it) }
+        homeViewModel.thisUsersFam.observe(viewLifecycleOwner,
+            { value ->
+                println("tizioscricca: " + value)
+
+                val endTimeCal = Calendar.getInstance()
+                if (value.lastMatchMillis != null) {
+                    endTimeCal.timeInMillis = value.lastMatchMillis!!
+                    endTimeCal.add(Calendar.DAY_OF_MONTH,30)
+                    if (today.after(endTimeCal) && value.matchState == "STARTED") {
+                        value.matchState = "ENDED"
+                        value.lastWinnerMail = value.components?.sortedBy { user -> user.position }?.last()?.mail
+                        homeViewModel.updateMatchState(requireContext())
+                    }                                 //end match if is been more than 30 days from match start
+                    endTimeCal.add(Calendar.DAY_OF_MONTH, 7)
+                    if( ( (today.after(endTimeCal) && value.playersInGame <= 0) || value.playersInGame == -10) && value.matchState == "ENDED") {
+                        value.matchState = "NONE"
+                        homeViewModel.updateMatchState(requireContext())
+                    }                                                                                       //remove victory screen if it's been a week since match ended or if victory screen has been shown
+                                                                                                            //at least 1 time by all players and then 10 times more
                 }
 
+                if(value.matchState == "ENDED") { println("ma manco qua? " + homeViewModel.thisUser.value?.isInGame)
+                    if(homeViewModel.thisUser.value?.isInGame == true || value.playersInGame<=0) {
+                        value.playersInGame = value.playersInGame - 1
+                        homeViewModel.updateMatchState(requireContext())
+                    }
+                    homeViewModel.thisUser.value?.isInGame= false
+                    println("ohmachee: " + homeViewModel.thisUser.value?.isInGame)
+                    homeViewModel.updatePlayerState(requireContext())
+                }
 
+                if (!value.components.isNullOrEmpty())
+                    value.components?.let {
+                        adapter.setData(it)
+                        adapter.sortItems()
+                        setPositions(it)
+                    }
+
+                println("2COPIARE: " + layout.gameBoard.width + "/" + layout.gameBoard.height)// = ViewGroup.LayoutParams()
+
+                rvhome.layoutManager = LinearLayoutManager(requireContext())
+                rvhome.adapter = adapter
+
+
+                familyName.text = value.name
+
+                //inserimento dati utente nell'header
+                val header = requireActivity().findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
+                header.findViewById<TextView>(R.id.navHeadNickname)?.text = homeViewModel.thisUser.value?.username
+                header.findViewById<TextView>(R.id.navHeadFamilyName)?.text = homeViewModel.thisUsersFam.value?.name
+                header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(homeViewModel.thisUser.value?.profileImg).fit().into(it) }
+            }
         )
+
+
         homeViewModel.weights.observe(viewLifecycleOwner, Observer { weights ->
             println("WEIGHTS: $weights")
             println("nWeight: ${weights.size}")
@@ -108,15 +299,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             if (dataultima.get(java.util.Calendar.DAY_OF_MONTH) == today.get(java.util.Calendar.DAY_OF_MONTH)
                     && dataultima.get(java.util.Calendar.MONTH) == today.get(java.util.Calendar.MONTH)
                     && dataultima.get(java.util.Calendar.YEAR) == today.get(java.util.Calendar.YEAR)) {
-                //datacontroller = false
+                datacontroller = false
             }
             println("data ultima pesata: ${dataultima.timeInMillis}")
             println("data oggi: ${today.timeInMillis}")
             println("Se falso oggi=dataultimapesata: $datacontroller")
 
         })
-
-
 
         /*homeViewModel.thisUsersFam.observe(viewLifecycleOwner, { fam ->
             familyName.text = fam.name
@@ -130,11 +319,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         //Carousel
 
-
         var carouselView: CarouselView? = null
         carouselView = requireActivity().findViewById(R.id.carouselView)
-        carouselView.setPageCount(sampleImages.size)
         carouselView.setImageListener(imageListener)
+        carouselView.pageCount = sampleImages.size
 
 
         regolamento.setOnClickListener {
@@ -157,170 +345,148 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         }
                         .show()
             } else {
-                val messaggiosalvato: String = getString(R.string.question_message_weight)
-                val message: String = messaggiosalvato
-
-                MaterialAlertDialogBuilder(requireContext())
-                        .setTitle(R.string.question_title_weight)
-                        .setMessage(message)
-                        .setPositiveButton(R.string.yes) { _, _ ->
-                            //Wifi
-                            val manager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-                            val wifi = requireContext().getSystemService(Context.WIFI_SERVICE) as WifiManager?
-                            var wifiacceso = false
-                            if (wifi != null) {
-                                if (wifi.isWifiEnabled){
-                                    wifiacceso = true
-                                }
-                            }
-                            val builder = NetworkRequest.Builder()
-                            builder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                            builder.removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                            builder.setNetworkSpecifier(
-                                    WifiNetworkSpecifier.Builder().apply {
-                                        //Qui inserite il nome del vostro WIFI e la password
-                                        setSsid("KGame")
-                                        setWpa2Passphrase("123123123")
-                                    }.build()
-                            )
-                            Log.d("esp", "Builder built")
-                            try {
-                                println("dentro try")
-                                var retedisponibile = false
-
-                                manager.requestNetwork(builder.build(), object : ConnectivityManager.NetworkCallback() {
-                                    override fun onUnavailable() {
-                                        super.onUnavailable()
-                                        println("OnAnavailable")
-                                        MaterialAlertDialogBuilder(requireContext())
-                                                .setTitle("Non sei connesso alla bilancia")
-                                                .setMessage("Connettiti al wifi KGame e riprova!")
-                                                .setPositiveButton(R.string.ok) { _, _ ->
-
-                                                }
-                                                .show()
-
-                                    }
-
-                                    override fun onAvailable(network: Network) {
-                                        println("dentro onAvailable")
-                                        manager.bindProcessToNetwork(network)
-                                        Log.d("esp", "network connected")
-                                        retedisponibile = true
-                                        lifecycleScope.launch(Dispatchers.IO) {
-                                            val str = URL("http://192.168.4.1/").readText(Charset.forName("UTF-8"))
-                                            withContext(Dispatchers.Main) {
-
-                                                val messaggiosalvato2: String = getString(R.string.question_message_obj_ok)
-                                                val kg: String = getString(R.string.kg)
-                                                val peso: String = str
-                                                val message2: String = "$messaggiosalvato2 $peso $kg"
-
-                                                if (homeViewModel.thisUser.value?.objective != null && homeViewModel.weights.value?.size!! > 0) {
-                                                    homeViewModel.changePosition(requireContext(), peso.toFloat())
-                                                }
-
-                                                DbManager.createWeight(requireContext(), peso, System.currentTimeMillis())
-
-                                                MaterialAlertDialogBuilder(requireContext())
-                                                        .setTitle(R.string.question_title_weight_ok)
-                                                        .setMessage(message2)
-                                                        .setPositiveButton(R.string.ok) { _, _ ->
-
-                                                        }
-                                                        .show()
-
-                                            }
-                                        }
-
-
-                                    }
-
-
-                                    override fun onLost(network: Network) {
-                                        super.onLost(network)
-                                        println("onLost")
-                                        MaterialAlertDialogBuilder(requireContext())
-                                                .setTitle("Ti sei disconnesso dalla bilancia")
-                                                .setMessage("Connettiti di nuovo al wifi KGame e riprova!")
-                                                .setPositiveButton(R.string.ok) { _, _ ->
-
-                                                }
-                                                .show()
-                                    }
-
-
-                                })
-
-                                if(wifiacceso == false){
-                                    println("non connesso")
-                                    MaterialAlertDialogBuilder(requireContext())
-                                            .setTitle("Non sei connesso alla bilancia")
-                                            .setMessage("Connettiti al wifi KGame e riprova!")
-                                            .setPositiveButton(R.string.ok) { _, _ ->
-
-                                            }
-                                            .show()
-
-                                }
-                            } catch (e: SecurityException) {
-                                Log.d("Non ha trovato wifi", e.message!!)
-                                println("dentro catch")
-                            }
-
-
-                        }
-                        .setNegativeButton(R.string.no) { _, _ -> noClicked() }
-                        .show()
+                weighting()
             }
         }
+    }
+
+    private fun weighting(fromJoinOrStartMatch : String = "none") {
+        val messaggiosalvato: String = getString(R.string.question_message_weight)
+        val message: String = messaggiosalvato
+
+        MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.question_title_weight)
+                .setMessage(message)
+                .setPositiveButton(R.string.yes) { _, _ ->
+                    //Wifi
+                    val manager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                    val wifi = requireContext().getSystemService(Context.WIFI_SERVICE) as WifiManager?
+                    var wifiacceso = false
+                    if (wifi != null) {
+                        if (wifi.isWifiEnabled){
+                            wifiacceso = true
+                        }
+                    }
+                    val builder = NetworkRequest.Builder()
+                    builder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                    builder.removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                    builder.setNetworkSpecifier(
+                            WifiNetworkSpecifier.Builder().apply {
+                                //Qui inserite il nome del vostro WIFI e la password
+                                setSsid("KGame")
+                                setWpa2Passphrase("123123123")
+                            }.build()
+                    )
+                    Log.d("esp", "Builder built")
+                    try {
+                        println("dentro try")
+                        var retedisponibile = false
+
+                        manager.requestNetwork(builder.build(), object : ConnectivityManager.NetworkCallback() {
+                            override fun onUnavailable() {
+                                super.onUnavailable()
+                                println("OnAnavailable")
+                                MaterialAlertDialogBuilder(requireContext())
+                                        .setTitle("Non sei connesso alla bilancia")
+                                        .setMessage("Connettiti al wifi KGame e riprova!")
+                                        .setPositiveButton(R.string.ok) { _, _ ->
+
+                                        }
+                                        .show()
+
+                            }
+
+                            override fun onAvailable(network: Network) {
+                                println("dentro onAvailable")
+                                manager.bindProcessToNetwork(network)
+                                Log.d("esp", "network connected")
+                                retedisponibile = true
+                                lifecycleScope.launch(Dispatchers.IO) {
+                                    val str = URL("http://192.168.4.1/").readText(Charset.forName("UTF-8"))
+                                    withContext(Dispatchers.Main) {
+
+                                        val messaggiosalvato2: String = getString(R.string.question_message_obj_ok)
+                                        val kg: String = getString(R.string.kg)
+                                        val peso: String = str
+                                        val message2: String = "$messaggiosalvato2 $peso $kg"
+
+                                        if (homeViewModel.thisUser.value?.objective != null && homeViewModel.weights.value?.size!! > 0) {
+                                            homeViewModel.changePosition(requireContext(), peso.toFloat())
+                                        }
+
+                                        DbManager.createWeight(requireContext(), peso, System.currentTimeMillis())
+
+                                        MaterialAlertDialogBuilder(requireContext())
+                                                .setTitle(R.string.question_title_weight_ok)
+                                                .setMessage(message2)
+                                                .setPositiveButton(R.string.ok) { _, _ ->
+                                                    if(fromJoinOrStartMatch == "JOIN") joinMatch()
+                                                    if(fromJoinOrStartMatch == "START") startMatch()
+                                                }
+                                                .show()
+
+                                    }
+                                }
 
 
+                            }
 
 
-        //Inizio parte di movimento
-        /*
-        var position = 0
-        var playersNum = 2
-        homeAddWeight.setOnClickListener {
-            //refresh position
-            position++
-            //move player
-            println("right2= " + view.gameBoard.width)
-            when (playersNum) {
-                1 -> {
-                    player1.translationX =
-                        view.gameBoard.left + (view.gameBoard.width.toFloat()) * getXYmodsFromPosition(
-                            position
-                        ).first - player1.width.toFloat() / 2
-                    player1.translationY =
-                        view.gameBoard.top + (view.gameBoard.height.toFloat()) * getXYmodsFromPosition(
-                            position
-                        ).second - player1.height.toFloat() / 2
+                            override fun onLost(network: Network) {
+                                super.onLost(network)
+                                println("onLost")
+                                MaterialAlertDialogBuilder(requireContext())
+                                        .setTitle("Ti sei disconnesso dalla bilancia")
+                                        .setMessage("Connettiti di nuovo al wifi KGame e riprova!")
+                                        .setPositiveButton(R.string.ok) { _, _ ->
+
+                                        }
+                                        .show()
+                            }
+
+
+                        })
+
+                        if(wifiacceso == false){
+                            println("non connesso")
+                            MaterialAlertDialogBuilder(requireContext())
+                                    .setTitle("Non sei connesso alla bilancia")
+                                    .setMessage("Connettiti al wifi KGame e riprova!")
+                                    .setPositiveButton(R.string.ok) { _, _ ->
+
+                                    }
+                                    .show()
+
+                        }
+                    } catch (e: SecurityException) {
+                        Log.d("Non ha trovato wifi", e.message!!)
+                        println("dentro catch")
+                    }
+
+
                 }
-                2 -> {
-                    player1.translationX =
-                        view.gameBoard.left + (view.gameBoard.width.toFloat()) * getXYmodsFromPosition(
-                            position
-                        ).first - player1.width.toFloat()*3/4
-                    player1.translationY =
-                        view.gameBoard.top + (view.gameBoard.height.toFloat()) * getXYmodsFromPosition(
-                            position
-                        ).second - player1.height.toFloat()*3/4
+                .setNegativeButton(R.string.no) { _, _ -> noClicked() }
+                .show()
+    }
 
-                    player2.translationX =
-                        view.gameBoard.left + (view.gameBoard.width.toFloat()) * getXYmodsFromPosition(
-                            position
-                        ).first - player2.width.toFloat()/4
-                    player2.translationY =
-                        view.gameBoard.top + (view.gameBoard.height.toFloat()) * getXYmodsFromPosition(
-                            position
-                        ).second - player2.height.toFloat()/4
+    private fun joinMatch() {
+        homeViewModel.thisUser.value?.isInGame = true
+        homeViewModel.updatePlayerState(requireContext())
+        homeViewModel.thisUsersFam.value?.playersInGame = homeViewModel.thisUsersFam.value?.playersInGame!! + 1
+        if (homeViewModel.thisUsersFam.value?.playersInGame == homeViewModel.thisUsersFam.value?.components?.size) {
+            homeViewModel.thisUsersFam.value?.matchState = "STARTED"
+            homeViewModel.thisUsersFam.value?.lastMatchMillis = System.currentTimeMillis()
+        }
 
-                }
-            }
-        }*/
+        homeViewModel.updateMatchState(requireContext())
+    }
 
+    private fun startMatch() {
+        homeViewModel.thisUser.value?.isInGame= true
+        homeViewModel.updatePlayerState(requireContext())
+        homeViewModel.thisUsersFam.value?.playersInGame = homeViewModel.thisUsersFam.value?.playersInGame!! + 1
+        homeViewModel.thisUsersFam.value?.matchState = "ACTIVE"
+        homeViewModel.updateMatchState(requireContext())
     }
 
     private fun setPositions(list: List<User>) {
@@ -590,4 +756,27 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     var imageListener = ImageListener { position, imageView -> imageView.setImageResource(sampleImages.get(position)) }
 
+    fun setStartButtonEnabled() {
+        but_join.visibility = View.GONE
+        but_start.visibility=View.VISIBLE
+        but_start.isEnabled = true
+    }
+
+    fun setStartButtonDisabled() {
+        but_join.visibility = View.GONE
+        but_start.visibility=View.VISIBLE
+        but_start.isEnabled = false
+    }
+
+    fun setJoinButtonEnabled() {
+        but_start.visibility = View.GONE
+        but_join.visibility=View.VISIBLE
+        but_join.isEnabled = true
+    }
+
+    fun setJoinButtonDisabled() {
+        but_start.visibility = View.GONE
+        but_join.visibility=View.VISIBLE
+        but_join.isEnabled = false
+    }
 }

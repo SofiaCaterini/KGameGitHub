@@ -47,7 +47,7 @@ class ItemAdapterUsers() : RecyclerView.Adapter<ItemAdapterUsers.ViewHolder>() {
         super.onViewRecycled(holder)
         holder.unbind()
     }
-    fun sortPosizione() {
+    fun sortItems() {
         val newData = data.sortedBy{ it.position}
         data = newData
         notifyDataSetChanged()

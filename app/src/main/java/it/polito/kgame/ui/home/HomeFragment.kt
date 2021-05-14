@@ -12,6 +12,7 @@ import android.net.wifi.WifiManager
 import android.net.wifi.WifiNetworkSpecifier
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -40,8 +41,6 @@ import it.polito.kgame.ui.grow.GrowFragment
 import it.polito.kgame.ui.grow.noClicked
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.carousel_layout.*
-import kotlinx.android.synthetic.main.content_main.*
-import kotlinx.android.synthetic.main.fragment_grow.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.join_match.*
@@ -68,8 +67,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private var mRequestQue: RequestQueue? = null
     private val URL = "https://fcm.googleapis.com/fcm/send"
 
-
     @SuppressLint("ResourceType")
+    override fun onAttach(context: Context) {
+
+        super.onAttach(context)
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
 
@@ -370,6 +372,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(homeViewModel.thisUser.value?.profileImg).into(it) }
         })*/
 
+
         //Carousel
 
         var carouselView: CarouselView? = null
@@ -377,6 +380,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         carouselView.setImageListener(imageListener)
         carouselView.pageCount = sampleImages.size
 
+
+        val activity: MainActivity? = activity as MainActivity?
+        var myDataFromActivity = activity?.getMyData()
+
+        if (myDataFromActivity!= null){
+            println("carvis")
+            //Da mettere benvenuto su kgame
+            carousel.isVisible = true
+            (activity as MainActivity).sessionId = null
+
+        }
 
         regolamento.setOnClickListener {
             carousel.isVisible = true

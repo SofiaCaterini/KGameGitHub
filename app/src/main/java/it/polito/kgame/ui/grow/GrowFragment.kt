@@ -39,21 +39,15 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
         val listapesate : MutableList<PesoInfo> = ArrayList()
         var ser : LineGraphSeries<DataPoint>? = null
         val graph : GraphView = view.findViewById(R.id.graph) as GraphView
-        var controlloObj = false
-        println("idgrow: ${this.id}")
+
 
         val bundle = this.arguments
         if (bundle != null) {
-            println("okBundle")
-            controlloObj = true
             obb.isVisible = true
         } else {
             obb.isVisible = false
         }
-        if(controlloObj==true){
-            println("controlloobjtrue")
-            obb.isVisible = true
-        }
+
         growViewModel.Weights.observe(viewLifecycleOwner, Observer { weight ->
             println("WEIGHTS: $weight")
             println("nWeight: ${weight.size}")

@@ -27,4 +27,7 @@
         android:name="it.polito.kgame.ui.grow.GrowFragment"
         android:label="@string/menu_grow"
         tools:layout="@layout/fragment_grow" />
+    <action
+        android:id="@+id/action1"
+        app:destination="@id/nav_grow" />
 </navigation>

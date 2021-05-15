@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_300">#723EEF</color>
     <color name="purple_500">#111112</color>
     <color name="purple_700">#090909</color>
     <color name="teal_200">#DB73ED</color>
@@ -14,4 +15,6 @@
     <color name="toolbar_account">#FF9800</color>
     <color name="blue">#0000FF</color>
     <color name="yellow">#FFD500</color>
+    <color name="addBlack">#B0000000</color>
+    <color name="empty">#0000</color>
 </resources>

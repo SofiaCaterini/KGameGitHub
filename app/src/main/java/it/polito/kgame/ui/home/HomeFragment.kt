@@ -4,6 +4,7 @@ package it.polito.kgame.ui.home
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
@@ -30,6 +31,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.messaging.FirebaseMessaging
@@ -63,7 +65,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     var pawnWidth : Int? = null
     private var pawnHeight : Int? = null
-    val sampleImages = arrayListOf<Int>(R.drawable.dog, R.drawable.lion)
+    val sampleImages = arrayListOf(R.drawable.regola1, R.drawable.regola2, R.drawable.regola2b_warning, R.drawable.regola3, R.drawable.regola4, R.drawable.regola5)
     private var mRequestQue: RequestQueue? = null
     private val URL = "https://fcm.googleapis.com/fcm/send"
 
@@ -85,161 +87,122 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         val listapesate : MutableList<PesoInfo> = ArrayList()
         val today : Calendar = Calendar.getInstance()
-        //today.timeInMillis = System.currentTimeMillis()
         var dataultima : Calendar = Calendar.getInstance()
         var datacontroller : Boolean = true
 
         //Toolbar
         requireActivity().toolbar.setBackgroundResource(R.color.toolbar_home)
 
-        homeViewModel.thisUser.observe(viewLifecycleOwner,
-                { userValue ->
-                    println("tizio: " + userValue)
-//                val endTimeCal = Calendar.getInstance()
-//                if (homeViewModel.thisUsersFam.userValue?.lastMatchMillis != null) {
-//                    endTimeCal.timeInMillis = homeViewModel.thisUsersFam.userValue?.lastMatchMillis!!
-//                    endTimeCal.add(Calendar.DAY_OF_MONTH,30)
-//                    if (today.after(endTimeCal)) homeViewModel.thisUsersFam.userValue?.matchState = "ENDED"
-//                    endTimeCal.add(Calendar.DAY_OF_MONTH, 1)
-//                    if(today.after(endTimeCal) && homeViewModel.thisUsersFam.userValue?.playersInGame == 0) homeViewModel.thisUsersFam.userValue?.matchState = "NONE"
-//                }
-//
-//                if(homeViewModel.thisUsersFam.userValue?.matchState == "ENDED") {
-//                    userValue.isInGame= false
-//                    homeViewModel.thisUsersFam.userValue?.playersInGame = homeViewModel.thisUsersFam.userValue?.playersInGame!! - 1
-//                }
+        homeViewModel.thisUser.observe(viewLifecycleOwner, { userValue ->
 
-                    println("dovrebbe " + (userValue.isInGame))
-                    if (userValue.isInGame) {    //then match must be "STARTED" or "ACTIVE"
-                        homeViewModel.thisUsersFam.observe(viewLifecycleOwner,
-                                { famValue ->
-                                    println("tizios fatti  " + famValue)
-                                    when (famValue.matchState) {
-                                        "STARTED" -> {
-                                            gameBoard.alpha = 1F
-                                            joinMatch.visibility = View.GONE
-                                            waitForPlayers.visibility = View.GONE
-                                        }
-                                        "ACTIVE" -> {
-                                            gameBoard.alpha = 0.5F
-                                            joinMatch.visibility = View.GONE
-                                            waitForPlayers.visibility = View.VISIBLE
-                                            txt_waitForPlayers.text = "Aspetta che gli altri giocatori della famiglia si uniscano, la partita inizierà quando ci sarete tutti. \n" +
-                                                    "Se sei solo invita altri ad unirsi alla tua famiglia facedoli accedere con questo codice: " + famValue.code + "\n" +
-                                                    "Se credi che tutti si siano già uniti prova a resettare l'app."
-                                        }
+            if (userValue.isInGame) {    //then match must be "STARTED" or "ACTIVE"
+                homeViewModel.thisUsersFam.observe(viewLifecycleOwner,
+                        { famValue ->
+                            println("tizios fatti  " + famValue)
+                            when (famValue.matchState) {
+                                "STARTED" -> {
+                                    gameBoard.alpha = 1F
+                                    joinMatch.visibility = View.GONE
+                                    waitForPlayers.visibility = View.GONE
+                                }
+                                "ACTIVE" -> {
+                                    gameBoard.alpha = 0.5F
+                                    joinMatch.visibility = View.GONE
+                                    waitForPlayers.visibility = View.VISIBLE
+                                    txt_waitForPlayers.text = "Aspetta che gli altri giocatori della famiglia si uniscano, la partita inizierà quando ci sarete tutti. \n" +
+                                            "Se sei solo invita altri ad unirsi alla tua famiglia facedoli accedere con questo codice: " + famValue.code + "\n" +
+                                            "Se credi che tutti si siano già uniti prova a resettare l'app."
+                                }
+                            }
+                        }
+                )
+            } else {  //player is not in game
+                //activate dialog box
+                gameBoard.alpha = 0.5F
+                joinMatch.visibility = View.VISIBLE
+                waitForPlayers.visibility = View.GONE
+
+                homeViewModel.thisUsersFam.observe(viewLifecycleOwner,
+                        { famValue ->
+                            when (famValue.matchState) {
+                                "NONE" -> { //player can create first match
+                                    txt_title.text = "Avvia una nuova partita"   //title
+
+                                    but_obj.visibility = View.VISIBLE           //obj button
+
+                                    if (userValue.objective == null) {              //obj text; end button
+                                        txt_obj.text =
+                                                "Devi impostare un obiettivo prima di poter iniziare la partita. Dopo averla avviata non potrai più modificarlo prima di 30 giorni"
+                                        setStartButtonDisabled()
+                                    } else {
+                                        txt_obj.text =
+                                                "Adesso il tuo obiettivo di peso è di ${userValue.objective} kg. Una volta che avvierai la partita non potrai più modificarlo fino alla fine del mese. Vuoi cambiarlo ora?"
+                                        setStartButtonEnabled()
+                                    }
+
+                                }
+                                "ACTIVE" -> {   //player can join
+                                    txt_title.text = "Unisciti alla partita!"    //title
+
+                                    but_obj.visibility = View.VISIBLE           //obj button
+
+
+                                    if (userValue.objective == null) {              //obj text; end button
+                                        txt_obj.text =
+                                                "Devi impostare un obiettivo prima di poterti unire alla partita. Ricorda che dopo esserti unito non potrai più modificarlo prima di 30 giorni"
+                                        setJoinButtonDisabled()
+                                    } else {
+                                        txt_obj.text =
+                                                "Adesso il tuo obiettivo di peso è di ${userValue.objective} kg. Una volta che sarai in partita non potrai più modificarlo prima di 30 giorni. Vuoi cambiarlo ora?"
+                                        setJoinButtonEnabled()
                                     }
                                 }
-                        )
-                    } else {  //player is not in game
-                        //activate dialog box
-                        gameBoard.alpha = 0.5F
-                        joinMatch.visibility = View.VISIBLE
-                        waitForPlayers.visibility = View.GONE
+                                "STARTED" -> {  //player can't join
+                                    txt_title.text = "La partita è gia iniziata."   //title
 
-                        homeViewModel.thisUsersFam.observe(viewLifecycleOwner,
-                                { famValue ->
-                                    println("tizios fatti  " + famValue)
-                                    when (famValue.matchState) {
-                                        "NONE" -> { //player can create first match
-                                            txt_title.text = "Avvia una nuova partita"   //title
+                                    val matchEndCal = Calendar.getInstance()        //obj text
+                                    matchEndCal.timeInMillis = famValue.lastMatchMillis!!
+                                    matchEndCal.add(Calendar.DAY_OF_MONTH, 30)
+                                    txt_obj.text = "Aspetta che finisca per unirti alla prossima. " +
+                                            "\n Finirà il ${matchEndCal.get(Calendar.DAY_OF_MONTH)}/${matchEndCal.get(Calendar.MONTH) + 1}"
 
-                                            but_obj.visibility = View.VISIBLE           //onj button
-                                            val fragment = GrowFragment()
-                                            but_obj.setOnClickListener {
+                                    but_obj.visibility = View.GONE                  //obj button
 
-                                                val bundle = Bundle()
-                                                bundle.putString("key", "abc") // Put anything what you want
+                                    setJoinButtonDisabled()                         //end button
 
-                                                fragment.setArguments(bundle)
-                                                view.findNavController().navigate(R.id.action1)
-                                                requireActivity().supportFragmentManager
-                                                        .beginTransaction().replace(this.id, fragment)
-                                                        .commit()
+                                }
+                                "ENDED" -> {    //player can restart match only if every player has seen victory screen -> homeViewModel.thisUsersFam.userValue?.playersInGame == 0
+                                    var winner: String? = famValue.components?.find { user -> user.mail == famValue.lastWinnerMail }?.username
+                                    txt_title.text = "Congratulazioni ${winner}!!!"     //title
 
+                                    txt_obj.text = "La partita si è conclusa. Complimenti al vincitore ma anche a tutti voi! \n "   //obj text part1
 
-                                            }
-
-                                            if (userValue.objective == null) {              //obj text; end button
-                                                txt_obj.text =
-                                                        "Devi impostare un obiettivo prima di poter iniziare la partita. Dopo averla avviata non potrai più modificarlo prima di 30 giorni"
-                                                setStartButtonDisabled()
-                                            } else {
-                                                txt_obj.text =
-                                                        "Adesso il tuo obiettivo di peso è di ${userValue.objective} kg. Una volta che avvierai la partita non potrai più modificarlo fino alla fine del mese. Vuoi cambiarlo ora?"
-                                                setStartButtonEnabled()
-                                            }
-
-                                        }
-                                        "ACTIVE" -> {   //player can join
-                                            txt_title.text = "Unisciti alla partita!"    //title
-
-                                            but_obj.visibility = View.VISIBLE           //obj button
-
-                                            val fragment = GrowFragment()
-                                            but_obj.setOnClickListener {
-
-                                                val bundle = Bundle()
-                                                bundle.putString("key", "abc") // Put anything what you want
-
-                                                fragment.arguments = bundle
-                                                view.findNavController().navigate(R.id.action1)
-                                                requireActivity().supportFragmentManager
-                                                        .beginTransaction().replace(this.id, fragment)
-                                                        .commit()
-
-
-                                            }
-
-                                            if (userValue.objective == null) {              //obj text; end button
-                                                txt_obj.text =
-                                                        "Devi impostare un obiettivo prima di poterti unire alla partita. Ricorda che dopo esserti unito non potrai più modificarlo prima di 30 giorni"
-                                                setJoinButtonDisabled()
-                                            } else {
-                                                txt_obj.text =
-                                                        "Adesso il tuo obiettivo di peso è di ${userValue.objective} kg. Una volta che sarai in partita non potrai più modificarlo prima di 30 giorni. Vuoi cambiarlo ora?"
-                                                setJoinButtonEnabled()
-                                            }
-                                        }
-                                        "STARTED" -> {  //player can't join
-                                            txt_title.text = "La partita è gia iniziata."   //title
-
-                                            val matchEndCal = Calendar.getInstance()        //obj text
-                                            matchEndCal.timeInMillis = famValue.lastMatchMillis!!
-                                            matchEndCal.add(Calendar.DAY_OF_MONTH, 30)
-                                            txt_obj.text = "Aspetta che finisca per unirti alla prossima. " +
-                                                    "\n Finirà il ${matchEndCal.get(Calendar.DAY_OF_MONTH)}/${matchEndCal.get(Calendar.MONTH) + 1}"
-
-                                            but_obj.visibility = View.GONE                  //obj button
-
-                                            setJoinButtonDisabled()                         //end button
-
-                                        }
-                                        "ENDED" -> {    //player can restart match only if every player has seen victory screen -> homeViewModel.thisUsersFam.userValue?.playersInGame == 0
-                                            var winner: String? = famValue.components?.find { user -> user.mail == famValue.lastWinnerMail }?.username
-                                            txt_title.text = "Congratulazioni ${winner}!!!"     //title
-
-                                            txt_obj.text = "La partita si è conclusa. Complimenti al vincitore ma anche a tutti voi! \n "   //obj text part1
-
-                                            if (famValue.playersInGame == 0) {      //obj text part2; obj button; end button
-                                                txt_obj.text = txt_obj.text.toString() + "Sei già pronto a rigiocare? Se vuoi cambia ora il tuo obiettivo e poi avvia la partita"
-                                                but_obj.visibility = View.VISIBLE
-                                                setStartButtonEnabled()
-                                            } else {
-                                                txt_obj.text = txt_obj.text.toString() + "Gli altri giocatori non sono ancora pronti. Digli di aprire l'app così che tutti vedano chi ha vinto"
-                                                but_obj.visibility = View.GONE
-                                                setStartButtonDisabled()
-                                            }
-                                        }
+                                    if (famValue.playersInGame == 0) {      //obj text part2; obj button; end button
+                                        txt_obj.text = txt_obj.text.toString() + "Sei già pronto a rigiocare? Se vuoi cambia ora il tuo obiettivo e poi avvia la partita"
+                                        but_obj.visibility = View.VISIBLE
+                                        setStartButtonEnabled()
+                                    } else {
+                                        txt_obj.text = txt_obj.text.toString() + "Gli altri giocatori non sono ancora pronti. Digli di aprire l'app così che tutti vedano chi ha vinto"
+                                        but_obj.visibility = View.GONE
+                                        setStartButtonDisabled()
                                     }
                                 }
-                        )
-                    }
-                }
-        )
+                            }
+                        }
+                )
+            }
+        } )
 
+        val fragment = GrowFragment()
         but_obj.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString("key", "abc") // Put anything what you want
 
+            fragment.arguments = bundle
+            view.findNavController().navigate(R.id.action1)
+            requireActivity().supportFragmentManager
+                    .beginTransaction().replace(this.id, fragment)
+                    .commit()
         }
 
         but_join.setOnClickListener {
@@ -257,8 +220,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
 
-
-
         but_start.setOnClickListener {
             if(datacontroller==true) {      //non ti sei pesato oggi
                 MaterialAlertDialogBuilder(requireContext())
@@ -275,69 +236,65 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
 
+        homeViewModel.thisUsersFam.observe(viewLifecycleOwner, { value ->
+                println("tizioscricca: " + value)
 
-        homeViewModel.thisUsersFam.observe(viewLifecycleOwner,
-                { value ->
-                    println("tizioscricca: " + value)
+                //Notification
+                mRequestQue = Volley.newRequestQueue(requireContext())
+                FirebaseMessaging.getInstance().subscribeToTopic(value.code.toString())
+                println("observe: ${value.code.toString()}")
 
-                    //Notification
-                    mRequestQue = Volley.newRequestQueue(requireContext())
-                    FirebaseMessaging.getInstance().subscribeToTopic(value.code.toString())
-                    println("observe: ${value.code.toString()}")
-
-                    val endTimeCal = Calendar.getInstance()
-                    if (value.lastMatchMillis != null) {
-                        endTimeCal.timeInMillis = value.lastMatchMillis!!
-                        endTimeCal.add(Calendar.DAY_OF_MONTH, 30)
-                        if (today.after(endTimeCal) && value.matchState == "STARTED") {
-                            value.matchState = "ENDED"
-                            sendNotificationEndMatch()
-                            value.lastWinnerMail = value.components?.sortedBy { user -> user.position }?.last()?.mail
-                            homeViewModel.updateMatchState(requireContext())
-                        }                                 //end match if is been more than 30 days from match start
-                        endTimeCal.add(Calendar.DAY_OF_MONTH, 7)
-                        if (((today.after(endTimeCal) && value.playersInGame <= 0) || value.playersInGame == -10) && value.matchState == "ENDED") {
-                            value.matchState = "NONE"
-                            homeViewModel.updateMatchState(requireContext())
-                        }                                                                                       //remove victory screen if it's been a week since match ended or if victory screen has been shown
-                        //at least 1 time by all players and then 10 times more
-                    }
-
-                    if (value.matchState == "ENDED") {
-                        println("ma manco qua? " + homeViewModel.thisUser.value?.isInGame)
-                        if (homeViewModel.thisUser.value?.isInGame == true || value.playersInGame <= 0) {
-                            value.playersInGame = value.playersInGame - 1
-                            homeViewModel.updateMatchState(requireContext())
-                        }
-                        homeViewModel.thisUser.value?.isInGame = false
-                        println("ohmachee: " + homeViewModel.thisUser.value?.isInGame)
-                        homeViewModel.updatePlayerState(requireContext())
-                    }
-
-                    if (!value.components.isNullOrEmpty())
-                        value.components?.let {
-                            adapter.setData(it)
-                            adapter.sortItems()
-                            setPositions(it)
-                        }
-
-                    println("2COPIARE: " + layout.gameBoard.width + "/" + layout.gameBoard.height)// = ViewGroup.LayoutParams()
-
-                    rvhome.layoutManager = LinearLayoutManager(requireContext())
-                    rvhome.adapter = adapter
-
-                    familyName.text = value.name
-
-                    //inserimento dati utente nell'header
-                    val header = requireActivity().findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
-                    header.findViewById<TextView>(R.id.navHeadNickname)?.text = homeViewModel.thisUser.value?.username
-                    header.findViewById<TextView>(R.id.navHeadFamilyName)?.text = homeViewModel.thisUsersFam.value?.name
-                    header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(homeViewModel.thisUser.value?.profileImg).fit().into(it) }
+                val endTimeCal = Calendar.getInstance()
+                if (value.lastMatchMillis != null) {
+                    endTimeCal.timeInMillis = value.lastMatchMillis!!
+                    endTimeCal.add(Calendar.DAY_OF_MONTH, 30)
+                    if (today.after(endTimeCal) && value.matchState == "STARTED") {
+                        value.matchState = "ENDED"
+                        sendNotificationEndMatch()
+                        value.lastWinnerMail = value.components?.sortedBy { user -> user.position }?.last()?.mail
+                        homeViewModel.updateMatchState(requireContext())
+                    }                                 //end match if is been more than 30 days from match start
+                    endTimeCal.add(Calendar.DAY_OF_MONTH, 7)
+                    if (((today.after(endTimeCal) && value.playersInGame <= 0) || value.playersInGame == -10) && value.matchState == "ENDED") {
+                        value.matchState = "NONE"
+                        homeViewModel.updateMatchState(requireContext())
+                    }                                                                                       //remove victory screen if it's been a week since match ended or if victory screen has been shown
+                    //at least 1 time by all players and then 10 times more
                 }
-        )
 
+                if (value.matchState == "ENDED") {
+                    println("ma manco qua? " + homeViewModel.thisUser.value?.isInGame)
+                    if (homeViewModel.thisUser.value?.isInGame == true || value.playersInGame <= 0) {
+                        value.playersInGame = value.playersInGame - 1
+                        homeViewModel.updateMatchState(requireContext())
+                    }
+                    homeViewModel.thisUser.value?.isInGame = false
+                    println("ohmachee: " + homeViewModel.thisUser.value?.isInGame)
+                    homeViewModel.updatePlayerState(requireContext())
+                }
 
-        homeViewModel.weights.observe(viewLifecycleOwner, Observer { weights ->
+                if (!value.components.isNullOrEmpty())
+                    value.components?.let {
+                        adapter.setData(it)
+                        adapter.sortItems()
+                        setPositions(it)
+                    }
+
+                println("2COPIARE: " + layout.gameBoard.width + "/" + layout.gameBoard.height)// = ViewGroup.LayoutParams()
+
+                rvhome.layoutManager = LinearLayoutManager(requireContext())
+                rvhome.adapter = adapter
+
+                familyName.text = value.name
+
+                //inserimento dati utente nell'header
+                val header = requireActivity().findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
+                header.findViewById<TextView>(R.id.navHeadNickname)?.text = homeViewModel.thisUser.value?.username
+                header.findViewById<TextView>(R.id.navHeadFamilyName)?.text = homeViewModel.thisUsersFam.value?.name
+                header.findViewById<ImageView>(R.id.navHeadProfileImg)?.let { Picasso.get().load(homeViewModel.thisUser.value?.profileImg).fit().into(it) }
+        })
+
+        homeViewModel.weights.observe(viewLifecycleOwner, { weights ->
             println("WEIGHTS: $weights")
             println("nWeight: ${weights.size}")
             listapesate.clear()
@@ -379,30 +336,39 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         carouselView = requireActivity().findViewById(R.id.carouselView)
         carouselView.setImageListener(imageListener)
         carouselView.pageCount = sampleImages.size
+        var appBar = requireActivity().findViewById<AppBarLayout>(R.id.appBarLayout)
 
 
         val activity: MainActivity? = activity as MainActivity?
         var myDataFromActivity = activity?.getMyData()
 
-        if (myDataFromActivity!= null){
+        if (myDataFromActivity!= null) {
             println("carvis")
             //Da mettere benvenuto su kgame
             carousel.isVisible = true
             (activity as MainActivity).sessionId = null
-
         }
 
         regolamento.setOnClickListener {
+            var noScroll = true
             carousel.isVisible = true
+
+            appBar.foreground = ColorDrawable(requireContext().getColor(R.color.addBlack))
+            obscure.visibility = View.VISIBLE
+
             button.setOnClickListener {
-                carousel.isVisible = false
+                carousel.visibility = View.GONE
+                view.isNestedScrollingEnabled = true
+                appBar.foreground = ColorDrawable(requireContext().getColor(R.color.empty))
+                obscure.visibility = View.INVISIBLE
+                noScroll=false
+            }
+            view.setOnScrollChangeListener { _, _, _, _, _ ->
+                if(noScroll) view.scrollTo(0,0)
             }
         }
 
-
-
         //Add weight
-
         homeAddWeight.setOnClickListener {
             if (datacontroller == false) {
                 MaterialAlertDialogBuilder(requireContext())

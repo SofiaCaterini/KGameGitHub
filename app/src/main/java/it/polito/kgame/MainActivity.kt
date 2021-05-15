@@ -1,5 +1,6 @@
 package it.polito.kgame
 
+
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -9,11 +10,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -22,23 +20,27 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
-import it.polito.kgame.ui.home.HomeViewModel
+import it.polito.kgame.ui.home.HomeFragment
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_calendar.*
+import kotlinx.android.synthetic.main.fragment_home.*
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     lateinit var preferences: SharedPreferences
+    var sessionId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        println("OncreateMain")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         preferences = getSharedPreferences("SHARED_PREF", Context.MODE_PRIVATE)
+
+        sessionId = intent.getStringExtra("EXTRA_SESSION_ID")
 
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
@@ -90,7 +92,7 @@ class MainActivity : AppCompatActivity() {
                     finish()
 
                 }
-                .setNegativeButton("No"){  _, _ ->
+                .setNegativeButton("No"){ _, _ ->
 
                 }
                 .show()
@@ -114,7 +116,7 @@ class MainActivity : AppCompatActivity() {
                     finish()
 
                 }
-                .setNegativeButton("No"){  _, _ ->
+                .setNegativeButton("No"){ _, _ ->
 
                 }
                 .show()
@@ -136,19 +138,22 @@ class MainActivity : AppCompatActivity() {
                     finish()
 
                 }
-                .setNegativeButton("No"){  _, _ ->
+                .setNegativeButton("No"){ _, _ ->
 
                 }
                 .show()
 
     }
-
+    public fun getMyData(): String? {
+        return sessionId
+    }
     override fun onSupportNavigateUp(): Boolean {
         hideKeyboard(nav_view, this)
 
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
 
 
 }

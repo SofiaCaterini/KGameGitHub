@@ -90,7 +90,7 @@
             android:foregroundTint="#F6F6F6"
             android:foregroundTintMode="src_atop"
             android:src="@drawable/exchange"
-            android:tint="#FFC107"
+            app:tint="#FFC107"
             app:layout_constraintBottom_toTopOf="@+id/guideline4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.16"

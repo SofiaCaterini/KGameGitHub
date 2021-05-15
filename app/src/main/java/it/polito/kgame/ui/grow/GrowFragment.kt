@@ -13,18 +13,14 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import com.applandeo.materialcalendarview.EventDay
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import it.polito.kgame.DbManager
-import it.polito.kgame.EventoInfo
 import it.polito.kgame.PesoInfo
 import it.polito.kgame.R
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.fragment_calendar.*
 import kotlinx.android.synthetic.main.fragment_grow.*
 import kotlinx.android.synthetic.main.fragment_grow.obiettivo
 import kotlinx.android.synthetic.main.obj_form.*
@@ -44,11 +40,19 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
         var ser : LineGraphSeries<DataPoint>? = null
         val graph : GraphView = view.findViewById(R.id.graph) as GraphView
 
+
+        val bundle = this.arguments
+        if (bundle != null) {
+            obb.isVisible = true
+        } else {
+            obb.isVisible = false
+        }
+
         growViewModel.Weights.observe(viewLifecycleOwner, Observer { weight ->
             println("WEIGHTS: $weight")
             println("nWeight: ${weight.size}")
             listapesate.clear()
-            val dati : MutableMap<Long,Double> = mutableMapOf()
+            val dati: MutableMap<Long, Double> = mutableMapOf()
             weight.forEach {
                 listapesate.add(it)
                 dati[it.data!!] = it.peso?.toDouble()!!
@@ -70,18 +74,18 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
         var objIsActive = false
         val np: NumberPicker = view.findViewById(R.id.numberPicker)
         var objLine = LineGraphSeries(
-            arrayOf(
-                DataPoint(
-                    (todayMillis - 31*oneDayInMillis)
-                        .toDouble(),
-                    obj.toDouble()
-                ),
-                DataPoint(
-                    todayMillis
-                        .toDouble(),
-                    obj.toDouble()
+                arrayOf(
+                        DataPoint(
+                                (todayMillis - 31 * oneDayInMillis)
+                                        .toDouble(),
+                                obj.toDouble()
+                        ),
+                        DataPoint(
+                                todayMillis
+                                        .toDouble(),
+                                obj.toDouble()
+                        )
                 )
-            )
         )
 
         fun refresh() {
@@ -92,18 +96,18 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
                 }
 
                 objLine = LineGraphSeries(
-                    arrayOf(
-                        DataPoint(
-                            (todayMillis - 31*oneDayInMillis)
-                                .toDouble(),
-                            obj.toDouble()
-                        ),
-                        DataPoint(
-                            todayMillis
-                                .toDouble(),
-                            obj.toDouble()
+                        arrayOf(
+                                DataPoint(
+                                        (todayMillis - 31 * oneDayInMillis)
+                                                .toDouble(),
+                                        obj.toDouble()
+                                ),
+                                DataPoint(
+                                        todayMillis
+                                                .toDouble(),
+                                        obj.toDouble()
+                                )
                         )
-                    )
                 )
                 objLine.color = R.color.white
 
@@ -115,14 +119,15 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
         growViewModel.thisUser.observe(viewLifecycleOwner, Observer {
             println("OBJ: ${it.objective}")
             //set objective
-            if(it.objective!= null){
+            if (it.objective != null) {
                 obj = it.objective!!.toInt()
                 objIsActive = true
-                if ( ser!= null){
-                resizeGraph(0, ser!!, todayMillis)}
+                if (ser != null) {
+                    resizeGraph(0, ser!!, todayMillis)
+                }
             }
             refresh()
-            obb.isVisible = false
+            //obb.isVisible = false
 
 
         })
@@ -138,7 +143,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
 
         graph.gridLabelRenderer.setHorizontalLabelsAngle(45)
         //graph.gridLabelRenderer.numHorizontalLabels = 6
-        graph.gridLabelRenderer.setHumanRounding(true,true)
+        graph.gridLabelRenderer.setHumanRounding(true, true)
         graph.gridLabelRenderer.labelFormatter = object : DefaultLabelFormatter() {
             override fun formatLabel(value: Double, isValueX: Boolean): String {
                 return if (isValueX) {
@@ -303,21 +308,21 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
                 0 -> {
                     last_x_days.text = "Ultimi 7 giorni"
                     // set manual x bounds to have nice steps
-                    graph.viewport.setMinX(today - (7*oneDayInMillis).toDouble())
+                    graph.viewport.setMinX(today - (7 * oneDayInMillis).toDouble())
                     graph.viewport.setMaxX(today + (oneDayInMillis).toDouble())
                     graph.viewport.isXAxisBoundsManual = true
                 }
                 1 -> {
                     last_x_days.text = "Ultimi 15 giorni"
                     // set manual x bounds to have nice steps
-                    graph.viewport.setMinX(today - (15*oneDayInMillis).toDouble())
+                    graph.viewport.setMinX(today - (15 * oneDayInMillis).toDouble())
                     graph.viewport.setMaxX(today + (oneDayInMillis).toDouble())
                     graph.viewport.isXAxisBoundsManual = true
                 }
                 2 -> {
                     last_x_days.text = "Ultimo mese"
                     // set manual x bounds to have nice steps
-                    graph.viewport.setMinX(today - (31*oneDayInMillis).toDouble())
+                    graph.viewport.setMinX(today - (31 * oneDayInMillis).toDouble())
                     graph.viewport.setMaxX(today + (oneDayInMillis).toDouble())
                     graph.viewport.isXAxisBoundsManual = true
                 }
@@ -376,7 +381,7 @@ private fun refactorDate(cal: java.util.Calendar): String {
     return day + "/" + month + "/" + cal.get(java.util.Calendar.YEAR)
 }
 
-private fun updateGraph(dati: MutableMap<Long,Double>) : LineGraphSeries<DataPoint> {
+private fun updateGraph(dati: MutableMap<Long, Double>) : LineGraphSeries<DataPoint> {
     var series: LineGraphSeries<DataPoint>
     println("dentro updatecalendar")
     println("dates: ${dati.keys}")

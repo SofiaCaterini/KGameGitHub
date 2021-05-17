@@ -13,6 +13,31 @@
         android:background="@drawable/resource_final"
         tools:context=".HomeActivity">
 
+        <include
+            android:id="@+id/carousel"
+            layout="@layout/carousel_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="#F8F5F5"
+            android:elevation="6dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/gameBoard" />
+
+        <View
+            android:id="@+id/obscure"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@color/addBlack"
+            android:elevation="5dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/gameBoard"
             android:layout_width="423dp"
@@ -34,7 +59,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/gameBoard"
             app:layout_constraintEnd_toEndOf="@+id/carousel"
             app:layout_constraintStart_toStartOf="@+id/carousel"
-            app:layout_constraintTop_toTopOf="@+id/gameBoard" />
+            app:layout_constraintTop_toTopOf="@+id/gameBoard"
+            tools:visibility="visible" />
 
         <include
             android:id="@+id/waitForPlayers"
@@ -45,18 +71,6 @@
             app:layout_constraintBottom_toBottomOf="@+id/gameBoard"
             app:layout_constraintEnd_toEndOf="@+id/carousel"
             app:layout_constraintStart_toStartOf="@+id/carousel"
-            app:layout_constraintTop_toTopOf="@+id/gameBoard" />
-
-        <include
-            android:id="@+id/carousel"
-            layout="@layout/carousel_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="#F8F5F5"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/gameBoard" />
 
         <TextView

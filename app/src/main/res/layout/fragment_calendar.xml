@@ -21,26 +21,28 @@
             layout="@layout/impegno_form"
             android:layout_width="350dp"
             android:layout_height="533dp"
+            android:layout_marginTop="32dp"
             android:elevation="0dp"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.65" />
+            app:layout_constraintVertical_bias="0.86" />
 
         <include
             android:id="@+id/creareeve"
             layout="@layout/event_form"
             android:layout_width="350dp"
             android:layout_height="533dp"
+            android:layout_marginTop="32dp"
             android:elevation="0dp"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.65" />
+            app:layout_constraintVertical_bias="0.86" />
 
         <include
             android:id="@+id/ante"

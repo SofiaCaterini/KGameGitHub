@@ -70,10 +70,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val URL = "https://fcm.googleapis.com/fcm/send"
 
     @SuppressLint("ResourceType")
-    override fun onAttach(context: Context) {
 
-        super.onAttach(context)
-    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
 

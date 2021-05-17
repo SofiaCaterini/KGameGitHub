@@ -53,6 +53,7 @@
         android:foreground="@drawable/right_arrow"
         android:foregroundTint="#FFFFFF"
         android:foregroundTintMode="src_in"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/materialTextView4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graph" />
@@ -66,6 +67,7 @@
         android:foregroundTint="#FFFFFF"
         android:foregroundTintMode="src_in"
         android:rotation="180"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/materialTextView4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graph" />
@@ -108,6 +110,7 @@
         android:textColor="#ffffff"
         android:textSize="26sp"
         android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/materialTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

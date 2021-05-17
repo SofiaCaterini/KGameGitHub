@@ -56,6 +56,9 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
         }
 
         growViewModel.Weights.observe(viewLifecycleOwner, Observer { weight ->
+            right_arrow.isVisible = true
+            left_arrow.isVisible = true
+            last_x_days.isVisible = true
             println("WEIGHTS: $weight")
             println("nWeight: ${weight.size}")
             listapesate.clear()
@@ -72,6 +75,7 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
 
             //Graph
             ser = updateGraph(dati)
+
             graph.addSeries(ser)
             resizeGraph(0, ser!!, todayMillis)
 
@@ -186,50 +190,51 @@ class GrowFragment : Fragment(R.layout.fragment_grow){
 
 
 
+        val kgValues = arrayOfNulls<String>(200)
 
+        for (i in 0..199) {
+            kgValues[i] = i.toString() + " Kg"
+        }
+        np.minValue = 0
+        np.maxValue = 199
+        np.value = growViewModel.thisUser.value?.objective?.toInt()?:50
+        np.displayedValues = kgValues
 
         obiettivo.setOnClickListener {
-            val kgValues = arrayOfNulls<String>(200)
-
-            for (i in 0..199) {
-                kgValues[i] = i.toString() + " Kg"
-            }
-            np.minValue = 0
-            np.maxValue = 199
-            np.value = growViewModel.thisUser.value?.objective?.toInt()!!
-            np.displayedValues = kgValues
-
+            np.value = growViewModel.thisUser.value?.objective?.toInt()?:50
 
             obb.isVisible = true
             appBar.foreground = ColorDrawable(requireContext().getColor(R.color.addBlack))
             obscure2.visibility = View.VISIBLE
 
-            ok.setOnClickListener {
-                obb.isVisible = false
-                appBar.foreground = ColorDrawable(requireContext().getColor(R.color.empty))
-                obscure2.visibility = View.INVISIBLE
-
-
-                var messag : String = getString(R.string.question_message_obj)
-                var kg : String = getString(R.string.kgq)
-                var peso : String = np.value.toString()
-                var message2 : String = "$messag $peso $kg"
-
-
-
-                MaterialAlertDialogBuilder(requireContext())
-                        .setTitle(R.string.question_title_obj_ok)
-                        .setMessage(message2)
-                        .setPositiveButton(R.string.yes) { _, _ ->
-                            obj = np.value
-                            objIsActive = true
-                            refresh()
-                            growViewModel.changeObjective(obj.toDouble())
-                        }
-                        .setNegativeButton(R.string.no, null)
-                        .show()
-            }
         }
+
+       ok.setOnClickListener {
+            obb.isVisible = false
+            appBar.foreground = ColorDrawable(requireContext().getColor(R.color.empty))
+            obscure2.visibility = View.INVISIBLE
+
+
+            var messag : String = getString(R.string.question_message_obj)
+            var kg : String = getString(R.string.kgq)
+            var peso : String = np.value.toString()
+            var message2 : String = "$messag $peso $kg"
+
+
+
+            MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.question_title_obj_ok)
+                    .setMessage(message2)
+                    .setPositiveButton(R.string.yes) { _, _ ->
+                        obj = np.value
+                        objIsActive = true
+                        refresh()
+                        growViewModel.changeObjective(obj.toDouble())
+                    }
+                    .setNegativeButton(R.string.no, null)
+                    .show()
+        }
+
         cancel.setOnClickListener {
             obb.isVisible = false
             appBar.foreground = ColorDrawable(requireContext().getColor(R.color.empty))

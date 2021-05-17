@@ -11,7 +11,7 @@
 
 
     <ImageView
-        android:id="@+id/button"
+        android:id="@+id/closeCarousel"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginEnd="30dp"
@@ -23,7 +23,7 @@
         android:id="@+id/carouselView"
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        app:fillColor="#FBF9F9"
+        app:fillColor="@color/purple_300"
         app:pageColor="#00000000"
         app:radius="6dp"
         app:slideInterval="0"

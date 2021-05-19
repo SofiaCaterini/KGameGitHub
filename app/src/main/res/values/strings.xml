@@ -66,12 +66,13 @@
     <string name="question_message_weight_ok">Obiettivo aggiunto correttamente</string>
     <string name="question_title">Imposta sveglia</string>
     <string name="question_message">Sei sicuro di voler impostare la sveglia alle </string>
-    <string name="question_title_obj_ok">Conferma aggiunta obiettivo</string>
+    <string name="question_title_obj_ok">Aggiungi obiettivo</string>
     <string name="question_message_obj">Vuoi davvero impostare il tuo nuovo obiettivo di peso su </string>
     <string name="ricorda">Ricorda: è meglio pesarsi sempre allo stesso orario, preferibilmente al mattino o prima dei pasti!</string>
 
         <!-- home -->
     <string name="question_title_weight">Aggiungi peso</string>
+    <string name="question_title_clock">Imposta sveglia</string>
     <string name="question_title_weight_ok">Peso aggiunto correttamente</string>
     <string name="question_message_weight">Sei salito sopra la bilancia e vuoi aggiungere il tuo peso? </string>
     <string name="question_message_obj_ok">Hai aggiunto correttamente il peso di</string>

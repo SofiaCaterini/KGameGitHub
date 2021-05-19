@@ -677,56 +677,82 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 if ((titoloe.text.toString().isNotEmpty() && luogoe.text.toString().isNotEmpty()
                             && descrizionee.text.toString().isNotEmpty()) && orainizioevalid && dataeIsValid
                 ) {
+
+                    ///qui
                     val nuovoevento = EventoInfo(titoloe.text.toString(), eventDateCal , descrizionee.text.toString(),luogoe.text.toString())
                     listaeventi.add(nuovoevento)
                     Log.d("Nuovoevento", nuovoevento.cal?.timeInMillis.toString())
-                    val intent = Intent(Intent.ACTION_INSERT).apply {
-                        data = CalendarContract.Events.CONTENT_URI
-                        putExtra(CalendarContract.Events.TITLE, titoloe.text.toString())
-                        putExtra(CalendarContract.Events.EVENT_LOCATION, luogoe.text.toString())
-                        putExtra(CalendarContract.Events.DESCRIPTION, descrizionee.text.toString())
-                        putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, eventDateCal.timeInMillis)
-                        //condividere l'evento con tutte le persone della famiglia, si ricava la mail da ogni partecipante
-                        //attenzione deve essere mail di google
-                        putExtra(Intent.EXTRA_EMAIL, "pippo@coca.it")
-                    }
-                    if (intent.resolveActivity(requireActivity().packageManager) != null) {
-                        requireActivity().startActivity(intent)
-                        creareeve.isVisible = false
-                        calendarView.isVisible = true
-                        calendarView.isClickable = true
-                        calendarView.isEnabled = true
 
-                        val dataprova1 : java.util.Calendar = java.util.Calendar.getInstance()
+                    MaterialAlertDialogBuilder(requireContext())
+                            .setTitle("Aggiungi evento a Google Calendar")
+                            .setMessage("Vuoi aggiungere questo evento di famiglia al tuo Google Calendar e mandare l'invito ai componenti della tua famiglia?")
+                            .setPositiveButton("Si") { _, _ ->
 
-                        dataprova1.set(eventDateCal.get(java.util.Calendar.YEAR), eventDateCal.get(java.util.Calendar.MONTH),
-                                eventDateCal.get(java.util.Calendar.DAY_OF_MONTH), eventDateCal.get(java.util.Calendar.HOUR),
-                                eventDateCal.get(java.util.Calendar.MINUTE))
-                        Log.d("dataprova1==mimp", dataprova1.timeInMillis.toString())
+                                val intent = Intent(Intent.ACTION_INSERT).apply {
+                                    data = CalendarContract.Events.CONTENT_URI
+                                    putExtra(CalendarContract.Events.TITLE, titoloe.text.toString())
+                                    putExtra(CalendarContract.Events.EVENT_LOCATION, luogoe.text.toString())
+                                    putExtra(CalendarContract.Events.DESCRIPTION, descrizionee.text.toString())
+                                    putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, eventDateCal.timeInMillis)
+                                    //condividere l'evento con tutte le persone della famiglia, si ricava la mail da ogni partecipante
+                                    //attenzione deve essere mail di google
+                                    putExtra(Intent.EXTRA_EMAIL, "pippo@coca.it")
+                                }
+                                if (intent.resolveActivity(requireActivity().packageManager) != null) {
+                                    requireActivity().startActivity(intent)
+                                    creareeve.isVisible = false
+                                    calendarView.isVisible = true
+                                    calendarView.isClickable = true
+                                    calendarView.isEnabled = true
 
-                        if (mImpegniDays.find {
-                                    (it.calendar.get(java.util.Calendar.DAY_OF_MONTH) == dataprova1.get(java.util.Calendar.DAY_OF_MONTH)
-                                            && it.calendar.get(java.util.Calendar.MONTH) == dataprova1.get(java.util.Calendar.MONTH)
-                                            && it.calendar.get(java.util.Calendar.YEAR) == dataprova1.get(java.util.Calendar.YEAR))
-                                }!= null) {
-                            mImpEvDays.add(EventDay(dataprova1, R.drawable.blackandgreenicon))
+                                    val dataprova1 : java.util.Calendar = java.util.Calendar.getInstance()
 
+                                    dataprova1.set(eventDateCal.get(java.util.Calendar.YEAR), eventDateCal.get(java.util.Calendar.MONTH),
+                                            eventDateCal.get(java.util.Calendar.DAY_OF_MONTH), eventDateCal.get(java.util.Calendar.HOUR),
+                                            eventDateCal.get(java.util.Calendar.MINUTE))
+                                    Log.d("dataprova1==mimp", dataprova1.timeInMillis.toString())
 
-                        }
-                        else {
-                            mEventDays.add(EventDay(dataprova1, R.drawable.greenicon))
-                        }
-
-
-                        //calendarView.setEvents(mImpEvDays.plus(mImpegniDays.plus(mEventDays)))
+                                    if (mImpegniDays.find {
+                                                (it.calendar.get(java.util.Calendar.DAY_OF_MONTH) == dataprova1.get(java.util.Calendar.DAY_OF_MONTH)
+                                                        && it.calendar.get(java.util.Calendar.MONTH) == dataprova1.get(java.util.Calendar.MONTH)
+                                                        && it.calendar.get(java.util.Calendar.YEAR) == dataprova1.get(java.util.Calendar.YEAR))
+                                            }!= null) {
+                                        mImpEvDays.add(EventDay(dataprova1, R.drawable.blackandgreenicon))
 
 
-                    } else {
-                        Toast.makeText(
-                                requireContext(), "There is no app that can support this action",
-                                Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                                    }
+                                    else {
+                                        mEventDays.add(EventDay(dataprova1, R.drawable.greenicon))
+                                    }
+
+
+                                    //calendarView.setEvents(mImpEvDays.plus(mImpegniDays.plus(mEventDays)))
+
+
+                                } else {
+                                    Toast.makeText(
+                                            requireContext(), "There is no app that can support this action",
+                                            Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                            .setNegativeButton("No"){  _, _ ->
+                                //creareimp.isVisible = false
+                                evento.isClickable = true
+                                impegno.isClickable = true
+                                creareeve.isVisible = false
+                                calendarView.isClickable = true
+                                calendarView.isEnabled = true
+                                calendarView.isVisible = true
+                                view.hideKeyboard()
+                                println("annulla")
+                                /*Toast.makeText(
+                                        requireContext(), "Evento aggiunto correttamente ",
+                                        Toast.LENGTH_SHORT
+                                ).show()*/
+                            }
+                            .show()
+
 
                 } else {
                     Toast.makeText(

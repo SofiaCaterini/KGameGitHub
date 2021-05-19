@@ -65,7 +65,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private var pawnHeight : Int? = null
     val sampleImages = arrayListOf(R.drawable.regola1, R.drawable.regola2, R.drawable.regola2b_warning, R.drawable.regola3, R.drawable.regola4, R.drawable.regola5)
     //Aggiungere benvenuto
-    val sampleImagesFirstTime = arrayListOf(R.drawable.dog, R.drawable.regola1, R.drawable.regola2, R.drawable.regola2b_warning, R.drawable.regola3, R.drawable.regola4, R.drawable.regola5)
+    val sampleImagesFirstTime = arrayListOf(R.drawable.regole_benvenuto, R.drawable.regola1, R.drawable.regola2, R.drawable.regola2b_warning, R.drawable.regola3, R.drawable.regola4, R.drawable.regola5)
     private var mRequestQue: RequestQueue? = null
     private val URL = "https://fcm.googleapis.com/fcm/send"
 

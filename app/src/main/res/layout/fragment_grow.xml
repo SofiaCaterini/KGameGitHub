@@ -28,24 +28,6 @@
     </com.google.android.material.textview.MaterialTextView>
 
     <ImageView
-        android:id="@+id/refreshgrow2"
-        android:layout_width="28dp"
-        android:layout_height="29dp"
-        android:background="#00FF0000"
-        android:clickable="true"
-        android:contextClickable="true"
-        android:foreground="@drawable/exchange"
-        android:foregroundTint="#FFFFFF"
-        android:foregroundTintMode="src_in"
-        android:src="@drawable/exchange"
-        app:layout_constraintBottom_toTopOf="@+id/graph"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.16"
-        app:layout_constraintStart_toEndOf="@+id/text"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.52" />
-
-    <ImageView
         android:id="@+id/right_arrow"
         android:layout_width="28dp"
         android:layout_height="29dp"
@@ -84,7 +66,6 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/graph"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.318"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.53" />

@@ -29,10 +29,13 @@
             android:id="@+id/deletedettagli"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="10dp"
             android:background="#00FBFAFA"
             android:foreground="@drawable/trash"
             android:foregroundTint="#0C0C0C"
-            android:foregroundTintMode="src_in" />
+            android:foregroundTintMode="src_in"
+            android:paddingRight="10dp" />
     </LinearLayout>
 
     <com.google.android.material.textview.MaterialTextView

@@ -308,7 +308,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             if (dataultima.get(java.util.Calendar.DAY_OF_MONTH) == today.get(java.util.Calendar.DAY_OF_MONTH)
                     && dataultima.get(java.util.Calendar.MONTH) == today.get(java.util.Calendar.MONTH)
                     && dataultima.get(java.util.Calendar.YEAR) == today.get(java.util.Calendar.YEAR)) {
-                datacontroller = false
+                //datacontroller = false
             }
             println("data ultima pesata: ${dataultima.timeInMillis}")
             println("data oggi: ${today.timeInMillis}")
@@ -448,6 +448,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                 retedisponibile = true
                                 lifecycleScope.launch(Dispatchers.IO) {
                                     val str = URL("http://192.168.4.1/").readText(Charset.forName("UTF-8"))
+                                    Log.d("esp",str)
+                                    manager.bindProcessToNetwork(null)
                                     withContext(Dispatchers.Main) {
 
                                         val messaggiosalvato2: String = getString(R.string.question_message_obj_ok)
@@ -455,11 +457,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                         val peso: String = str
                                         val message2: String = "$messaggiosalvato2 $peso $kg"
 
+                                        Log.d("esp",message2)
+
+                                        DbManager.createWeight(requireContext(), peso, System.currentTimeMillis())
+
+                                        Log.d("esp",peso)
                                         if (homeViewModel.thisUser.value?.objective != null && homeViewModel.weights.value?.size!! > 0) {
                                             homeViewModel.changePosition(requireContext(), peso.toFloat())
                                         }
 
-                                        DbManager.createWeight(requireContext(), peso, System.currentTimeMillis())
+
 
                                         MaterialAlertDialogBuilder(requireContext())
                                                 .setTitle(R.string.question_title_weight_ok)

@@ -21,26 +21,28 @@
             layout="@layout/impegno_form"
             android:layout_width="350dp"
             android:layout_height="533dp"
+            android:layout_marginTop="32dp"
             android:elevation="0dp"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.65" />
+            app:layout_constraintVertical_bias="0.86" />
 
         <include
             android:id="@+id/creareeve"
             layout="@layout/event_form"
             android:layout_width="350dp"
             android:layout_height="533dp"
+            android:layout_marginTop="32dp"
             android:elevation="0dp"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.65" />
+            app:layout_constraintVertical_bias="0.86" />
 
         <include
             android:id="@+id/ante"
@@ -99,14 +101,13 @@
                 android:textAlignment="center" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/evento"
+                android:id="@+id/impegno"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:layout_marginVertical="20dp"
                 android:fontFamily="@font/asap"
                 android:padding="10dp"
-                android:text="@string/evento"
+                android:text="@string/impegno"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/toolbar_calendar"
                 android:textSize="18sp"
@@ -121,13 +122,14 @@
             </com.google.android.material.button.MaterialButton>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/impegno"
+                android:id="@+id/evento"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
+                android:layout_marginVertical="20dp"
                 android:fontFamily="@font/asap"
                 android:padding="10dp"
-                android:text="@string/impegno"
+                android:text="@string/evento"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/toolbar_calendar"
                 android:textSize="18sp"

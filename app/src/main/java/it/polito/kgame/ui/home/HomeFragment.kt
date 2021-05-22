@@ -13,7 +13,6 @@ import android.net.wifi.WifiManager
 import android.net.wifi.WifiNetworkSpecifier
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -22,7 +21,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -66,14 +64,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     var pawnWidth : Int? = null
     private var pawnHeight : Int? = null
     val sampleImages = arrayListOf(R.drawable.regola1, R.drawable.regola2, R.drawable.regola2b_warning, R.drawable.regola3, R.drawable.regola4, R.drawable.regola5)
+    //Aggiungere benvenuto
+    val sampleImagesFirstTime = arrayListOf(R.drawable.regole_benvenuto, R.drawable.regola1, R.drawable.regola2, R.drawable.regola2b_warning, R.drawable.regola3, R.drawable.regola4, R.drawable.regola5)
     private var mRequestQue: RequestQueue? = null
     private val URL = "https://fcm.googleapis.com/fcm/send"
 
     @SuppressLint("ResourceType")
-    override fun onAttach(context: Context) {
 
-        super.onAttach(context)
-    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
 
@@ -344,8 +341,23 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         if (myDataFromActivity!= null) {
             println("carvis")
+            carouselView.setImageListener(imageListenerFirstTime)
+            carouselView.pageCount = sampleImagesFirstTime.size
+            var noScroll = true
             //Da mettere benvenuto su kgame
             carousel.isVisible = true
+            appBar.foreground = ColorDrawable(requireContext().getColor(R.color.addBlack))
+            obscure.visibility = View.VISIBLE
+            closeCarousel.setOnClickListener {
+                carousel.visibility = View.GONE
+                view.isNestedScrollingEnabled = true
+                appBar.foreground = ColorDrawable(requireContext().getColor(R.color.empty))
+                obscure.visibility = View.INVISIBLE
+                noScroll=false
+            }
+            view.setOnScrollChangeListener { _, _, _, _, _ ->
+                if(noScroll) view.scrollTo(0,0)
+            }
             (activity as MainActivity).sessionId = null
         }
 
@@ -356,7 +368,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             appBar.foreground = ColorDrawable(requireContext().getColor(R.color.addBlack))
             obscure.visibility = View.VISIBLE
 
-            button.setOnClickListener {
+            closeCarousel.setOnClickListener {
                 carousel.visibility = View.GONE
                 view.isNestedScrollingEnabled = true
                 appBar.foreground = ColorDrawable(requireContext().getColor(R.color.empty))
@@ -901,6 +913,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     var imageListener = ImageListener { position, imageView -> imageView.setImageResource(sampleImages.get(position)) }
+    var imageListenerFirstTime = ImageListener { position, imageView -> imageView.setImageResource(sampleImagesFirstTime.get(position)) }
 
     fun setStartButtonEnabled() {
         but_join.visibility = View.GONE

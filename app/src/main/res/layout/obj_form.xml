@@ -12,7 +12,6 @@
         android:layout_width="302dp"
         android:layout_height="300dp"
         android:layout_marginBottom="-32dp"
-        android:src="@color/teal_200"
         android:tintMode="screen"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

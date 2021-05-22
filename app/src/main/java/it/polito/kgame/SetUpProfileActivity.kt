@@ -84,11 +84,12 @@ class SetUpProfileActivity : AppCompatActivity() {
                                     "Ti sei unito correttamente alla famiglia",
                                     Toast.LENGTH_SHORT
                             ).show()
+
                         }
                         val intent = Intent(this@SetUpProfileActivity, MainActivity::class.java)
                         intent.flags =
                                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        val sessionId = true
+                        val sessionId = "true"
                         intent.putExtra("EXTRA_SESSION_ID", sessionId)
                         startActivity(intent)
                         finish()

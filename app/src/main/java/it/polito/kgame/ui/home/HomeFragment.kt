@@ -108,7 +108,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                     joinMatch.visibility = View.GONE
                                     waitForPlayers.visibility = View.VISIBLE
                                     txt_waitForPlayers.text = "Aspetta che gli altri giocatori della famiglia si uniscano, la partita inizierà quando ci sarete tutti. \n" +
-                                            "Se sei solo invita altri ad unirsi alla tua famiglia facedoli accedere con questo codice: " + famValue.code + "\n" +
+                                            "Se sei solo invita altri ad unirsi alla tua famiglia facedoli accedere con questo codice: " + "\n" + famValue.code + "\n" +
                                             "Se credi che tutti si siano già uniti prova a resettare l'app."
                                 }
                             }
@@ -275,7 +275,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     value.components?.let {
                         adapter.setData(it)
                         adapter.sortItems()
-                        setPositions(it)
+                        if ( homeViewModel.thisUsersFam.value?.matchState == "STARTED"){
+                        setPositions(it)}
                     }
 
                 println("2COPIARE: " + layout.gameBoard.width + "/" + layout.gameBoard.height)// = ViewGroup.LayoutParams()
@@ -309,7 +310,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             if (dataultima.get(java.util.Calendar.DAY_OF_MONTH) == today.get(java.util.Calendar.DAY_OF_MONTH)
                     && dataultima.get(java.util.Calendar.MONTH) == today.get(java.util.Calendar.MONTH)
                     && dataultima.get(java.util.Calendar.YEAR) == today.get(java.util.Calendar.YEAR)) {
-                //datacontroller = false
+                datacontroller = false
             }
             println("data ultima pesata: ${dataultima.timeInMillis}")
             println("data oggi: ${today.timeInMillis}")
@@ -423,6 +424,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                 setWpa2Passphrase("123123123")
                             }.build()
                     )
+
                     Log.d("esp", "Builder built")
                     try {
                         println("dentro try")
@@ -450,7 +452,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                 lifecycleScope.launch(Dispatchers.IO) {
                                     val str = URL("http://192.168.4.1/").readText(Charset.forName("UTF-8"))
                                     Log.d("esp",str)
-                                    manager.bindProcessToNetwork(null)
+                                    //manager.bindProcessToNetwork(null)
                                     withContext(Dispatchers.Main) {
 
                                         val messaggiosalvato2: String = getString(R.string.question_message_obj_ok)
@@ -464,18 +466,20 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                                 .setTitle(R.string.question_title_weight_ok)
                                                 .setMessage(message2)
                                                 .setPositiveButton(R.string.ok) { _, _ ->
+
                                                     if (fromJoinOrStartMatch == "JOIN") joinMatch()
                                                     if (fromJoinOrStartMatch == "START") startMatch()
-                                                    if (homeViewModel.thisUser.value?.objective != null && homeViewModel.weights.value?.size!! > 0) {
+                                                    if (homeViewModel.thisUser.value?.objective != null && homeViewModel.weights.value?.size!! > 0
+                                                            && homeViewModel.thisUsersFam.value?.matchState == "STARTED"
+                                                            && homeViewModel.thisUser.value?.isInGame == true) {
                                                         homeViewModel.changePosition(requireContext(), peso.toFloat())
                                                     }
+                                                    manager.bindProcessToNetwork(null)
                                                 }
                                                 .show()
 
                                     }
                                 }
-
-
                             }
 
 

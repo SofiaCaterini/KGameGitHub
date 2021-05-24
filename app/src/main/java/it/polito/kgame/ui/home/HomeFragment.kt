@@ -68,6 +68,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     val sampleImagesFirstTime = arrayListOf(R.drawable.regole_benvenuto, R.drawable.regola1, R.drawable.regola2, R.drawable.regola2b_warning, R.drawable.regola3, R.drawable.regola4, R.drawable.regola5)
     private var mRequestQue: RequestQueue? = null
     private val URL = "https://fcm.googleapis.com/fcm/send"
+    var activePlayerPawnImageView : ImageView? = null
 
     @SuppressLint("ResourceType")
 
@@ -457,16 +458,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                         val peso: String = str
                                         val message2: String = "$messaggiosalvato2 $peso $kg"
 
-                                        Log.d("esp",message2)
-
                                         DbManager.createWeight(requireContext(), peso, System.currentTimeMillis())
-
-                                        Log.d("esp",peso)
-                                        if (homeViewModel.thisUser.value?.objective != null && homeViewModel.weights.value?.size!! > 0) {
-                                            homeViewModel.changePosition(requireContext(), peso.toFloat())
-                                        }
-
-
 
                                         MaterialAlertDialogBuilder(requireContext())
                                                 .setTitle(R.string.question_title_weight_ok)
@@ -474,6 +466,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                                 .setPositiveButton(R.string.ok) { _, _ ->
                                                     if (fromJoinOrStartMatch == "JOIN") joinMatch()
                                                     if (fromJoinOrStartMatch == "START") startMatch()
+                                                    if (homeViewModel.thisUser.value?.objective != null && homeViewModel.weights.value?.size!! > 0) {
+                                                        homeViewModel.changePosition(requireContext(), peso.toFloat())
+                                                    }
                                                 }
                                                 .show()
 
@@ -606,121 +601,120 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         println(" layout " + layout)
         println(" gameBoard " + layout.gameBoard)
 
-        val map = mutableMapOf<Int, Int>()
+        val map = mutableMapOf<Int, Int>()      // <Position, Players in that position>
         list.forEach { u -> val num = list.count { x -> x.position == u.position }
-            map[u.position!!] = num
+            map[u.position] = num
         }
 
         list.forEach { u ->
-            val player = ImageView(requireContext()).apply {
-                setImageResource(Pedina.pedina(u.pawnCode))
-                adjustViewBounds = true
-                layoutParams = ViewGroup.LayoutParams(
-                        pawnWidth!!,
-                        pawnHeight!!)
-                println("1pos della pedina: w - " + x + "; h - " + y)
+            var alreadyCreated = false
+            if (u.mail == homeViewModel.thisUser.value?.mail && activePlayerPawnImageView != null) alreadyCreated = true
 
-            }
-            println("2pos della pedina: w - " + player.x + "; h - " + player.y)
+            val player =
+                if(alreadyCreated) activePlayerPawnImageView
+                else ImageView(requireContext()).apply {
+                    setImageResource(Pedina.pedina(u.pawnCode))
+                    adjustViewBounds = true
+                    layoutParams = ViewGroup.LayoutParams(
+                            pawnWidth!!,
+                            pawnHeight!!)
+                }
+
+            if(u.mail == homeViewModel.thisUser.value?.mail && !alreadyCreated) activePlayerPawnImageView = player
+
+            println("2pos della pedina: w - " + player!!.x + "; h - " + player.y)
             layout.apply {
-                addView(player)
+                if(!alreadyCreated) addView(player)
             }
             layout.gameBoard.viewTreeObserver.addOnGlobalLayoutListener {
                 if(u.position==0)  { player.visibility = View.INVISIBLE }
 
-                when (map[u.position!!]) {
+                when (map[u.position]) {
                     1 -> {
-                        ObjectAnimator.ofFloat(player, "translationX",
-                                layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
-                                        u.position!!
-                                ).first - pawnWidth!!.toFloat() / 2).apply {
-                            duration = 2000
-                            start()
+                        if (alreadyCreated) {
+                            ObjectAnimator.ofFloat(player, "translationX",
+                                    layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                                            u.position
+                                    ).first - pawnWidth!!.toFloat() / 2).apply {
+                                duration = 2000
+                                start()
+                            }
+                            ObjectAnimator.ofFloat(player, "translationY",
+                                    layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                                            u.position
+                                    ).second - pawnHeight!!.toFloat() / 2).apply {
+                                duration = 2000
+                                start()
+                            }
+                        } else {
+                            player.translationX =
+                                    layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                                            u.position
+                                    ).first - pawnWidth!!.toFloat() / 2
+                            player.translationY =
+                                    layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                                            u.position
+                                    ).second - pawnHeight!!.toFloat() / 2
+
                         }
-                        ObjectAnimator.ofFloat(player, "translationY",
-                                layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
-                                        u.position!!
-                                ).second - pawnHeight!!.toFloat() / 2).apply {
-                            duration = 2000
-                            start()
-                        }
-
-
-                        /*player.translationX =
-                                layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
-                                        u.position!!
-                                ).first - pawnWidth!!.toFloat() / 2
-                        player.translationY =
-                                layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
-                                        u.position!!
-                                ).second - pawnHeight!!.toFloat() / 2
-
-                         */
-                        println("SIAMO IN 1")
-                        println("31pos della pedina: w - " + player.x + "; h - " + player.y)
-                        println("megaprintone: \n" +
-                                "layout.gameBoard.left: " + layout.gameBoard.left + ";  \n" +
-                                "layout.gameBoard.width.toFloat(): " + layout.gameBoard.width.toFloat() + "; \n" +
-                                "getXYmodsFromPosition(u.position!!).first: " + getXYmodsFromPosition(u.position!!).first)
-
                     }
                     2 -> {
+                        if (alreadyCreated) {
+                                ObjectAnimator.ofFloat(player, "translationX",
+                                        layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                                                u.position
+                                        ).first - pawnWidth!!.toFloat() * 3 / 4).apply {
+                                    duration = 2000
+                                    start()
+                                }
+                                ObjectAnimator.ofFloat(player, "translationY",
+                                        layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                                                u.position
+                                        ).second - pawnHeight!!.toFloat() * 3 / 4).apply {
+                                    duration = 2000
+                                    start()
+                                }
+                        } else {
+                            player.translationX =
+                                    layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                                            u.position
+                                    ).first - pawnWidth!!.toFloat() * 3 / 4
+                            player.translationY =
+                                    layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                                            u.position
+                                    ).second - pawnHeight!!.toFloat() * 3 / 4
 
-                        ObjectAnimator.ofFloat(player, "translationX",
-                                layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
-                                        u.position!!
-                                ).first - pawnWidth!!.toFloat() * 3 / 4).apply {
-                            duration = 2000
-                            start()
                         }
-                        ObjectAnimator.ofFloat(player, "translationY",
-                                layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
-                                        u.position!!
-                                ).second - pawnHeight!!.toFloat() * 3 / 4).apply {
-                            duration = 2000
-                            start()
-                        }
-                        /*
-                        player.translationX =
-                                layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
-                                        u.position!!
-                                ).first - pawnWidth!!.toFloat() * 3 / 4
-                        player.translationY =
-                                layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
-                                        u.position!!
-                                ).second - pawnHeight!!.toFloat() * 3 / 4
-
-                         */
-
-                        map[u.position!!] = 22
+                        map[u.position] = 22
                         println("SIAMO IN 2")
                     }
                     22 -> {
+                        if(alreadyCreated) {
+                            ObjectAnimator.ofFloat(player, "translationX",
+                                    layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                                            u.position
+                                    ).first - pawnWidth!!.toFloat() / 4).apply {
+                                duration = 2000
+                                start()
+                            }
+                            ObjectAnimator.ofFloat(player, "translationY",
+                                    layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                                            u.position
+                                    ).second - pawnHeight!!.toFloat() / 4).apply {
+                                duration = 2000
+                                start()
+                            }
+                        } else {
+                            player.translationX =
+                                    layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                                            u.position
+                                    ).first - pawnWidth!!.toFloat() / 4
+                            player.translationY =
+                                    layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
+                                            u.position
+                                    ).second - pawnHeight!!.toFloat() / 4
 
-                        ObjectAnimator.ofFloat(player, "translationX",
-                                layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
-                                        u.position!!
-                                ).first - pawnWidth!!.toFloat() / 4).apply {
-                            duration = 2000
-                            start()
                         }
-                        ObjectAnimator.ofFloat(player, "translationY",
-                                layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
-                                        u.position!!
-                                ).second - pawnHeight!!.toFloat() / 4).apply {
-                            duration = 2000
-                            start()
-                        }
-                        /*player.translationX =
-                                layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
-                                        u.position!!
-                                ).first - pawnWidth!!.toFloat() / 4
-                        player.translationY =
-                                layout.gameBoard.top + (layout.gameBoard.height.toFloat()) * getXYmodsFromPosition(
-                                        u.position!!
-                                ).second - pawnHeight!!.toFloat() / 4
-
-                         */
                         println("SIAMO IN 22")
                     }
                     3 -> {
@@ -731,6 +725,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
     }
+
+
 
     //Prende in input il numero della casella e ritorna i moltiplicatori x ed y relativi a quella casella
     fun getXYmodsFromPosition(position: Int): Pair<Float, Float> {
@@ -944,5 +940,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         but_start.visibility = View.GONE
         but_join.visibility=View.VISIBLE
         but_join.isEnabled = false
+    }
+
+    fun movePawn(finalPos: Int) {
+        val layout = requireActivity().findViewById<ConstraintLayout>(R.id.homeLayout)
+        ObjectAnimator.ofFloat(activePlayerPawnImageView, "translationX",
+                layout.gameBoard.left + (layout.gameBoard.width.toFloat()) * getXYmodsFromPosition(
+                        finalPos
+                ).first - pawnWidth!!.toFloat() / 2).apply {
+            duration = 2000
+            start()
+        }
     }
 }

@@ -74,7 +74,7 @@ class HomeViewModel : ViewModel() {
                                                 _thisUsersFam.value?.lastMatchMillis = value[DbManager.MATCH_START_DATE] as Long?
                                                 if(value[DbManager.MATCH_STATE]!=null) _thisUsersFam.value?.matchState = value[DbManager.MATCH_STATE] as String
                                                 if(value[DbManager.PLAYERS_IN_GAME]!=null) _thisUsersFam.value?.playersInGame = value[DbManager.PLAYERS_IN_GAME].toString().toInt()
-                                                println("mocc a mammt: " + value[DbManager.PLAYERS_IN_GAME])
+                                                println("value[players in game]: " + value[DbManager.PLAYERS_IN_GAME])
                                                 _thisUsersFam.value?.lastWinnerMail = value[DbManager.LAST_WINNER] as String?
                                                 println("capiamoci " + value)
                                                 println("FAMMI SAPERE 2 " +_thisUsersFam.value)
@@ -149,7 +149,6 @@ class HomeViewModel : ViewModel() {
         }
 
         fun changePosition(context:Context, actualWeight: Float) {
-                println("cazzata qualsiasi1")
                 val bonusStreaks = arrayListOf(5,10,15,20,30) //if you do a streak of these length you will a bonus step  //5.1 10.1 15.2 20.2 30.3
                 var x = 0
                 if((_thisUser.value?.objective!! - actualWeight).absoluteValue <= (_thisUser.value?.objective!! - _weights.value?.get(_weights.value?.size!! - 2)?.peso!!).absoluteValue) {
@@ -161,13 +160,10 @@ class HomeViewModel : ViewModel() {
                         _thisUser.value?.goodWeightStreak = 0
                 }
                 if(bonusStreaks.contains(_thisUser.value?.goodWeightStreak)) {
-                        x += (_thisUser.value?.goodWeightStreak!!-1/ 10) + 1 //the value is rounded by excess (5.1 10.1 15.2 20.2 30.3)
+                        x += (_thisUser.value?.goodWeightStreak!!-1/ 10) + 1    //this is      __x += goodWeightStreak/10__       but the value is rounded by excess (5->1 / 10->1 / 15->2 / 20->2 / 30->3)
                 }
-                println("cazzata qualsiasi2")
-                println("valore -2 " + _weights.value?.get(_weights.value?.size!! - 2))
-                println("valore -1 " + _weights.value?.get(_weights.value?.size!! - 1))
-
                 _thisUser.value?.position = _thisUser.value?.position!! + x
+                
                 println("this user " +_thisUser.value + " fattarelli " +_thisUser.value?.position!! +" / "+ x)
                 DbManager.updateUser(context,_thisUser.value!!)
         }
